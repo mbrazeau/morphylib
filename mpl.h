@@ -19,7 +19,9 @@ int     mpl_set_numtaxa(const int ntax, Morphy m);
 int     mpl_get_numtaxa(Morphy m);
 int     mpl_set_num_charac(const int ncharac, Morphy m);
 int     mpl_get_num_charac(Morphy m);
-int     mpl_attach_rawdata(char* rawmatrix, Morphy m);
+int     mpl_attach_symbols(const char* symbols, Morphy m);
+char*   mpl_get_symbols(const Morphy m);
+int     mpl_attach_rawdata(const char* rawmatrix, Morphy m);
 int     mpl_delete_rawdata(Morphy m);
 
 int     mpl_set_postorder(const int nodeID, const int index, Morphy m);

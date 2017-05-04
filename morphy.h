@@ -19,7 +19,6 @@
 #include <string.h>
 
 //#include <glib.h>
-
 #ifdef MDBL
 typedef double Mflt;
 #elif MLDBL
@@ -43,18 +42,17 @@ typedef enum {
 } gap_t;
 
 typedef struct __morphy_s {
-    int         numtaxa;
-    int         numcharacters;
-    int         numsymbols;
-    char*       symbols;
-    char*       char_t_matrix;
-    int         numnodes;
-    int*        nodesequence;
-//    struct MPL_stsymb  symboldict;
+    int                 numtaxa;
+    int                 numcharacters;
+    char*               char_t_matrix;
+    int                 numnodes;
+    int*                nodesequence;
+    struct symbset_s*   symboldict;
     union {
         int     asint;
-        Mflt  asfloat;
+        Mflt    asfloat;
     } score;
+    
 } Morphy_t, *Morphyp;
 
 /* Function prototypes */

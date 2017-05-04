@@ -10,6 +10,7 @@ void test_get_states(void)
 	char *states = "01ABaC4359";
 
 	Morphy m1 = mpl_new_Morphy();
+
 	mpl_attach_rawdata(rawmatrix, m1);
 
 	mpl_delete_Morphy(m1);

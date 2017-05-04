@@ -27,12 +27,13 @@ static const char* gmpl_valid_state =
 "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 typedef struct{
-    Mstates bitrep;
-    char    char_t_symbol;
+    Mstates asint;
+    char    aschar;
 } MPL_stsymb;
 
-typedef struct {
+typedef struct symbset_s {
     int         numstates;
+    char*       rawsymbols;
     MPL_stsymb* symbols;
 } MPL_symbset;
 
@@ -71,7 +72,9 @@ typedef struct {
 } MPLnodesets;
 
 /* Function prototypes */
-int     mpl_get_states_from_rawdata(Morphyp handl);
-void    mpl_convert_rawdata(Morphyp handl);
+int             mpl_get_states_from_rawdata(Morphyp handl);
+void            mpl_convert_rawdata(Morphyp handl);
+MPL_symbset*    mpl_alloc_symbolset(void);
+void            mpl_destroy_symbolset(MPL_symbset* symbs);
 
 #endif /* statedata_h */

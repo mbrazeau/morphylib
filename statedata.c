@@ -68,37 +68,81 @@ int mpl_get_states_from_rawdata(Morphyp handl)
     qsort(statesymbols, strlen(statesymbols), sizeof(char),
           compare_char_t_states);
     
+    unsigned long numstates = strlen(statesymbols);
+    handl->symboldict->numstates = (int)numstates;
+    handl->symboldict->rawsymbols = (char*)malloc((1 + numstates)
+                                                  * sizeof(char));
+    strcpy(handl->symboldict->rawsymbols, statesymbols);
+    
     return count-1;
 }
 
 void mpl_set_numsymbols(int numstates, Morphyp handl)
 {
-    assert(!numstates && !handl);
-    
-    handl->numsymbols = numstates;
+    dbg_printf("Setting numsymbols\n");
+    assert(numstates && handl);
+    handl->symboldict->numstates = numstates;
 }
 
 int mpl_get_numsybols(Morphyp handl)
 {
+    dbg_printf("Getting numsymbols\n");
     assert(handl);
-    return handl->numsymbols;
+    return handl->symboldict->numstates;
 }
 
-int mpl_create_state_dictionary(const char* states, Morphyp handl)
+int mpl_create_state_dictionary(Morphyp handl)
 {
+    dbg_printf("Creating state dictionary\n");
+    assert(handl->symboldict);
+    
+    char* states = handl->symboldict->rawsymbols;
     assert(!strchr(states, ' '));
     
     mpl_set_numsymbols((int)strlen(states), handl);
+    int maxsymb = mpl_get_numsybols(handl);
     
+    handl->symboldict->symbols = (MPL_stsymb*)calloc(maxsymb,
+                                                     sizeof(MPL_stsymb));
+    if (!handl->symboldict->symbols) {
+        return ERR_BAD_MALLOC;
+    }
+    
+    
+    for (int i = 0; i < maxsymb; ++i) {
+        handl->symboldict->symbols[i].aschar = states[i];
+        dbg_printf("Converting symbol: %c\n", states[i]);
+    }
     
     return ERR_NO_ERROR;
 }
 
 
+MPL_symbset* mpl_alloc_symbolset(void)
+{
+    return (MPL_symbset*)calloc(1, sizeof(MPL_symbset));
+}
+
+void mpl_destroy_symbolset(MPL_symbset* symbs)
+{
+    if (symbs) {
+        if (symbs->rawsymbols) {
+            free(symbs->rawsymbols);
+            symbs->rawsymbols = NULL;
+        }
+        if (symbs->symbols) {
+            free(symbs->rawsymbols);
+        }
+        
+        free(symbs);
+    }
+}
+
 void mpl_convert_rawdata(Morphyp handl)
 {
     
-    if (!handl->symbols) {
+    if (!handl->symboldict->rawsymbols) {
+        
         mpl_get_states_from_rawdata(handl);
     }
     else {
@@ -107,6 +151,8 @@ void mpl_convert_rawdata(Morphyp handl)
     }
     
     // Create a state dictionary
+    // Probably multipe dictionaries...? Regular and w/ NA?
+    mpl_create_state_dictionary(handl);
     // Set shift values in the dictionary
     // Use dictionary to convert
 }

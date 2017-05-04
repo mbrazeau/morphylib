@@ -16,6 +16,7 @@
 Morphy mpl_new_Morphy(void)
 {
     Morphyp new = mpl_new_Morphy_t();
+    new->symboldict = mpl_alloc_symbolset();
     return (Morphy)new;
 }
 
@@ -29,7 +30,7 @@ int mpl_delete_Morphy(Morphy m)
     
     // TODO: Morphy destructors
     mpl_delete_rawdata(m);
-    
+    mpl_destroy_symbolset(m1->symboldict);
     free(m1);
     
     return ERR_NO_ERROR;
@@ -79,8 +80,24 @@ int mpl_get_num_charac(Morphy m)
     return ((Morphyp)m)->numtaxa;
 }
 
-//int     mpl_attach_rawdata(char* rawmatrix, Morphy m);
-int mpl_attach_rawdata(char* rawmatrix, Morphy m)
+//int     mpl_attach_symbols(char* symbols, Morphy m);
+int mpl_attach_symbols(const char *symbols, Morphy m)
+{
+    if (!symbols || !m) {
+        return ERR_BAD_PARAM;
+    }
+    
+    // Copy symbols; remove spaces and punc
+    // Allocate memory for symbols
+    // Attach symbols
+    
+    return ERR_NO_ERROR;
+}
+
+//char*   mpl_get_symbols(Morphy m);
+
+//int     mpl_attach_rawdata(const char* rawmatrix, const Morphy m);
+int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
 {
     if (!rawmatrix || !m) {
         return ERR_BAD_PARAM;
