@@ -12,6 +12,8 @@
 #include <stdint.h>
 #include <limits.h>
 #include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
 
 typedef uint64_t Mstates;
 
@@ -22,9 +24,10 @@ typedef uint64_t Mstates;
 #define MAXSTATES   (CHAR_BIT * sizeof(Mstates))
 
 static const char* gmpl_valid_symb =
-"\n\t[]{} -+?0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+"\n\t[](){}; -+?0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 static const char* gmpl_valid_state =
 "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+static const char* gmpl_valid_matrix_punc = "{}();";
 
 typedef struct{
     Mstates asint;
@@ -73,6 +76,9 @@ typedef struct {
 
 /* Function prototypes */
 int             mpl_get_states_from_rawdata(Morphyp handl);
+int             mpl_copy_raw_matrix(const char* rawmatrix, Morphyp handl);
+int             mpl_check_nexus_matrix_dimensions(char *input_matrix, int input_num_taxa, int input_num_chars);
+char*           mpl_get_preprocessed_matrix(Morphyp handl);
 void            mpl_convert_rawdata(Morphyp handl);
 MPL_symbset*    mpl_alloc_symbolset(void);
 void            mpl_destroy_symbolset(MPL_symbset* symbs);

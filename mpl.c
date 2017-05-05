@@ -6,7 +6,6 @@
 //  Copyright © 2017 brazeaulab. All rights reserved.
 //
 
-#include <string.h>
 #include "mplerror.h"
 #include "mpl.h"
 #include "morphy.h"
@@ -15,8 +14,9 @@
 //Morphy  mpl_new_Morphy(void);
 Morphy mpl_new_Morphy(void)
 {
-    Morphyp new = mpl_new_Morphy_t();
+    Morphyp new     = mpl_new_Morphy_t();
     new->symboldict = mpl_alloc_symbolset();
+    
     return (Morphy)new;
 }
 
@@ -86,7 +86,7 @@ int mpl_attach_symbols(const char *symbols, Morphy m)
     if (!symbols || !m) {
         return ERR_BAD_PARAM;
     }
-    
+    // TODO: Implement attach_symbols
     // Copy symbols; remove spaces and punc
     // Allocate memory for symbols
     // Attach symbols
@@ -94,7 +94,14 @@ int mpl_attach_symbols(const char *symbols, Morphy m)
     return ERR_NO_ERROR;
 }
 
-//char*   mpl_get_symbols(Morphy m);
+char* mpl_get_symbols(Morphy m)
+{
+// TODO: Implement get_symbols
+    Morphyp mi = (Morphyp)m;
+    
+    return mi->symboldict->rawsymbols;
+}
+
 
 //int     mpl_attach_rawdata(const char* rawmatrix, const Morphy m);
 int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
@@ -103,16 +110,21 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
         return ERR_BAD_PARAM;
     }
     
-    char *matcpy = NULL;
-    unsigned long len = 1 + strlen(rawmatrix);
+    Morphyp m1 = (Morphyp)m;
     
-    matcpy = (char*)malloc(len * sizeof(char));
-    if (!matcpy) {
-        return ERR_BAD_MALLOC;
+    mpl_copy_raw_matrix(rawmatrix, m1);
+    
+    // Check validity of preprocessed matrix
+    MPL_ERR_T invalid = mpl_check_nexus_matrix_dimensions
+    (mpl_get_preprocessed_matrix(m1),
+     mpl_get_numtaxa(m1),
+     mpl_get_num_charac(m1));
+    
+    if (invalid) {
+        // Cleanup; return error
+        mpl_delete_rawdata(m1);
+        return invalid;
     }
-    
-    strcpy(matcpy, rawmatrix);
-    ((Morphyp)m)->char_t_matrix = matcpy;
     
     mpl_convert_rawdata((Morphyp)m);
     

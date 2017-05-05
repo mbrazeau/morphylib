@@ -1,15 +1,16 @@
-# Makefile for treelib
+# Makefile for morphy library
 NAME	:= libmorphy_$(shell uname -m)-$(shell uname -s)
 CC		:= gcc
 DBGF	:= -g -D DEBUG
-CFLAGS	:= -c -Wall -fPIC
+CFLAGS	:= -c -Wall -fPIC #$(shell pkg-config --cflags glib-2.0)
 SRC		:= *.c
 OBJS	:= *.o
 SNAME	:= $(NAME).a
 DNAME	:= $(NAME).so
 TDIRS	:= ./tests/
-LDFLAGS	:= -L./
-#LDLIBS	:=-lmorphy_x86_64-Darwin  
+LDFLAGS	:= -L./ 
+LIBS	:= $(shell pkg-config --libs glib-2.0)
+
 
 .PHONY: all clean test run debug
 
@@ -19,7 +20,7 @@ debug: CFLAGS := $(CFLAGS) $(DBGF)
 debug: all 
 
 $(SNAME) : $(OBJS)
-	ar rvs ${SNAME} ${OBJS} 
+	ar rvs $(SNAME) $(OBJS)
 
 $(DNAME) : $(OBJS)
 	$(CC) -shared -o $(DNAME) $(OBJS) 

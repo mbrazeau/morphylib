@@ -11,6 +11,8 @@
 
 typedef enum {
     
+    ERR_DIMENS_UNDER,           // Dimensions under expected
+    ERR_DIMENS_OVER,            // Dimensions exceed expected
     ERR_NO_DATA,
     ERR_BAD_MALLOC,
     ERR_BAD_PARAM,

@@ -23,3 +23,9 @@ Morphyp mpl_new_Morphy_t(void)
 {
     return (Morphyp)calloc(1, sizeof(Morphy_t));
 }
+
+void* mpl_get_from_matrix
+(const int row, const int col, const size_t size, const void* data)
+{
+    return (void*)&data[row * col * size + (size * col - 1)];
+}

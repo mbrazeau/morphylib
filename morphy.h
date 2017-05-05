@@ -12,13 +12,15 @@
 #ifdef DEBUG
 #include <stdio.h>
 #define dbg_printf(...) printf(__VA_ARGS__)
+#else
+#define dbg_printf(...)
 #endif
 
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-
 //#include <glib.h>
+
 #ifdef MDBL
 typedef double Mflt;
 #elif MLDBL
@@ -57,5 +59,6 @@ typedef struct __morphy_s {
 
 /* Function prototypes */
 Morphyp mpl_new_Morphy_t(void);
+void*   mpl_get_from_matrix(const int row, const int col, const size_t size, const void* data);
 
 #endif /* morphy_h */
