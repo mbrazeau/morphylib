@@ -10,7 +10,7 @@
 #define mplerror_h
 
 typedef enum {
-    
+    ERR_NO_DIMENSIONS,
     ERR_DIMENS_UNDER,           // Dimensions under expected
     ERR_DIMENS_OVER,            // Dimensions exceed expected
     ERR_NO_DATA,

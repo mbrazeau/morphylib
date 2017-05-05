@@ -29,3 +29,10 @@ void* mpl_get_from_matrix
 {
     return (void*)&data[row * col * size + (size * col - 1)];
 }
+
+int mpl_get_gaphandl(Morphyp handl)
+{
+    assert(handl);
+    return handl->gaphandl;
+}
+

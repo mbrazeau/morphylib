@@ -34,13 +34,15 @@ typedef enum {
     WAGNER_T,
     DOLLO_T,
     IRREVERSIBLE_T,
-    USERTYPE_T
+    USERTYPE_T,
+    MAX_CTYPE,
 } ptype_t;
 
 typedef enum {
     GAP_INAPPLIC,
     GAP_MISSING,
     GAP_NEWSTATE,
+    GAP_MAX,
 } gap_t;
 
 typedef struct __morphy_s {
@@ -50,15 +52,16 @@ typedef struct __morphy_s {
     int                 numnodes;
     int*                nodesequence;
     struct symbset_s*   symboldict;
+    gap_t               gaphandl;
     union {
         int     asint;
         Mflt    asfloat;
     } score;
-    
+    struct mpl_matrix_s*    inmatrix;
 } Morphy_t, *Morphyp;
 
 /* Function prototypes */
 Morphyp mpl_new_Morphy_t(void);
 void*   mpl_get_from_matrix(const int row, const int col, const size_t size, const void* data);
-
+int     mpl_get_gaphandl(Morphyp handl);
 #endif /* morphy_h */

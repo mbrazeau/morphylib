@@ -29,7 +29,12 @@ static const char* gmpl_valid_state =
 "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 static const char* gmpl_valid_matrix_punc = "{}();";
 
-typedef struct{
+typedef struct {
+    Mstates asint;
+    char*   asstr;
+} MPLcell;
+
+typedef struct {
     Mstates asint;
     char    aschar;
 } MPL_stsymb;
@@ -60,12 +65,11 @@ typedef struct {
     Mstates*    subtree_finalset;
 } MPLancstates;
 
-typedef struct {
-    int         numrows;
-    int         numcols;
-    char*       rawdata;
-    Mstates*    tipdata;
-    Mstates**   nodalstates;
+typedef struct mpl_matrix_s {
+    int*        intweights;
+    Mflt*       fltweights;
+    int         ncells;
+    MPLcell*    cells;
 } MPLmatrix;
 
 typedef struct {
@@ -75,6 +79,7 @@ typedef struct {
 } MPLnodesets;
 
 /* Function prototypes */
+char*           mpl_skip_closure(const char *closure, const char openc, const char closec);
 int             mpl_get_states_from_rawdata(Morphyp handl);
 int             mpl_copy_raw_matrix(const char* rawmatrix, Morphyp handl);
 int             mpl_check_nexus_matrix_dimensions(char *input_matrix, int input_num_taxa, int input_num_chars);
@@ -82,5 +87,7 @@ char*           mpl_get_preprocessed_matrix(Morphyp handl);
 void            mpl_convert_rawdata(Morphyp handl);
 MPL_symbset*    mpl_alloc_symbolset(void);
 void            mpl_destroy_symbolset(MPL_symbset* symbs);
+MPLmatrix*      mpl_new_mpl_matrix(const int ntaxa, const int nchar, const int nstates);
+int             mpl_delete_mpl_matrix(MPLmatrix* m);
 
 #endif /* statedata_h */

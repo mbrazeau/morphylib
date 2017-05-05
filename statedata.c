@@ -18,9 +18,12 @@ char* mpl_skip_closure(const char *closure, const char openc, const char closec)
     
     do {
         ++ret;
-    } while (*ret != closec);
+        if (*ret == closec) {
+            return ret;
+        }
+    } while (*ret);
     
-    return ret;
+    return NULL;
 }
 
 
@@ -45,10 +48,10 @@ int mpl_get_states_from_rawdata(Morphyp handl)
     statesymbols[0] = '\0';
     current = rawmatrix;
     
-    dbg_printf("The raw matrix about to be processed:\n%s\n", rawmatrix);
+//    dbg_printf("The raw matrix about to be processed:\n%s\n", rawmatrix);
     
     do {
-        dbg_printf("Current: %c\n", *current);
+//        dbg_printf("Current: %c\n", *current);
         
         if (strchr(gmpl_valid_symb, *current)) {
             
@@ -64,7 +67,7 @@ int mpl_get_states_from_rawdata(Morphyp handl)
             }
         }
         else {
-            dbg_printf("Returning error\n");
+//            dbg_printf("Returning error\n");
             return ERR_INVALID_SYMBOL;
         }
         
@@ -270,10 +273,100 @@ int mpl_check_nexus_matrix_dimensions
     return ERR_NO_ERROR;
 }
 
+
 char* mpl_get_preprocessed_matrix(Morphyp handl)
 {
     assert(handl);
     return handl->char_t_matrix;
+}
+
+Mstates mpl_gap_value(Morphyp handl)
+{
+    switch (mpl_get_gaphandl(handl)) {
+        case GAP_INAPPLIC:
+            return NA;
+        case GAP_MISSING:
+            return MISSING;
+        case GAP_NEWSTATE:
+            return (Mstates)1;
+        case GAP_MAX:
+            return -1;
+        default:
+            break;
+    }
+    
+    return -2;
+}
+
+MPLmatrix* mpl_new_mpl_matrix
+(const int ntaxa, const int nchar, const int nstates)
+{
+    MPLmatrix* ret = NULL;
+    
+    ret = (MPLmatrix*)calloc(1, sizeof(MPLmatrix));
+    if (!ret) {
+        return NULL;
+    }
+    
+    
+    ret->intweights = (int*)calloc(nchar, sizeof(int));
+    if (!ret->intweights) {
+        mpl_delete_mpl_matrix(ret);
+        return NULL;
+    }
+    
+    ret->fltweights = (Mflt*)calloc(nchar, sizeof(Mflt));
+    if (!ret->fltweights) {
+        mpl_delete_mpl_matrix(ret);
+        return NULL;
+    }
+    
+    ret->cells = (MPLcell*)calloc(ntaxa * nchar, sizeof(MPLcell));
+    if (!ret->cells) {
+        mpl_delete_mpl_matrix(ret);
+        return NULL;
+    }
+    
+    ret->ncells = ntaxa * nchar;
+    
+    for (int i = 0; i < ret->ncells; ++i) {
+        ret->cells[i].asstr = (char*)calloc(nstates + 1, sizeof(char));
+        if (!ret->cells[i].asstr) {
+            for (int j = 0; j < i; ++j) {
+                free(ret->cells[i].asstr);
+                ret->cells[i].asstr = NULL;
+            }
+            mpl_delete_mpl_matrix(ret);
+            return NULL;
+        }
+    }
+    
+    
+    return ret;
+}
+
+int mpl_delete_mpl_matrix(MPLmatrix* m)
+{
+    assert(m);
+    if (m->cells) {
+        for (int i = 0; i < m->ncells; ++i) {
+            if (m->cells[i].asstr) {
+                free(m->cells[i].asstr);
+                m->cells[i].asstr = NULL;
+            }
+        }
+        free(m->cells);
+    }
+    if (m->fltweights) {
+        free(m->fltweights);
+        m->fltweights = NULL;
+    }
+    if (m->intweights) {
+        free(m->intweights);
+        m->intweights = NULL;
+    }
+    
+    return ERR_NO_ERROR;
 }
 
 void mpl_convert_rawdata(Morphyp handl)
@@ -289,12 +382,6 @@ void mpl_convert_rawdata(Morphyp handl)
         // TODO: Replace list to one without spaces? (YES)
     }
     
-//    GArray* withgaps = g_array_new(FALSE, TRUE, sizeof(int));
-//    GArray* nogaps = g_array_new(FALSE, TRUE, sizeof(int));
-//    int a = 1;
-//    int b = 2;
-//    g_array_append_val(withgaps, a);
-//    g_array_append_val(nogaps, b);
     
     // Loop over the matrix and find out which ones have
     // Create a state dictionary

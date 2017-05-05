@@ -11,16 +11,33 @@
 #include "morphy.h"
 #include "statedata.h"
 
-//Morphy  mpl_new_Morphy(void);
+
+/*!
+ @brief Creates a new instance of a Morphy object
+ ------
+ @discussion Creates a new empty Morphy object. All fields are unpopulated and
+ uninitialised.
+ @return A void pointer to the Morphy instance. NULL if unsuccessful.
+ */
 Morphy mpl_new_Morphy(void)
 {
     Morphyp new     = mpl_new_Morphy_t();
-    new->symboldict = mpl_alloc_symbolset();
+    if (new) {
+        new->symboldict = mpl_alloc_symbolset();
+    }
     
     return (Morphy)new;
 }
 
-//int     mpl_delete_Morphy(Morphy m);
+
+/*!
+ @brief Destroys an instance of a Morphy object.
+ ------
+ @discussion Destroys an instance of the Morphy object, calling all destructors
+ for internal object completely returning the memory to the system.
+ @param m An Morphy object to be destroyed.
+ @return A Morphy error code.
+ */
 int mpl_delete_Morphy(Morphy m)
 {
     if (!m) {
@@ -28,9 +45,10 @@ int mpl_delete_Morphy(Morphy m)
     }
     Morphyp m1 = (Morphyp)m;
     
-    // TODO: Morphy destructors
+    // TODO: All Morphy destructors
     mpl_delete_rawdata(m);
     mpl_destroy_symbolset(m1->symboldict);
+    mpl_delete_mpl_matrix(m1->inmatrix);
     free(m1);
     
     return ERR_NO_ERROR;
@@ -112,6 +130,10 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
     
     Morphyp m1 = (Morphyp)m;
     
+    if (!mpl_get_numtaxa(m) || !mpl_get_num_charac(m)) {
+        return ERR_NO_DIMENSIONS;
+    }
+    
     mpl_copy_raw_matrix(rawmatrix, m1);
     
     // Check validity of preprocessed matrix
@@ -157,7 +179,28 @@ int mpl_delete_rawdata(Morphy m)
 //int     mpl_set_charac_weight(const int charID, Mflt weight);
 //
 //int     mpl_set_parsim_t(const int charID, const ptype_t parsfxn, Morphy m);
+
 //int     mpl_set_gaphandl(const gap_t gaptype, Morphy m);
+// TODO: Document gap_t
+int mpl_set_gaphandl(const gap_t gaptype, Morphy m)
+{
+    if (!m) {
+        return ERR_BAD_PARAM;
+    }
+    
+    Morphyp mp = (Morphyp)m;
+    mp->gaphandl = gaptype;
+    return ERR_NO_ERROR;
+}
+
+int mpl_query_gaphandl(Morphy m)
+{
+    if (!m) {
+        return ERR_BAD_PARAM;
+    }
+    
+    return mpl_get_gaphandl((Morphyp)m);
+}
 //
 //int     mpl_down_recon(const int nodeID, const int lChild, const int rChild, Morphy m);
 //int     mpl_up_recon(const int nodeID, const int lChild, const int rChild, const int parentID, Morphy m);

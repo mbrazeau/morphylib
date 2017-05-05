@@ -33,6 +33,7 @@ int     mpl_set_charac_weight(const int charID, Mflt weight);
 
 int     mpl_set_parsim_t(const int charID, const ptype_t parsfxn, Morphy m);
 int     mpl_set_gaphandl(const gap_t gaptype, Morphy m);
+int     mpl_query_gaphandl(Morphy m);
 
 int     mpl_down_recon(const int nodeID, const int lChild, const int rChild, Morphy m);
 int     mpl_up_recon(const int nodeID, const int lChild, const int rChild, const int parentID, Morphy m);
