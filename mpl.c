@@ -165,6 +165,8 @@ int mpl_delete_rawdata(Morphy m)
     if (mp->char_t_matrix) {
         free(mp->char_t_matrix);
         mp->char_t_matrix = NULL;
+        mpl_delete_mpl_matrix(m);
+        mp->inmatrix = NULL;
     }
     
     return ERR_NO_ERROR;

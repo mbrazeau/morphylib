@@ -382,6 +382,15 @@ void mpl_convert_rawdata(Morphyp handl)
         // TODO: Replace list to one without spaces? (YES)
     }
     
+    handl->inmatrix = mpl_new_mpl_matrix(handl->numtaxa,
+                                         handl->numcharacters,
+                                         mpl_get_numsybols(handl));
+    
+    if (!handl->inmatrix) {
+        // TODO: Change function to return an error
+    }
+    
+    // Write the characters as strings into their cells
     
     // Loop over the matrix and find out which ones have
     // Create a state dictionary
