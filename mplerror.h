@@ -13,18 +13,30 @@
  used by some internal functions) to report errors back to the caller.
  */
 typedef enum {
-    ERR_SYMBOL_MISMATCH = -11,        /*! Symbols list and matrix have a mismatch (i.e. symbol not found).*/
-    ERR_MATCHING_PARENTHS = -10,      /*! Data input has unexpected non-matching parentheses.*/
-    ERR_ATTEMPT_OVERWRITE = -9,      /*! Caller attempted to overwrite a loaded dataset.*/
-    ERR_NO_DIMENSIONS = -8,          /*! Function requires pre-specified dimensions to function properly.*/
-    ERR_DIMENS_UNDER = -7,           /*! Supplied dimensions underestimate size of dataset.*/
-    ERR_DIMENS_OVER= -6,            /*! Supplied dimensions overestimate size of dataset.*/
-    ERR_NO_DATA = -5,                /*! No dataset supplied.*/
-    ERR_BAD_MALLOC = -4,             /*! Memory allocation failure.*/
-    ERR_BAD_PARAM = -3,              /*! Unexpected parameter value passed to function.*/
-    ERR_UNEXP_NULLPTR = -2,          /*! Unexpected NULL pointer passed to function.*/
-    ERR_INVALID_SYMBOL = -1,         /*! Symbol in dataset or symbol list is not allowed by Morphy.*/
-    ERR_NO_ERROR            = 0,/*! No error. Everything went OK.*/
+    ERR_SYMBOL_MISMATCH     = -11,  /*! Symbols list and matrix have a mismatch 
+                                       (i.e. symbol not found).*/
+    ERR_MATCHING_PARENTHS   = -10,  /*! Data input has unexpected non-matching 
+                                        parentheses.*/
+    ERR_ATTEMPT_OVERWRITE   = -9,   /*! Caller attempted to overwrite a loaded 
+                                        dataset.*/
+    ERR_NO_DIMENSIONS       = -8,   /*! Function requires pre-specified 
+                                        dimensions to function properly.*/
+    ERR_DIMENS_UNDER        = -7,   /*! Supplied dimensions underestimate size 
+                                        of dataset.*/
+    ERR_DIMENS_OVER         = -6,   /*! Supplied dimensions overestimate size of 
+                                        dataset.*/
+    ERR_NO_DATA             = -5,   /*! No dataset supplied.*/
+    
+    ERR_BAD_MALLOC          = -4,   /*! Memory allocation failure.*/
+    
+    ERR_BAD_PARAM           = -3,   /*! Unexpected parameter value passed to 
+                                        function.*/
+    ERR_UNEXP_NULLPTR       = -2,   /*! Unexpected NULL pointer passed to 
+                                        function.*/
+    ERR_INVALID_SYMBOL      = -1,   /*! Symbol in dataset or symbol list is not 
+                                        allowed by Morphy.*/
+    ERR_NO_ERROR            =  0,   /*! No error. Everything went OK.*/
+    
 } MPL_ERR_T;
 
 #endif /* mplerror_h */
