@@ -17,16 +17,18 @@
 
 typedef uint64_t Mstates;
 
-#define ISAPPLIC    (UINT64_MAX - 1)
-#define NA          1
-#define MISSING     UINT64_MAX
-
-#define MAXSTATES   (CHAR_BIT * sizeof(Mstates))
+#define ISAPPLIC        (UINT64_MAX - 1)
+#define NA              1
+#define MISSING         UINT64_MAX
+#define MAXSTATES       (CHAR_BIT * sizeof(Mstates))
+#define DEFAULTGAP      '-'
+#define DEFAULTMISSING  '?'
 
 static const char* gmpl_valid_symb =
 "\n\t[](){}; -+?0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 static const char* gmpl_valid_state =
-"-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+"+0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+static const char* gmpl_valid_matrix_wildcard = "-?";
 static const char* gmpl_valid_matrix_punc = "{}();";
 
 typedef struct {
@@ -39,11 +41,11 @@ typedef struct {
     char    aschar;
 } MPL_stsymb;
 
-typedef struct symbset_s {
-    int         numstates;
-    char*       rawsymbols;
-    MPL_stsymb* symbols;
-} MPL_symbset;
+//typedef struct symbset_s {
+//    int         numstates;
+//    char*       rawsymbols;
+//    MPL_stsymb* symbols;
+//} MPL_symbset;
 
 typedef struct {
     int         maxnchars;
@@ -79,15 +81,17 @@ typedef struct {
 } MPLnodesets;
 
 /* Function prototypes */
+int             mpl_init_symbolset(Morphyp m);
+int             mpl_get_numsymbols(Morphyp handl);
+void            mpl_destroy_symbolset(Morphyp m);
 char*           mpl_skip_closure(const char *closure, const char openc, const char closec);
 int             mpl_get_states_from_rawdata(Morphyp handl);
 int             mpl_copy_raw_matrix(const char* rawmatrix, Morphyp handl);
 int             mpl_check_nexus_matrix_dimensions(char *input_matrix, int input_num_taxa, int input_num_chars);
 char*           mpl_get_preprocessed_matrix(Morphyp handl);
 void            mpl_convert_rawdata(Morphyp handl);
-MPL_symbset*    mpl_alloc_symbolset(void);
-void            mpl_destroy_symbolset(MPL_symbset* symbs);
 MPLmatrix*      mpl_new_mpl_matrix(const int ntaxa, const int nchar, const int nstates);
 int             mpl_delete_mpl_matrix(MPLmatrix* m);
+MPLmatrix*      mpl_get_mpl_matrix(Morphyp m);
 
 #endif /* statedata_h */

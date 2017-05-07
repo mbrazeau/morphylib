@@ -6,6 +6,7 @@
 //  Copyright © 2017 brazeaulab. All rights reserved.
 //
 
+#include "morphydefs.h"
 #include "mplerror.h"
 #include "mpl.h"
 #include "morphy.h"
@@ -22,9 +23,10 @@
 Morphy mpl_new_Morphy(void)
 {
     Morphyp new     = mpl_new_Morphy_t();
-    if (new) {
-        new->symboldict = mpl_alloc_symbolset();
-    }
+    
+//    if (new) {
+//        new->symboldict = mpl_alloc_symbolset();
+//    }
     
     return (Morphy)new;
 }
@@ -47,23 +49,38 @@ int mpl_delete_Morphy(Morphy m)
     
     // TODO: All Morphy destructors
     mpl_delete_rawdata(m);
-    mpl_destroy_symbolset(m1->symboldict);
+    mpl_destroy_symbolset(m1);
     mpl_delete_mpl_matrix(m1->inmatrix);
     free(m1);
     
     return ERR_NO_ERROR;
 }
 
-//int     mpl_set_numtaxa(const int ntax, Morphy m);
-int mpl_set_numtaxa(const int ntax, Morphy m)
+int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
 {
-    if (!m) {
-        return ERR_BAD_PARAM;
+    if (!ntax || !nchar) {
+        return ERR_NO_DIMENSIONS;
+    }
+    dbg_printf("ntax: %i, ", ntax);
+    dbg_printf("nchar: %i\n", nchar);
+
+    int ret = ERR_NO_ERROR;
+    Morphyp mi = (Morphyp)m;
+    
+    ret = mpl_set_numtaxa(ntax, mi);
+    if (ret) {
+        return ret;
+    }
+    ret = mpl_set_num_charac(nchar, mi);
+    if (ret) {
+        return ret;
     }
     
-    ((Morphyp)m)->numtaxa = ntax;
-    
-    return ERR_NO_ERROR;
+    mi->symbols.statesymbols = NULL;
+
+    dbg_printf("Numtaxa: %i, ", mpl_get_numtaxa(m));
+    dbg_printf("numchars: %i\n", mpl_get_num_charac(m));
+    return ret;
 }
 
 //int     mpl_get_numtaxa(Morphy m);
@@ -76,17 +93,6 @@ int mpl_get_numtaxa(Morphy m)
     return ((Morphyp)m)->numtaxa;
 }
 
-//int     mpl_set_num_charac(const int nchar, Morphy m);
-int mpl_set_num_charac(const int nchar, Morphy m)
-{
-    if (!m) {
-        return ERR_BAD_PARAM;
-    }
-    
-    ((Morphyp)m)->numcharacters = nchar;
-    
-    return ERR_NO_ERROR;
-}
 
 //int     mpl_get_num_charac(Morphy m);
 int mpl_get_num_charac(Morphy m)
@@ -117,7 +123,7 @@ char* mpl_get_symbols(Morphy m)
 // TODO: Implement get_symbols
     Morphyp mi = (Morphyp)m;
     
-    return mi->symboldict->rawsymbols;
+    return mi->symbols.statesymbols;
 }
 
 
@@ -128,22 +134,22 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
         return ERR_BAD_PARAM;
     }
     
-    Morphyp m1 = (Morphyp)m;
-    
     if (!mpl_get_numtaxa(m) || !mpl_get_num_charac(m)) {
         return ERR_NO_DIMENSIONS;
     }
     
+    Morphyp m1 = (Morphyp)m;
     mpl_copy_raw_matrix(rawmatrix, m1);
     
     // Check validity of preprocessed matrix
-    MPL_ERR_T invalid = mpl_check_nexus_matrix_dimensions
-    (mpl_get_preprocessed_matrix(m1),
-     mpl_get_numtaxa(m1),
-     mpl_get_num_charac(m1));
+    MPL_ERR_T invalid;
+    invalid = mpl_check_nexus_matrix_dimensions(mpl_get_preprocessed_matrix(m1),
+                                                mpl_get_numtaxa(m1),
+                                                mpl_get_num_charac(m1));
     
     if (invalid) {
         // Cleanup; return error
+        dbg_printf("Invalid data :(\n");
         mpl_delete_rawdata(m1);
         return invalid;
     }
@@ -165,10 +171,9 @@ int mpl_delete_rawdata(Morphy m)
     if (mp->char_t_matrix) {
         free(mp->char_t_matrix);
         mp->char_t_matrix = NULL;
-        mpl_delete_mpl_matrix(m);
+        mpl_delete_mpl_matrix(mpl_get_mpl_matrix((Morphyp)m));
         mp->inmatrix = NULL;
     }
-    
     return ERR_NO_ERROR;
 }
 

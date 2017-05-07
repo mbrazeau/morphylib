@@ -5,9 +5,11 @@
 //  Created by mbrazeau on 26/04/2017.
 //  Copyright © 2017 brazeaulab. All rights reserved.
 //
+#include "morphydefs.h"
 #include "mplerror.h"
 #include "morphy.h"
 #include "statedata.h"
+#include "mpl.h"
 
 char* mpl_skip_closure(const char *closure, const char openc, const char closec)
 {
@@ -82,75 +84,72 @@ int mpl_get_states_from_rawdata(Morphyp handl)
     dbg_printf("The state symbols: %s\n", statesymbols);
     
     unsigned long numstates = strlen(statesymbols);
-    handl->symboldict->numstates = (int)numstates;
-    handl->symboldict->rawsymbols = (char*)malloc((1 + numstates)
-                                                  * sizeof(char));
-    strcpy(handl->symboldict->rawsymbols, statesymbols);
+    //handl->symboldict->numstates = (int)numstates;
+    // handl->symboldict->rawsymbols = (char*)malloc((1 + numstates)
+//                                                  * sizeof(char));
+    //strcpy(handl->symboldict->rawsymbols, statesymbols);
     
     return count-1;
 }
 
 
-void mpl_set_numsymbols(int numstates, Morphyp handl)
+int mpl_set_numsymbols(int numsymb, Morphyp handl)
 {
     dbg_printf("Setting numsymbols\n");
-    assert(numstates && handl);
-    handl->symboldict->numstates = numstates;
+    assert(handl);
+    handl->symbols.numstates = numsymb;
+    return ERR_NO_ERROR;
 }
 
-
-int mpl_get_numsybols(Morphyp handl)
+int mpl_get_numsymbols(Morphyp handl)
 {
     dbg_printf("Getting numsymbols\n");
     assert(handl);
-    return handl->symboldict->numstates;
+    return handl->symbols.numstates;
 }
 
 
 int mpl_create_state_dictionary(Morphyp handl)
 {
-    dbg_printf("Creating state dictionary\n");
-    assert(handl->symboldict);
-    
-    char* states = handl->symboldict->rawsymbols;
-    assert(!strchr(states, ' '));
-    
-    mpl_set_numsymbols((int)strlen(states), handl);
-    int maxsymb = mpl_get_numsybols(handl);
-    
-    handl->symboldict->symbols = (MPL_stsymb*)calloc(maxsymb,
-                                                     sizeof(MPL_stsymb));
-    if (!handl->symboldict->symbols) {
-        return ERR_BAD_MALLOC;
-    }
-    
-    for (int i = 0; i < maxsymb; ++i) {
-        handl->symboldict->symbols[i].aschar = states[i];
-        dbg_printf("Converting symbol: %c\n", states[i]);
-    }
+//    dbg_printf("Creating state dictionary\n");
+//    assert(handl->symboldict);
+//    
+//    char* states = handl->symboldict->rawsymbols;
+//    assert(!strchr(states, ' '));
+//    
+//    mpl_set_numsymbols((int)strlen(states), handl);
+//    int maxsymb = mpl_get_numsymbols(handl);
+//    
+//    handl->symboldict->symbols = (MPL_stsymb*)calloc(maxsymb,
+//                                                     sizeof(MPL_stsymb));
+//    if (!handl->symboldict->symbols) {
+//        return ERR_BAD_MALLOC;
+//    }
+//    
+//    for (int i = 0; i < maxsymb; ++i) {
+//        handl->symboldict->symbols[i].aschar = states[i];
+//        dbg_printf("Converting symbol: %c\n", states[i]);
+//    }
     
     return ERR_NO_ERROR;
 }
 
 
-MPL_symbset* mpl_alloc_symbolset(void)
+int mpl_init_symbolset(Morphyp m)
 {
-    return (MPL_symbset*)calloc(1, sizeof(MPL_symbset));
+    if (!mpl_get_numsymbols(m)) {
+//        <#statements#>
+    }
+    return ERR_NO_ERROR;
 }
 
 
-void mpl_destroy_symbolset(MPL_symbset* symbs)
+void mpl_destroy_symbolset(Morphyp m)
 {
-    if (symbs) {
-        if (symbs->rawsymbols) {
-            free(symbs->rawsymbols);
-            symbs->rawsymbols = NULL;
-        }
-        if (symbs->symbols) {
-            free(symbs->rawsymbols);
-        }
-        
-        free(symbs);
+    assert(m);
+    if (m->symbols.statesymbols) {
+        free(m->symbols.statesymbols);
+        m->symbols.statesymbols = NULL;
     }
 }
 
@@ -159,10 +158,10 @@ bool mpl_is_valid_matrix_symbol(const char c)
     if (strchr(gmpl_valid_state, c)) {
         return true;
     }
-    else if (c == '?') {
+    else if (strchr(gmpl_valid_matrix_wildcard, c)) {
         return true;
     }
-    else if (c == '(' || c == ')') {
+    else if (strchr(gmpl_valid_matrix_punc, c)) {
         return true;
     }
     
@@ -248,20 +247,34 @@ int mpl_check_nexus_matrix_dimensions
     current = preproc_matrix;
     
     do {
-        if (strchr(gmpl_valid_state, *current) || *current == '?') {
+        if (strchr(gmpl_valid_state, *current)
+            || strchr(gmpl_valid_matrix_wildcard, *current)) {
             ++matrix_size;
         }
         else if (*current == '(' || *current == '{') {
-            current = mpl_skip_closure(current, '(', ')');
-            if (current < 0) {
-                mpl_skip_closure(current, '{', '}');
+            
+            char* err = 0;
+            
+            if (*current == '(') {
+                err = mpl_skip_closure(current, '(', ')');
             }
+            else {
+                err = mpl_skip_closure(current, '{', '}');
+            }
+            if (err < 0) {
+                return ERR_MATCHING_PARENTHS;
+            }
+            
+            current = err;
             assert(!(current < 0));
             ++matrix_size;
         }
 
         ++current;
-    } while (*current/* != ';'*/);
+    } while (*current);
+    
+    dbg_printf("Expected dimensions: %i\n", expected_size);
+    dbg_printf("matrix length: %i\n", matrix_size);
     
     if (matrix_size > expected_size) {
         return ERR_DIMENS_UNDER;
@@ -301,13 +314,13 @@ Mstates mpl_gap_value(Morphyp handl)
 MPLmatrix* mpl_new_mpl_matrix
 (const int ntaxa, const int nchar, const int nstates)
 {
+    assert(nstates);
     MPLmatrix* ret = NULL;
     
     ret = (MPLmatrix*)calloc(1, sizeof(MPLmatrix));
     if (!ret) {
         return NULL;
     }
-    
     
     ret->intweights = (int*)calloc(nchar, sizeof(int));
     if (!ret->intweights) {
@@ -347,7 +360,10 @@ MPLmatrix* mpl_new_mpl_matrix
 
 int mpl_delete_mpl_matrix(MPLmatrix* m)
 {
-    assert(m);
+    if (!m) {
+        return ERR_BAD_PARAM;
+    }
+    
     if (m->cells) {
         for (int i = 0; i < m->ncells; ++i) {
             if (m->cells[i].asstr) {
@@ -357,10 +373,12 @@ int mpl_delete_mpl_matrix(MPLmatrix* m)
         }
         free(m->cells);
     }
+    
     if (m->fltweights) {
         free(m->fltweights);
         m->fltweights = NULL;
     }
+    
     if (m->intweights) {
         free(m->intweights);
         m->intweights = NULL;
@@ -369,10 +387,15 @@ int mpl_delete_mpl_matrix(MPLmatrix* m)
     return ERR_NO_ERROR;
 }
 
+MPLmatrix* mpl_get_mpl_matrix(Morphyp m)
+{
+    return m->inmatrix;
+}
+
 void mpl_convert_rawdata(Morphyp handl)
 {
     
-    if (!handl->symboldict->rawsymbols) {
+    if (!mpl_get_symbols((Morphy)handl)) {
         
         mpl_get_states_from_rawdata(handl);
     }
@@ -384,7 +407,7 @@ void mpl_convert_rawdata(Morphyp handl)
     
     handl->inmatrix = mpl_new_mpl_matrix(handl->numtaxa,
                                          handl->numcharacters,
-                                         mpl_get_numsybols(handl));
+                                         mpl_get_numsymbols(handl));
     
     if (!handl->inmatrix) {
         // TODO: Change function to return an error

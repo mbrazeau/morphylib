@@ -10,6 +10,8 @@
 #define mplerror_h
 
 typedef enum {
+    ERR_MATCHING_PARENTHS,
+    ERR_ATTEMPT_OVERWRITE,      // Attempt to overwrite existing data.
     ERR_NO_DIMENSIONS,
     ERR_DIMENS_UNDER,           // Dimensions under expected
     ERR_DIMENS_OVER,            // Dimensions exceed expected
