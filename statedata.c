@@ -457,10 +457,12 @@ int mpl_get_uncorrected_shift_value(char symb, Morphyp handl)
     return shift;
 }
 
+
 void mpl_use_symbols_from_matrix(Morphyp handl)
 {
     handl->symbols.statesymbols = handl->symbols.symbolsinmatrix;
 }
+
 
 int mpl_convert_rawdata(Morphyp handl)
 {
@@ -484,9 +486,8 @@ int mpl_convert_rawdata(Morphyp handl)
     handl->inmatrix = mpl_new_mpl_matrix(handl->numtaxa,
                                          handl->numcharacters,
                                          mpl_get_numsymbols(handl));
-    
     if (!handl->inmatrix) {
-        // TODO: Change function to return an error
+        return ERR_BAD_MALLOC;
     }
     
     // Write the characters as strings into their cells
