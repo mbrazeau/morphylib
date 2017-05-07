@@ -33,6 +33,6 @@ clean:
 
 test: $(DNAME)
 	$(CC) $(LDFLAGS) -o $(TDIRS)tcreate $(TDIRS)tcreate.c -lmorphy_x86_64-Darwin 
-	$(CC) $(LDFLAGS) -I./ -o ./unittests/utest ./unittests/statedata.c libmorphy_x86_64-Darwin.a
+	$(CC) $(LDFLAGS) -I./ -o ./mtests/utest ./mtests/statedata.c libmorphy_x86_64-Darwin.a
 run:
 	$(TDIRS)tcreate

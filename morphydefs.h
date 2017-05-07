@@ -9,6 +9,12 @@
 #ifndef morphydefs_h
 #define morphydefs_h
 
+#ifdef _CPLUSPLUS
+extern "C" {
+#endif
+
+#include <stdint.h>
+
 #ifdef MDBL
 typedef double Mflt;
 #elif MLDBL
@@ -16,6 +22,15 @@ typedef long double Mflt;
 #else
 typedef float Mflt;
 #endif
+
+typedef uint64_t Mstates;
+
+#define ISAPPLIC        (UINT64_MAX - 1)
+#define NA              1
+#define MISSING         UINT64_MAX
+#define MAXSTATES       (CHAR_BIT * sizeof(Mstates))
+#define DEFAULTGAP      '-'
+#define DEFAULTMISSING  '?'
 
 typedef enum {
     FITCH_T,
@@ -34,23 +49,34 @@ typedef enum {
 } gap_t;
 
 typedef struct __morphy_s {
+    
     int                 numtaxa;
     int                 numcharacters;
     char*               char_t_matrix;
     int                 numnodes;
     int*                nodesequence;
-    //    struct symbset_s*   symboldict;
-    struct symbols {
-        int numstates;
-        char* statesymbols;
+    
+    struct MPLsymbols {
+        int             numstates;
+        char*           statesymbols;
+        char*           symbolsinmatrix;
     } symbols;
+    
     gap_t               gaphandl;
+    
     union {
-        int     asint;
-        Mflt    asfloat;
+        int             asint;
+        Mflt            asfloat;
     } score;
-    struct mpl_matrix_s*    inmatrix;
+    
+    struct mpl_matrix_s* inmatrix;
+    
 } Morphy_t, *Morphyp;
 
 typedef void* Morphy;
+
+#ifdef _CPLUSPLUS
+}
+#endif
+    
 #endif /* morphydefs_h */

@@ -65,3 +65,12 @@ int mpl_set_numtaxa(const int ntax, Morphyp m)
     
     return ERR_NO_ERROR;
 }
+
+int mpl_check_data_loaded(Morphyp m)
+{
+    if (m->char_t_matrix) {
+        return 1;
+    }
+    
+    return 0;
+}

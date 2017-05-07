@@ -35,6 +35,53 @@ int compare_char_t_states(const void *ptr1, const void *ptr2)
 }
 
 
+int mpl_compare_symbol_lists(const char* sym1, const char* sym2)
+{
+    for (int i = 0; sym1[i]; ++i) {
+        if (!strchr(sym2, sym1[i])) {
+            if (!isspace(sym1[i])) {
+                return 1;
+            }
+        }
+    }
+    
+    for (int i = 0; sym2[i]; ++i) {
+        if (!strchr(sym1, sym2[i])) {
+            if (!isspace(sym2[i])) {
+                return 1;
+            }
+        }
+    }
+    
+    return 0;
+}
+
+
+int mpl_assign_symbol_list_from_matrix
+(const char *symbs, struct MPLsymbols* symlist)
+{
+    assert(symbs && symlist);
+    
+    int nsymbs = (int)strlen(symbs);
+    
+    ++nsymbs;
+    symlist->symbolsinmatrix = (char*)calloc(nsymbs, sizeof(char));
+    
+    if (!symlist->symbolsinmatrix) {
+        return ERR_BAD_MALLOC;
+    }
+    
+    strcpy(symlist->symbolsinmatrix, symbs);
+    
+    return ERR_NO_ERROR;
+}
+
+char *mpl_query_symbols_from_matrix(Morphyp m)
+{
+    return m->symbols.symbolsinmatrix;
+}
+
+
 int mpl_get_states_from_rawdata(Morphyp handl)
 {
     
@@ -49,8 +96,6 @@ int mpl_get_states_from_rawdata(Morphyp handl)
     
     statesymbols[0] = '\0';
     current = rawmatrix;
-    
-//    dbg_printf("The raw matrix about to be processed:\n%s\n", rawmatrix);
     
     do {
 //        dbg_printf("Current: %c\n", *current);
@@ -82,13 +127,9 @@ int mpl_get_states_from_rawdata(Morphyp handl)
           compare_char_t_states);
     
     dbg_printf("The state symbols: %s\n", statesymbols);
-    
-    unsigned long numstates = strlen(statesymbols);
-    //handl->symboldict->numstates = (int)numstates;
-    // handl->symboldict->rawsymbols = (char*)malloc((1 + numstates)
-//                                                  * sizeof(char));
-    //strcpy(handl->symboldict->rawsymbols, statesymbols);
-    
+    int numstates = (int)strlen(statesymbols);
+    mpl_set_numsymbols(numstates, handl);
+    mpl_assign_symbol_list_from_matrix(statesymbols, &handl->symbols);
     return count-1;
 }
 
@@ -176,12 +217,6 @@ unsigned long mpl_get_valid_matrix_length(const char* rawmatrix)
     do {
         if (mpl_is_valid_matrix_symbol(*matptr)) {
             ++len;
-//        }
-//        else if (*matptr == '?') {
-//            ++len;
-//        }
-//        else if (*matptr == '(' || *matptr == ')') {
-//            ++len;
         }
         else if (*matptr == '[') {
             matptr = mpl_skip_closure(matptr, '[', ']');
@@ -392,17 +427,58 @@ MPLmatrix* mpl_get_mpl_matrix(Morphyp m)
     return m->inmatrix;
 }
 
-void mpl_convert_rawdata(Morphyp handl)
+int mpl_set_gap_push(Morphyp handl)
 {
+    gap_t gt = mpl_get_gaphandl(handl);
     
+    if (gt == GAP_INAPPLIC || gt == GAP_NEWSTATE) {
+        return 1;
+    }
+    else if (gt == GAP_MISSING) {
+        return 0;
+    }
+    
+    return -1;
+}
+
+
+int mpl_get_uncorrected_shift_value(char symb, Morphyp handl)
+{
+    // Gets the raw shift value as determined by the order in the symbols list
+    assert(symb != DEFAULTGAP && symb != DEFAULTMISSING);
+    int shift = 0;
+    char* symbols = mpl_get_symbols((Morphy)handl);
+    
+    while (*symbols != symb && *symbols) {
+        ++symbols;
+        ++shift;
+    }
+    
+    return shift;
+}
+
+void mpl_use_symbols_from_matrix(Morphyp handl)
+{
+    handl->symbols.statesymbols = handl->symbols.symbolsinmatrix;
+}
+
+int mpl_convert_rawdata(Morphyp handl)
+{
+    int ret = ERR_NO_ERROR;
+    
+    mpl_get_states_from_rawdata(handl);
+    
+    // If no symbols supplied by the user
     if (!mpl_get_symbols((Morphy)handl)) {
-        
-        mpl_get_states_from_rawdata(handl);
+        // Assign internal symbols to list
+        mpl_use_symbols_from_matrix(handl);
     }
     else {
-        dbg_printf("Skipping attempt to make state list\n");
-        // TODO: Check all states are valid values
-        // TODO: Replace list to one without spaces? (YES)
+        char *frommatrix = mpl_query_symbols_from_matrix(handl);
+        char *user = mpl_get_symbols((Morphyp)handl);
+        if (mpl_compare_symbol_lists(frommatrix, user)) {
+            return ERR_SYMBOL_MISMATCH;
+        }
     }
     
     handl->inmatrix = mpl_new_mpl_matrix(handl->numtaxa,
@@ -421,5 +497,7 @@ void mpl_convert_rawdata(Morphyp handl)
     mpl_create_state_dictionary(handl);
     // Set shift values in the dictionary
     // Use dictionary to convert
+    
+    return ret;
 }
 

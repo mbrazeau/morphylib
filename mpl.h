@@ -1,18 +1,60 @@
-//
-//  mpl.h
-//  MorPhy2
-//
-//  Created by mbrazeau on 04/05/2017.
-//  Copyright © 2017 brazeaulab. All rights reserved.
-//
+/*!
+ @file mpl.h
+ 
+ @brief Defines the Morphy Phylogenetic Library: a library for phylogenetic
+ computation accommodating morphological character hierarchies.
+ 
+ Copyright (C) 2017  Martin D. Brazeau
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ @discussion (TBD)
+ */
 
 #ifndef mpl_h
 #define mpl_h
 
 
+#ifdef __CPLUSPLUS
+extern "C" {
+#endif /*__CPLUSPLUS */
+
+#include "morphydefs.h"
+    
 // Public functions
+
+/*!
+ @brief Creates a new instance of a Morphy object
+
+ @discussion Creates a new empty Morphy object. All fields are unpopulated and
+ uninitialised.
+ @return A void pointer to the Morphy instance. NULL if unsuccessful.
+ */
 Morphy  mpl_new_Morphy          (void);
+
+
+/*!
+ @brief Destroys an instance of a Morphy object.
+
+ @discussion Destroys an instance of the Morphy object, calling all destructors
+ for internal object completely returning the memory to the system.
+ @param m An Morphy object to be destroyed.
+ @return A Morphy error code.
+ */
 int     mpl_delete_Morphy       (Morphy m);
+
+
 int     mpl_init_Morphy         (const int ntax, const int nchar, Morphy m);
 int     mpl_get_numtaxa         (Morphy m);
 int     mpl_get_num_charac      (Morphy m);
@@ -45,5 +87,9 @@ int     mpl_get_insertcost_min  (const int srcID, const int tgt1ID, const int tg
 
 int     mpl_get_packed_states   (const int nodeID, const int character, int passnum, Morphy m);
 int     mpl_get_stateset        (char* res, const int nodeID, const int character, int passnum, Morphy m);
+
+#ifdef __CPLUSPLUS
+}
+#endif /*__CPLUSPLUS */
 
 #endif /* mpl_h */

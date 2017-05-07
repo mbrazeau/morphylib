@@ -12,14 +12,6 @@
 #include "morphy.h"
 #include "statedata.h"
 
-
-/*!
- @brief Creates a new instance of a Morphy object
- ------
- @discussion Creates a new empty Morphy object. All fields are unpopulated and
- uninitialised.
- @return A void pointer to the Morphy instance. NULL if unsuccessful.
- */
 Morphy mpl_new_Morphy(void)
 {
     Morphyp new     = mpl_new_Morphy_t();
@@ -32,14 +24,7 @@ Morphy mpl_new_Morphy(void)
 }
 
 
-/*!
- @brief Destroys an instance of a Morphy object.
- ------
- @discussion Destroys an instance of the Morphy object, calling all destructors
- for internal object completely returning the memory to the system.
- @param m An Morphy object to be destroyed.
- @return A Morphy error code.
- */
+
 int mpl_delete_Morphy(Morphy m)
 {
     if (!m) {
@@ -56,13 +41,12 @@ int mpl_delete_Morphy(Morphy m)
     return ERR_NO_ERROR;
 }
 
+
 int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
 {
     if (!ntax || !nchar) {
         return ERR_NO_DIMENSIONS;
     }
-    dbg_printf("ntax: %i, ", ntax);
-    dbg_printf("nchar: %i\n", nchar);
 
     int ret = ERR_NO_ERROR;
     Morphyp mi = (Morphyp)m;
@@ -78,8 +62,6 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     
     mi->symbols.statesymbols = NULL;
 
-    dbg_printf("Numtaxa: %i, ", mpl_get_numtaxa(m));
-    dbg_printf("numchars: %i\n", mpl_get_num_charac(m));
     return ret;
 }
 
@@ -101,7 +83,7 @@ int mpl_get_num_charac(Morphy m)
         return ERR_BAD_PARAM;
     }
     
-    return ((Morphyp)m)->numtaxa;
+    return ((Morphyp)m)->numcharacters;
 }
 
 //int     mpl_attach_symbols(char* symbols, Morphy m);
@@ -110,10 +92,41 @@ int mpl_attach_symbols(const char *symbols, Morphy m)
     if (!symbols || !m) {
         return ERR_BAD_PARAM;
     }
-    // TODO: Implement attach_symbols
-    // Copy symbols; remove spaces and punc
-    // Allocate memory for symbols
-    // Attach symbols
+    
+    int isdataloaded = mpl_check_data_loaded((Morphyp)m);
+    
+    int i = 0;
+    int len = 0;
+    
+    while(isalnum(symbols[i])) {
+        ++len;
+        ++i;
+    };
+    ++len;
+    
+    char* symbsnospaces = (char*)calloc(len, sizeof(char));
+    int j = 0;
+    for (i = 0; symbols[i]; ++i) {
+        if (isalnum(symbols[i])) {
+            symbsnospaces[j] = symbols[i];
+            ++j;
+        }
+    }
+    symbsnospaces[j + 1] = '\0';
+    
+    if (isdataloaded) {
+        char* matrixsymbs = mpl_query_symbols_from_matrix((Morphyp)m);
+        // TODO: Get the matrix symbols
+        assert(matrixsymbs);
+        dbg_printf("Data is loaded already...\n");
+        if (mpl_compare_symbol_lists(symbsnospaces, matrixsymbs)) {
+            dbg_printf("Bad symbols...\n");
+            free(symbsnospaces);
+            return ERR_SYMBOL_MISMATCH;
+        }
+    }
+
+    ((Morphyp)m)->symbols.statesymbols = symbsnospaces;
     
     return ERR_NO_ERROR;
 }
@@ -138,25 +151,27 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
         return ERR_NO_DIMENSIONS;
     }
     
+    
+    
     Morphyp m1 = (Morphyp)m;
     mpl_copy_raw_matrix(rawmatrix, m1);
     
     // Check validity of preprocessed matrix
-    MPL_ERR_T invalid;
-    invalid = mpl_check_nexus_matrix_dimensions(mpl_get_preprocessed_matrix(m1),
+    MPL_ERR_T err = ERR_NO_ERROR;
+    err = mpl_check_nexus_matrix_dimensions(mpl_get_preprocessed_matrix(m1),
                                                 mpl_get_numtaxa(m1),
                                                 mpl_get_num_charac(m1));
     
-    if (invalid) {
+    if (err) {
         // Cleanup; return error
         dbg_printf("Invalid data :(\n");
         mpl_delete_rawdata(m1);
-        return invalid;
+        return err;
     }
     
-    mpl_convert_rawdata((Morphyp)m);
+    err = mpl_convert_rawdata((Morphyp)m);
     
-    return ERR_NO_ERROR;
+    return err;
 }
 
 //int     mpl_delete_rawdata(Morphy m);

@@ -1,26 +1,30 @@
-//
-//  mplerror.h
-//  MorPhy2
-//
-//  Created by mbrazeau on 04/05/2017.
-//  Copyright © 2017 brazeaulab. All rights reserved.
-//
+/*!
+ @file mplerror.h
+ @brief Error codes and descriptions for MorphyLib.
+ */
 
 #ifndef mplerror_h
 #define mplerror_h
 
+/*!
+ @typedef MPL_ERR_T
+ @brief List of error codes. Each error is a negative value.
+ @discussion These error codes are returned by library interface functions (and
+ used by some internal functions) to report errors back to the caller.
+ */
 typedef enum {
-    ERR_MATCHING_PARENTHS,
-    ERR_ATTEMPT_OVERWRITE,      // Attempt to overwrite existing data.
-    ERR_NO_DIMENSIONS,
-    ERR_DIMENS_UNDER,           // Dimensions under expected
-    ERR_DIMENS_OVER,            // Dimensions exceed expected
-    ERR_NO_DATA,
-    ERR_BAD_MALLOC,
-    ERR_BAD_PARAM,
-    ERR_UNEXP_NULLPTR,
-    ERR_INVALID_SYMBOL,
-    ERR_NO_ERROR            = 0, // All errors are negative ints
+    ERR_SYMBOL_MISMATCH = -11,        /*! Symbols list and matrix have a mismatch (i.e. symbol not found).*/
+    ERR_MATCHING_PARENTHS = -10,      /*! Data input has unexpected non-matching parentheses.*/
+    ERR_ATTEMPT_OVERWRITE = -9,      /*! Caller attempted to overwrite a loaded dataset.*/
+    ERR_NO_DIMENSIONS = -8,          /*! Function requires pre-specified dimensions to function properly.*/
+    ERR_DIMENS_UNDER = -7,           /*! Supplied dimensions underestimate size of dataset.*/
+    ERR_DIMENS_OVER= -6,            /*! Supplied dimensions overestimate size of dataset.*/
+    ERR_NO_DATA = -5,                /*! No dataset supplied.*/
+    ERR_BAD_MALLOC = -4,             /*! Memory allocation failure.*/
+    ERR_BAD_PARAM = -3,              /*! Unexpected parameter value passed to function.*/
+    ERR_UNEXP_NULLPTR = -2,          /*! Unexpected NULL pointer passed to function.*/
+    ERR_INVALID_SYMBOL = -1,         /*! Symbol in dataset or symbol list is not allowed by Morphy.*/
+    ERR_NO_ERROR            = 0,/*! No error. Everything went OK.*/
 } MPL_ERR_T;
 
 #endif /* mplerror_h */

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "../morphydefs.h"
 #include "../mpl.h"
 
 int main (void)
