@@ -41,6 +41,8 @@ extern "C" {
 #endif /*__CPLUSPLUS */
 
 #include "morphydefs.h"
+#include "mplerror.h"
+    
     
 // Public functions
 
@@ -51,7 +53,8 @@ extern "C" {
  uninitialised.
  @return A void pointer to the Morphy instance. NULL if unsuccessful.
  */
-Morphy  mpl_new_Morphy          (void);
+Morphy  mpl_new_Morphy
+        (void);
 
 
 /*!
@@ -62,10 +65,24 @@ Morphy  mpl_new_Morphy          (void);
  @param m An Morphy object to be destroyed.
  @return A Morphy error code.
  */
-int     mpl_delete_Morphy       (Morphy m);
+int mpl_delete_Morphy
+    (Morphy m);
 
-
-int     mpl_init_Morphy         (const int ntax, const int nchar, Morphy m);
+/*!
+@brief Sets up the dimensions of the dataset.
+@discussion Provides initial dimensions for the dataset, which will constrain 
+ any input matrix supplied to Morphy.
+@param ntax The number of taxa (or tips/terminals).
+@param nchar The number of characters (i.e. transformation series) in the 
+ data set.
+@return Morphy error code.
+*/
+int mpl_init_Morphy
+    (const int  ntax,
+     const int  nchar,
+     Morphy     m);
+    
+    
 int     mpl_get_numtaxa         (Morphy m);
 int     mpl_get_num_charac      (Morphy m);
 int     mpl_attach_symbols      (const char* symbols, Morphy m);
@@ -82,7 +99,7 @@ int     mpl_excl_charac         (const int charID, Morphy m);
 
 int     mpl_set_charac_weight   (const int charID, Mflt weight);
 
-int     mpl_set_parsim_t        (const int charID, const ptype_t parsfxn, Morphy m);
+int     mpl_set_parsim_t        (const int charID, const MPLptype_t parsfxn, Morphy m);
 int     mpl_set_gaphandl        (const gap_t gaptype, Morphy m);
 int     mpl_query_gaphandl      (Morphy m);
 
