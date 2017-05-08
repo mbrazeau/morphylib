@@ -9,7 +9,7 @@
 #ifndef morphydefs_h
 #define morphydefs_h
 
-#ifdef _CPLUSPLUS
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -39,7 +39,7 @@ typedef enum {
     IRREVERSIBLE_T,
     USERTYPE_T,
     MAX_CTYPE,
-} ptype_t;
+} MPLptype_t;
 
 typedef enum {
     GAP_INAPPLIC,
@@ -75,7 +75,7 @@ typedef struct __morphy_s {
 
 typedef void* Morphy;
 
-#ifdef _CPLUSPLUS
+#ifdef __cplusplus
 }
 #endif
     
