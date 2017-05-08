@@ -1,7 +1,7 @@
 /*!
  @file mpl.h
  
- @brief Defines the Morphy Phylogenetic Library: a library for phylogenetic
+ @brief Defines the Morphy Phylogenetic Library API: a library for phylogenetic
  computation accommodating morphological character hierarchies.
  
  Copyright (C) 2017  Martin D. Brazeau
@@ -19,7 +19,17 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
- @discussion (TBD)
+ @discussion This header includes all the externally exported definitions and
+ function prototypes. A calling program creates an instance of a Morphy object 
+ and interacts with its elements through the functions described in this 
+ interface. The Morphy object contains no tree objects, but requires a 
+ pre-specified list of indices (integers) corresponding to the node indices in 
+ the calling program. Morphy will not keep track of the relationships between
+ the nodes, and it is up to the caller to keep track of these. 
+ 
+ Morphy will provide functions for local reoptimisation, partial reoptimisation
+ and optimisation of subtrees.
+ 
  */
 
 #ifndef mpl_h
