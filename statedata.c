@@ -463,6 +463,76 @@ void mpl_use_symbols_from_matrix(Morphyp handl)
     handl->symbols.statesymbols = handl->symbols.symbolsinmatrix;
 }
 
+void mpl_write_symbols_to_cell(char *cell, const char *data)
+{
+//    int i = 0;
+//    if (strchr(gmpl_valid_state, *data) ||
+//        strchr(gmpl_valid_matrix_wildcard, *data))
+//    {
+//        
+//    }
+}
+
+int mpl_write_input_rawchars_to_cells(Morphyp handl)
+{
+    int i = 0;
+    int j = 0;
+    int rows = mpl_get_numtaxa((Morphyp)handl);
+    int cols = mpl_get_num_charac((Morphyp)handl);
+    int length = rows * cols;
+    
+    char* prpdata = mpl_get_preprocessed_matrix(handl);
+    
+    dbg_printf("Made it this far...\n%s\n", prpdata);
+    
+    while (*prpdata) {
+        
+        if (!strchr(gmpl_valid_matrix_punc, *prpdata)) {
+            handl->inmatrix->cells[i].asstr[0] = *prpdata;
+            handl->inmatrix->cells[i].asstr[1] = '\0';
+        }
+        else {
+            if (*prpdata == '(') {
+                j = 0;
+                ++prpdata;
+                do {
+                    
+                    handl->inmatrix->cells[i].asstr[j] = *prpdata;
+                    ++j;
+                    ++prpdata;
+                } while (*prpdata != ')');
+                handl->inmatrix->cells[i].asstr[j] = '\0';
+            }
+            
+            if (*prpdata == '{') {
+                j = 0;
+                ++prpdata;
+                do {
+                    handl->inmatrix->cells[i].asstr[j] = *prpdata;
+                    ++j;
+                    ++prpdata;
+                } while (*prpdata != '}');
+                handl->inmatrix->cells[i].asstr[j] = '\0';
+            }
+            if (*prpdata == ';') {
+                break;
+            }
+        }
+
+        ++i;
+        ++prpdata;
+    };
+    
+    prpdata = mpl_get_preprocessed_matrix(handl);
+    dbg_printf("Now: %s\n", prpdata);
+
+    for (i = 0; i < length; ++i) {
+        dbg_printf("%s ", handl->inmatrix->cells[i].asstr);
+    }
+    dbg_printf("\n");
+    
+    return ERR_NO_ERROR;
+}
 
 int mpl_convert_rawdata(Morphyp handl)
 {
@@ -476,8 +546,10 @@ int mpl_convert_rawdata(Morphyp handl)
         mpl_use_symbols_from_matrix(handl);
     }
     else {
-        char *frommatrix = mpl_query_symbols_from_matrix(handl);
-        char *user = mpl_get_symbols((Morphyp)handl);
+        
+        char *frommatrix    = mpl_query_symbols_from_matrix(handl);
+        char *user          = mpl_get_symbols((Morphyp)handl);
+        
         if (mpl_compare_symbol_lists(frommatrix, user)) {
             return ERR_SYMBOL_MISMATCH;
         }
@@ -490,7 +562,8 @@ int mpl_convert_rawdata(Morphyp handl)
         return ERR_BAD_MALLOC;
     }
     
-    // Write the characters as strings into their cells
+    // Now safe to write characters into cells.
+    mpl_write_input_rawchars_to_cells(handl);
     
     // Loop over the matrix and find out which ones have
     // Create a state dictionary

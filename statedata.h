@@ -26,10 +26,10 @@ typedef struct {
     char*   asstr;
 } MPLcell;
 
-typedef struct {
-    Mstates asint;
-    char    aschar;
-} MPL_stsymb;
+//typedef struct {
+//    Mstates asint;
+//    char    aschar;
+//} MPL_stsymb;
 
 //typedef struct symbset_s {
 //    int         numstates;
@@ -42,7 +42,7 @@ typedef struct {
     int         nchars;
     int*        charindices;
     Mstates*    cdata;
-} MPLpartition;
+} MPLpartinfo;
 
 typedef struct {
     int         nchars;
