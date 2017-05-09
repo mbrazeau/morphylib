@@ -169,7 +169,9 @@ int mpl_create_state_dictionary(Morphyp handl)
 //        return ERR_BAD_MALLOC;
 //    }
 //    
-//    for (int i = 0; i < maxsymb; ++i) {
+//    int i = 0;
+//
+//    for (i = 0; i < maxsymb; ++i) {
 //        handl->symboldict->symbols[i].aschar = states[i];
 //        dbg_printf("Converting symbol: %c\n", states[i]);
 //    }
