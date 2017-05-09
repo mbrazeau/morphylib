@@ -33,6 +33,6 @@ clean:
 	rm *.o
 
 test: $(DNAME)
-	$(CC) $(LDFLAGS) -I./ -o ./tests/utest ./tests/teststatedata.c $(SNAME)
+	$(CC) $(LDFLAGS) -I./ -o ./tests/utest ./tests/*.c $(SNAME)
 run:
 	$(TDIRS)tcreate
