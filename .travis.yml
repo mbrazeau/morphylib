@@ -1,6 +1,12 @@
 language: c
+
+compiler:
+  - gcc
+
 script:
-  make debug test
+  - mkdir mtests
+  - mkdir tests
+  - make
 
 after_success:
-  make clean
+  - make clean
