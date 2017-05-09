@@ -415,5 +415,6 @@ int main (void)
         psump;
     }
     printf("\n");
-	return 0;
+	
+    return fails;
 }
