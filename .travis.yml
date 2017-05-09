@@ -5,8 +5,7 @@ compiler:
   - clang
 
 script:
-  - make debug tests
-  - ./tests/utest
+  - make debug tests && ./tests/utest
 
 after_success:
   - make clean
