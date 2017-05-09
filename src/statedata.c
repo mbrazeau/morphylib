@@ -37,7 +37,9 @@ int compare_char_t_states(const void *ptr1, const void *ptr2)
 
 int mpl_compare_symbol_lists(const char* sym1, const char* sym2)
 {
-    for (int i = 0; sym1[i]; ++i) {
+    int i = 0;
+    
+    for (i = 0; sym1[i]; ++i) {
         if (!strchr(sym2, sym1[i])) {
             if (!isspace(sym1[i])) {
                 return 1;
@@ -45,7 +47,7 @@ int mpl_compare_symbol_lists(const char* sym1, const char* sym2)
         }
     }
     
-    for (int i = 0; sym2[i]; ++i) {
+    for (i = 0; sym2[i]; ++i) {
         if (!strchr(sym1, sym2[i])) {
             if (!isspace(sym2[i])) {
                 return 1;
@@ -376,11 +378,13 @@ MPLmatrix* mpl_new_mpl_matrix
     }
     
     ret->ncells = ntaxa * nchar;
+    int i = 0;
     
-    for (int i = 0; i < ret->ncells; ++i) {
+    for (i = 0; i < ret->ncells; ++i) {
         ret->cells[i].asstr = (char*)calloc(nstates + 1, sizeof(char));
         if (!ret->cells[i].asstr) {
-            for (int j = 0; j < i; ++j) {
+            int j = 0;
+            for (j = 0; j < i; ++j) {
                 free(ret->cells[i].asstr);
                 ret->cells[i].asstr = NULL;
             }

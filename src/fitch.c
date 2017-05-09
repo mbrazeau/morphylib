@@ -15,9 +15,10 @@
 int morphy_fitch_downpass
 (Mstates* left, Mstates* right, Mstates* n, int nchars)
 {
+    int i = 0;
     int steps = 0;
     
-    for (int i = 0; i < nchars; ++i) {
+    for (i = 0; i < nchars; ++i) {
         if (left[i] & right[i]) {
             n[i] = left[i] & right[i];
         }
