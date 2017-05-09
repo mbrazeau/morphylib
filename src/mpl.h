@@ -25,7 +25,12 @@
  interface. The Morphy object contains no tree objects, but requires a 
  pre-specified list of indices (integers) corresponding to the node indices in 
  the calling program. Morphy will not keep track of the relationships between
- the nodes, and it is up to the caller to keep track of these. 
+ the nodes, and it is up to the caller to keep track of these. Each character
+ *must* be assigned a type, and Morphy will make no default assumptions. Once 
+ one or more characters are assigned a function type (which creates internal
+ partitions), and a postorder list of nodes is known, then the library functions
+ can be called to reconstruct state sets and deliver length estimates for each
+ node.
  
  Morphy will provide functions for local reoptimisation, partial reoptimisation
  and optimisation of subtrees.
@@ -48,11 +53,14 @@ extern "C" {
 // Public functions
 
 /*!
+ 
  @brief Creates a new instance of a Morphy object
 
  @discussion Creates a new empty Morphy object. All fields are unpopulated and
  uninitialised.
+ 
  @return A void pointer to the Morphy instance. NULL if unsuccessful.
+ 
  */
 Morphy  mpl_new_Morphy
     
@@ -60,12 +68,16 @@ Morphy  mpl_new_Morphy
 
 
 /*!
+ 
  @brief Destroys an instance of a Morphy object.
 
  @discussion Destroys an instance of the Morphy object, calling all destructors
  for internal object completely returning the memory to the system.
+ 
  @param m A Morphy object to be destroyed.
+ 
  @return A Morphy error code.
+ 
  */
 int     mpl_delete_Morphy
     
@@ -73,15 +85,22 @@ int     mpl_delete_Morphy
 
 
 /*!
-@brief Sets up the dimensions of the dataset.
-@discussion Provides initial dimensions for the dataset, which will constrain 
+
+ @brief Sets up the dimensions of the dataset.
+
+ @discussion Provides initial dimensions for the dataset, which will constrain
  any input matrix supplied to Morphy.
-@param ntax The number of taxa (or tips/terminals).
-@param nchar The number of characters (i.e. transformation series) in the 
+
+ @param ntax The number of taxa (or tips/terminals).
+
+ @param nchar The number of characters (i.e. transformation series) in the
  data set.
+ 
  @param m An instance of the Morphy object.
-@return Morphy error code.
-*/
+
+ @return Morphy error code.
+
+ */
 int     mpl_init_Morphy
     
         (const int  ntax,
@@ -90,30 +109,42 @@ int     mpl_init_Morphy
     
 
 /*!
-@brief Retrieve the number of taxa (rows) in the dataset.
-@discussion Retrieves the number of taxa (rows) in the dataset.
-@param m An instance of the Morphy object.
-@return The number of taxa if success, otherwise an error code.
-*/
+
+ @brief Retrieve the number of taxa (rows) in the dataset.
+ 
+ @discussion Retrieves the number of taxa (rows) in the dataset.
+
+ @param m An instance of the Morphy object.
+
+ @return The number of taxa if success, otherwise an error code.
+
+ */
 int     mpl_get_numtaxa
     
         (Morphy m);
 
 
 /*!
-@brief Retrieve the number of taxa (rows) in the dataset.
-@discussion Retrieves the number of taxa (rows) in the dataset.
-@param m An instance of the Morphy object.
-@return The number of taxa if success, otherwise an error code.
-*/
+
+ @brief Retrieve the number of taxa (rows) in the dataset.
+
+ @discussion Retrieves the number of taxa (rows) in the dataset.
+
+ @param m An instance of the Morphy object.
+
+ @return The number of taxa if success, otherwise an error code.
+
+ */
 int     mpl_get_num_charac
     
         (Morphy     m);
     
 
 /*!
-@brief Attach a caller-specified list of symbols.
-@discussion Allows the caller to specify a list of symbols in the data matrix,
+
+ @brief Attach a caller-specified list of symbols.
+
+ @discussion Allows the caller to specify a list of symbols in the data matrix,
  otherwise, the symbols list used by Morphy will be extracted from the matrix. 
  The symbols list must match the symbols provided in the matrix. When Morphy 
  extracts symbols from the matrix, their ordering is alphanumeric, according to
@@ -121,10 +152,14 @@ int     mpl_get_num_charac
  symbols list will override this ordering. Symbols loaded in either the list or
  the matrix must be valid Morphy character state symbols as defined in the 
  statedata.h header file.
-@param symbols A C-style (i.e. NULL-terminated) string of valid state symbols.
-@param m An instance of the Morphy object.
-@return Morphy error code.
-*/
+
+ @param symbols A C-style (i.e. NULL-terminated) string of valid state symbols.
+
+ @param m An instance of the Morphy object.
+
+ @return Morphy error code.
+
+ */
 int     mpl_attach_symbols
     
         (const char*    symbols,
@@ -132,30 +167,63 @@ int     mpl_attach_symbols
     
 
 /*!
+ 
  @brief Retrieves the current list of symbols.
- @discussion Returns a pointer to the string of character state symbols 
+ 
+ @discussion Returns a pointer to the string of character state symbols
  currently being used by Morphy (i.e. either the list of symbols extracted
  from the matrix, or the caller-specified values).
+ 
  @param m An instance of the Morphy object.
+ 
  @return A C-style (null-terminated) string of the character state symbols being
  used. NULL if failure.
+ 
  */
 char*   mpl_get_symbols
 
         (const Morphy   m);
 
 
+/*!
+
+ @brief Attach raw character state data (i.e. tip data).
+ 
+
+ @discussion Attaches a raw data character state matrix in the form of a C-style
+ (i.e. NULL-terminated string). This can be the matrix block extracted from a
+ Nexus file or an xread table format. The matrix should contain no terminal or
+ tip labels.
+
+ @param rawmatrix C-style string corresponding to the tip data.
+
+ @param m An instance of the Morphy object.
+
+ @return Morphy error code.
+
+ */
 int     mpl_attach_rawdata
 
         (const char*    rawmatrix,
          Morphy         m);
 
 
+/*!
+ 
+ @brief Deletes the caller-input data
+ 
+ @discussion Deletes all of the user-input data and restores all parameters to
+ their original values, except for the dimensions of the matrix.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return Morphy error code.
+*/
 int     mpl_delete_rawdata
 
         (Morphy     m);
 
-
+    
 int     mpl_set_gap_symbol
 
         (const char gapsymb,
