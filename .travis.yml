@@ -1,0 +1,6 @@
+language: c
+script:
+  make debug test
+
+after_success:
+  make clean
