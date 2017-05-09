@@ -5,9 +5,10 @@ compiler:
   - clang
 
 script:
-  - mkdir tests
-  - make debug tests
+  - make debug test
   - ./tests/utest
 
 after_success:
   - make clean
+
+skip_cleanup: true
