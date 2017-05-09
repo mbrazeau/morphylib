@@ -4,8 +4,8 @@ compiler:
   - gcc
 
 script:
-  - mkdir mtests
-  - make
+  - make debug tests
+  - ./tests/utest
 
 after_success:
   - make clean
