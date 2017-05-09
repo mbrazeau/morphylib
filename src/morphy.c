@@ -26,15 +26,21 @@ Morphyp mpl_new_Morphy_t(void)
     
     // Set defaults:
     mpl_set_gaphandl(GAP_INAPPLIC, (Morphy)new);
+    new->symbols.gap        = DEFAULTGAP;
+    new->symbols.missing    = DEFAULTMISSING;
     
     return new;
 }
 
-//void* mpl_get_from_matrix
-//(const int row, const int col, const size_t size, const void* data)
-//{
-//    return (void*)&data[row * col * size + (size * col - 1)];
-//}
+void* mpl_get_from_matrix
+(const int      row,
+ const int      col,
+ const int      ncol,
+ const size_t   size,
+ const void*    data)
+{
+    return (void*)&data[row * col * size + (size * col - 1)];
+}
 
 int mpl_get_gaphandl(Morphyp handl)
 {

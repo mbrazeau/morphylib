@@ -154,39 +154,47 @@ int mpl_get_numsymbols(Morphyp handl)
 
 int mpl_create_state_dictionary(Morphyp handl)
 {
-//    dbg_printf("Creating state dictionary\n");
-//    assert(handl->symboldict);
-//    
-//    char* states = handl->symboldict->rawsymbols;
-//    assert(!strchr(states, ' '));
-//    
-//    mpl_set_numsymbols((int)strlen(states), handl);
-//    int maxsymb = mpl_get_numsymbols(handl);
-//    
-//    handl->symboldict->symbols = (MPL_stsymb*)calloc(maxsymb,
-//                                                     sizeof(MPL_stsymb));
-//    if (!handl->symboldict->symbols) {
-//        return ERR_BAD_MALLOC;
-//    }
-//    
-//    int i = 0;
-//
-//    for (i = 0; i < maxsymb; ++i) {
-//        handl->symboldict->symbols[i].aschar = states[i];
-//        dbg_printf("Converting symbol: %c\n", states[i]);
-//    }
+    int i           = 0;
+    int gappush     = 0;
+    int numsymbs    = handl->symbols.numstates;
+    char *symbols   = mpl_get_symbols((Morphy)handl);
+    assert(symbols);
+    
+    if (!handl->symbols.packed) {
+        
+        handl->symbols.packed = (MPLstate*)calloc(handl->symbols.numstates,
+                                                  sizeof(MPLstate));
+        if (!handl->symbols.packed) {
+            return ERR_BAD_MALLOC;
+        }
+    }
+
+    if (handl->gaphandl == GAP_INAPPLIC || handl->gaphandl == GAP_NEWSTATE) {
+        gappush = 1;
+    }
+    
+    for (i = 0; i < numsymbs; ++i) {
+        handl->symbols.packed[i] = 1 << (i + gappush);
+    }
     
     return ERR_NO_ERROR;
 }
 
-
-int mpl_init_symbolset(Morphyp m)
+int mpl_convert_cells(Morphyp handl)
 {
-    if (!mpl_get_numsymbols(m)) {
-//        <#statements#>
-    }
+    
+    
+    
     return ERR_NO_ERROR;
 }
+
+//int mpl_init_symbolset(Morphyp m)
+//{
+//    if (!mpl_get_numsymbols(m)) {
+////        //somthing
+//    }
+//    return ERR_NO_ERROR;
+//}
 
 
 void mpl_destroy_symbolset(Morphyp m)
@@ -197,6 +205,7 @@ void mpl_destroy_symbolset(Morphyp m)
         m->symbols.statesymbols = NULL;
     }
 }
+
 
 bool mpl_is_valid_matrix_symbol(const char c)
 {
@@ -212,6 +221,7 @@ bool mpl_is_valid_matrix_symbol(const char c)
     
     return false;
 }
+
 
 unsigned long mpl_get_valid_matrix_length(const char* rawmatrix)
 {
@@ -231,6 +241,7 @@ unsigned long mpl_get_valid_matrix_length(const char* rawmatrix)
     
     return len;
 }
+
 
 void mpl_copy_valid_matrix_data(char *copy, const char* rawmatrix)
 {
@@ -253,6 +264,7 @@ void mpl_copy_valid_matrix_data(char *copy, const char* rawmatrix)
     dbg_printf("The truncated matrix: %s\n", copy);
 }
 
+
 // Copy the raw matrix, take out whitespace and comments
 int mpl_copy_raw_matrix(const char* rawmatrix, Morphyp handl)
 {
@@ -266,6 +278,7 @@ int mpl_copy_raw_matrix(const char* rawmatrix, Morphyp handl)
     handl->char_t_matrix = matcpy;
     return ERR_NO_ERROR;
 }
+
 
 int mpl_check_nexus_matrix_dimensions
 (char *preproc_matrix, int input_num_taxa, int input_num_chars)
@@ -284,6 +297,7 @@ int mpl_check_nexus_matrix_dimensions
     expected_size = input_num_chars * input_num_taxa;
     
     current = preproc_matrix;
+    assert(current);
     
     do {
         if (strchr(gmpl_valid_state, *current)
@@ -321,7 +335,7 @@ int mpl_check_nexus_matrix_dimensions
     else if (matrix_size < expected_size) {
         return ERR_DIMENS_OVER;
     }
-    
+
     return ERR_NO_ERROR;
 }
 
@@ -332,7 +346,8 @@ char* mpl_get_preprocessed_matrix(Morphyp handl)
     return handl->char_t_matrix;
 }
 
-Mstates mpl_gap_value(Morphyp handl)
+
+MPLstate mpl_gap_value(Morphyp handl)
 {
     switch (mpl_get_gaphandl(handl)) {
         case GAP_INAPPLIC:
@@ -340,7 +355,7 @@ Mstates mpl_gap_value(Morphyp handl)
         case GAP_MISSING:
             return MISSING;
         case GAP_NEWSTATE:
-            return (Mstates)1;
+            return (MPLstate)1;
         case GAP_MAX:
             return -1;
         default:
@@ -349,6 +364,7 @@ Mstates mpl_gap_value(Morphyp handl)
     
     return -2;
 }
+
 
 MPLmatrix* mpl_new_mpl_matrix
 (const int ntaxa, const int nchar, const int nstates)
@@ -395,9 +411,9 @@ MPLmatrix* mpl_new_mpl_matrix
         }
     }
     
-    
     return ret;
 }
+
 
 int mpl_delete_mpl_matrix(MPLmatrix* m)
 {
@@ -430,10 +446,12 @@ int mpl_delete_mpl_matrix(MPLmatrix* m)
     return ERR_NO_ERROR;
 }
 
+
 MPLmatrix* mpl_get_mpl_matrix(Morphyp m)
 {
     return m->inmatrix;
 }
+
 
 int mpl_set_gap_push(Morphyp handl)
 {
@@ -471,15 +489,6 @@ void mpl_use_symbols_from_matrix(Morphyp handl)
     handl->symbols.statesymbols = handl->symbols.symbolsinmatrix;
 }
 
-void mpl_write_symbols_to_cell(char *cell, const char *data)
-{
-//    int i = 0;
-//    if (strchr(gmpl_valid_state, *data) ||
-//        strchr(gmpl_valid_matrix_wildcard, *data))
-//    {
-//        
-//    }
-}
 
 int mpl_write_input_rawchars_to_cells(Morphyp handl)
 {
@@ -542,6 +551,7 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
     return ERR_NO_ERROR;
 }
 
+
 int mpl_convert_rawdata(Morphyp handl)
 {
     int ret = ERR_NO_ERROR;
@@ -572,12 +582,8 @@ int mpl_convert_rawdata(Morphyp handl)
     
     // Now safe to write characters into cells.
     mpl_write_input_rawchars_to_cells(handl);
-    
-    // Loop over the matrix and find out which ones have
-    // Create a state dictionary
-    // Probably multipe dictionaries...? Regular and w/ NA?
     mpl_create_state_dictionary(handl);
-    // Set shift values in the dictionary
+
     // Use dictionary to convert
     
     return ret;

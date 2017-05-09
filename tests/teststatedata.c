@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "mpltest.h"
 #include "../src/mplerror.h"
 #include "../src/mpl.h"
 #include "../src/statedata.h"
@@ -27,39 +28,49 @@ void test_good_symbols(void)
 	char *states4 = "2015";
 
 	if (mpl_compare_symbol_lists(states1, states2)) {
-		printf("FAIL:\n");
+//		printf("FAIL:\n");
+        pfail;
 	}
 	else {
-		printf("PASS:\n");
+//		printf("PASS:\n");
+        ppass;
 	}
 	
 	if (mpl_compare_symbol_lists(states2, states1)) {
-		printf("FAIL:\n");
+//		printf("FAIL:\n");
+        pfail;
 	}
 	else {
-		printf("PASS:\n");
+//		printf("PASS:\n");
+        ppass;
 	}
 	
 	if (mpl_compare_symbol_lists(states1, states3)) {
-		printf("FAIL:\n");
+        pfail;
+//		printf("FAIL:\n");
 	}
 	else {
-		printf("PASS:\n");
+        ppass;
+//		printf("PASS:\n");
 	}
 	
 	if (mpl_compare_symbol_lists(states2, states3)) {
-		printf("FAIL:\n");
+//		printf("FAIL:\n");
+        pfail;
 	}
 	else {
-		printf("PASS:\n");
+        ppass;
+//		printf("PASS:\n");
 	}
 	
 
 	if (mpl_compare_symbol_lists(states1, states4)) {
-		printf("FAIL:\n");
+        pfail;
+//		printf("FAIL:\n");
 	}
 	else {
-		printf("PASS:\n");
+        ppass;
+//		printf("PASS:\n");
 	}
 }
 
@@ -71,39 +82,49 @@ void test_bad_symbols(void)
 	char *states4 = "205";
 
 	if (!mpl_compare_symbol_lists(states1, states2)) {
-		printf("FAIL:\n");
+//		printf("FAIL:\n");
+        pfail;
 	}
 	else {
-		printf("PASS:\n");
+        ppass;
+//		printf("PASS:\n");
 	}
 	
 	if (!mpl_compare_symbol_lists(states2, states1)) {
-		printf("FAIL:\n");
+//		printf("FAIL:\n");
+        pfail;
 	}
 	else {
-		printf("PASS:\n");
+        ppass;
+//		printf("PASS:\n");
 	}
 	
 	if (!mpl_compare_symbol_lists(states1, states3)) {
-		printf("FAIL:\n");
+//		printf("FAIL:\n");
+        pfail;
 	}
 	else {
-		printf("PASS:\n");
+        ppass;
+//		printf("PASS:\n");
 	}
 	
 	if (!mpl_compare_symbol_lists(states2, states3)) {
-		printf("FAIL:\n");
+        pfail;
+//        printf("FAIL:\n");
 	}
 	else {
-		printf("PASS:\n");
+        ppass;
+//		printf("PASS:\n");
 	}
 	
 
 	if (!mpl_compare_symbol_lists(states1, states4)) {
-		printf("FAIL:\n");
+        pfail;
+//        printf("FAIL:\n");
 	}
 	else {
-		printf("PASS:\n");
+        ppass;
+//		printf("PASS:\n");
 	}
 
 	
@@ -162,10 +183,12 @@ void test_load_symbols(void)
 
 
 	if (err) {
-		printf("FAIL\n");
+        pfail;
+//		printf("FAIL\n");
 	}
 	else {
-		printf("PASS\n");
+        ppass;
+//		printf("PASS\n");
 	}
 	printf("Loading symbols first\n");
 	Morphy m2 = mpl_new_Morphy();
@@ -173,26 +196,26 @@ void test_load_symbols(void)
 	
 	err = mpl_attach_symbols(symbols, m2);
 	if (err) {
-		printf("FAIL\n");
+        pfail;
 	}
 	else {
-		printf("PASS\n");
+        ppass;
 	}
 
 	err = mpl_attach_rawdata(rawmatrix, m2);
 
 	if (err) {
-		printf("FAIL\n");
+        pfail;
 	}
 	else {
-		printf("PASS\n");
+        ppass;
 	}
 	
 	if (strcmp(symbols, mpl_get_symbols(m2))) {
-		printf("FAIL\n");
+        pfail;
 	}
 	else {
-		printf("PASS\n");
+        ppass;
 	}
 }
 
@@ -222,10 +245,10 @@ void test_bad_load_symbols(void)
 	mpl_delete_Morphy(m1);
 
 	if (!err) {
-		printf("FAIL\n");
+        pfail;
 	}
 	else {
-		printf("PASS\n");
+        ppass;
 	}
 
 	printf("\nLoading symbols first\n");
@@ -234,19 +257,19 @@ void test_bad_load_symbols(void)
 	
 	err = mpl_attach_symbols(symbols, m2);
 	if (err) {
-		printf("FAIL\n");
+        pfail;
 	}
 	else {
-		printf("PASS\n");
+        ppass;
 	}
 
 	err = mpl_attach_rawdata(rawmatrix, m2);
 
 	if (!err) {
-		printf("FAIL\n");
+        pfail;
 	}
 	else {
-		printf("PASS\n");
+        ppass;
 	}
 }
 

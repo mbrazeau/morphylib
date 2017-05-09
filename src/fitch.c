@@ -13,7 +13,7 @@
 
 /**/
 int morphy_fitch_downpass
-(Mstates* left, Mstates* right, Mstates* n, int nchars)
+(MPLstate* left, MPLstate* right, MPLstate* n, int nchars)
 {
     int i = 0;
     int steps = 0;
@@ -33,7 +33,7 @@ int morphy_fitch_downpass
 
 
 void morphy_fitch_uppass
-(Mstates *left, Mstates *right, Mstates *n, Mstates *anc, int nchars)
+(MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
 {
     
     
@@ -42,7 +42,7 @@ void morphy_fitch_uppass
 
 /**/
 void morphy_NA_fitch_first_downpass
-(Mstates* left, Mstates *right, Mstates *n, int nchars)
+(MPLstate* left, MPLstate *right, MPLstate *n, int nchars)
 {
     
     
@@ -50,7 +50,7 @@ void morphy_NA_fitch_first_downpass
 
 
 void morphy_NA_fitch_first_uppass
-(Mstates *left, Mstates *right, Mstates *n, Mstates *anc, int nchars)
+(MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
 {
     
     
@@ -58,7 +58,7 @@ void morphy_NA_fitch_first_uppass
 
 
 int morphy_NA_fitch_second_downpass
-(Mstates* left, Mstates* right, Mstates* n, int nchars)
+(MPLstate* left, MPLstate* right, MPLstate* n, int nchars)
 {
     int steps = 0;
     
@@ -67,7 +67,7 @@ int morphy_NA_fitch_second_downpass
 
 
 int morphy_NA_fitch_second_uppass
-(Mstates *left, Mstates *right, Mstates *n, Mstates *anc, int nchars)
+(MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
 {
     int steps = 0;
     

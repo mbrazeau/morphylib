@@ -23,12 +23,12 @@ typedef long double Mflt;
 typedef float Mflt;
 #endif
 
-typedef uint64_t Mstates;
+typedef uint64_t MPLstate;
 
 #define ISAPPLIC        (UINT64_MAX - 1)
 #define NA              1
 #define MISSING         UINT64_MAX
-#define MAXSTATES       (CHAR_BIT * sizeof(Mstates))
+#define MAXSTATES       (CHAR_BIT * sizeof(MPLstate))
 #define DEFAULTGAP      '-'
 #define DEFAULTMISSING  '?'
 
@@ -50,23 +50,26 @@ typedef enum {
 
 typedef struct __morphy_s {
     
-    int                 numtaxa;
-    int                 numcharacters;
-    char*               char_t_matrix;
-    int                 numnodes;
-    int*                nodesequence;
+    int         numtaxa;
+    int         numcharacters;
+    char*       char_t_matrix;
+    int         numnodes;
+    int*        nodesequence;
     
     struct MPLsymbols {
-        int             numstates;
-        char*           statesymbols;
-        char*           symbolsinmatrix;
+        int         numstates;
+        char*       statesymbols;
+        char*       symbolsinmatrix;
+        MPLstate*   packed;
+        char        gap;
+        char        missing;
     } symbols;
     
-    gap_t               gaphandl;
+    gap_t       gaphandl;
     
     union {
-        int             asint;
-        Mflt            asfloat;
+        int     asint;
+        Mflt    asfloat;
     } score;
     
     struct mpl_matrix_s* inmatrix;
