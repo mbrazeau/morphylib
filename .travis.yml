@@ -2,10 +2,10 @@ language: c
 
 compiler:
   - gcc
+  - clang
 
 script:
-  - mkdir mtests
-  - make
+  - make debug tests
 
 after_success:
   - make clean
