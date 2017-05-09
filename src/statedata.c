@@ -180,10 +180,62 @@ int mpl_create_state_dictionary(Morphyp handl)
     return ERR_NO_ERROR;
 }
 
+
+MPLstate mpl_convert_gap_symbol(Morphyp handl)
+{
+    if (handl->gaphandl == GAP_INAPPLIC) {
+        return NA;
+    }
+    else if (handl->gaphandl == GAP_NEWSTATE) {
+        return (MPLstate)1;
+    }
+    else if (handl->gaphandl == GAP_MISSING) {
+        return MISSING;
+    }
+    
+    return ERR_NO_DATA;
+}
+
+MPLstate mpl_convert_char_to_MPLstate(const char* celldata, Morphyp handl)
+{
+    int i = 0;
+    MPLstate result = 0;
+    
+    do {
+        i = 0;
+        do {
+            if (*celldata == handl->symbols.statesymbols[i]) {
+                result |= handl->symbols.packed[i];
+            }
+            ++i;
+        } while (handl->symbols.statesymbols[i]);
+        ++celldata;
+    } while (*celldata);
+    
+    return result;
+}
+
 int mpl_convert_cells(Morphyp handl)
 {
     
+    int i = 0;
+    int numcells = handl->inmatrix->ncells;
+    MPLmatrix *inmatrix = handl->inmatrix;
+    char *celldata = NULL;
     
+    for (i = 0; i < numcells; ++i) {
+        celldata = inmatrix->cells[i].asstr;
+        if (*celldata == handl->symbols.gap) {
+            inmatrix->cells[i].asint = mpl_convert_gap_symbol(handl);
+        }
+        else if (*celldata == handl->symbols.missing) {
+            inmatrix->cells[i].asint = MISSING;
+        }
+        else {
+            inmatrix->cells[i].asint = mpl_convert_char_to_MPLstate(celldata,
+                                                                    handl);
+        }
+    }
     
     return ERR_NO_ERROR;
 }
@@ -585,6 +637,7 @@ int mpl_convert_rawdata(Morphyp handl)
     mpl_create_state_dictionary(handl);
 
     // Use dictionary to convert
+    mpl_convert_cells(handl);
     
     return ret;
 }

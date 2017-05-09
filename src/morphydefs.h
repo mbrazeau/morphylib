@@ -26,8 +26,8 @@ typedef float Mflt;
 typedef uint64_t MPLstate;
 
 #define ISAPPLIC        (UINT64_MAX - 1)
-#define NA              1
-#define MISSING         UINT64_MAX
+#define NA              ((MPLstate)1)
+#define MISSING         ((MPLstate)UINT64_MAX)
 #define MAXSTATES       (CHAR_BIT * sizeof(MPLstate))
 #define DEFAULTGAP      '-'
 #define DEFAULTMISSING  '?'
