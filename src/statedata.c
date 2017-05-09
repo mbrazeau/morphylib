@@ -403,8 +403,10 @@ int mpl_delete_mpl_matrix(MPLmatrix* m)
         return ERR_BAD_PARAM;
     }
     
+    int i = 0;
+    
     if (m->cells) {
-        for (int i = 0; i < m->ncells; ++i) {
+        for (i = 0; i < m->ncells; ++i) {
             if (m->cells[i].asstr) {
                 free(m->cells[i].asstr);
                 m->cells[i].asstr = NULL;
