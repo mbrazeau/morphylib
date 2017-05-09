@@ -94,14 +94,12 @@ int mpl_get_states_from_rawdata(Morphyp handl)
     char *current = NULL;
     int listmax = MAXSTATES + 1; // +1 for terminal null.
     char statesymbols[listmax];
-    int dbg_loopcount = 0;
+//    int dbg_loopcount = 0;
     
     statesymbols[0] = '\0';
     current = rawmatrix;
     
     do {
-//        dbg_printf("Current: %c\n", *current);
-        
         if (strchr(gmpl_valid_symb, *current)) {
             
             if (strchr(gmpl_valid_matrix_punc, *current)) {
@@ -116,12 +114,11 @@ int mpl_get_states_from_rawdata(Morphyp handl)
             }
         }
         else {
-//            dbg_printf("Returning error\n");
             return ERR_INVALID_SYMBOL;
         }
-        
+    
         ++current;
-        ++dbg_loopcount;
+    
     } while (*current);
     
     // Sort alphanumerically
@@ -312,7 +309,7 @@ void mpl_copy_valid_matrix_data(char *copy, const char* rawmatrix)
         ++matptr;
     } while (*matptr);
     
-    copy[i] = '\0';
+    copy[i-1] = '\0';
     dbg_printf("The truncated matrix: %s\n", copy);
 }
 
@@ -323,6 +320,7 @@ int mpl_copy_raw_matrix(const char* rawmatrix, Morphyp handl)
     unsigned long len = mpl_get_valid_matrix_length(rawmatrix);
     
     char *matcpy = (char*)calloc(len + 1, sizeof(char));
+   
     if (!matcpy) {
         return ERR_BAD_MALLOC;
     }
