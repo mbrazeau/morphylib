@@ -5,6 +5,7 @@ compiler:
   - clang
 
 script:
+  - mkdir tests
   - make debug tests
   - ./tests/utest
 
