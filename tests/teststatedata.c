@@ -173,6 +173,7 @@ int test_count_applic_inapplic(void)
     return failn;
 }
 
+
 int test_load_symbols(void)
 {
 
@@ -393,28 +394,3 @@ int test_multistate_symbols(void)
     return failn;
 }
 
-
-int main (void)
-{
-    int fails = 0;
-    
-	fails += test_get_states();
-	fails += test_count_applic_inapplic();
-	fails += test_good_symbols();
-	fails += test_bad_symbols();
-	fails += test_load_symbols();
-	fails += test_bad_load_symbols();
-	fails += test_multistate_symbols();
-    fails += test_usr_order_symbols();
-    
-    printf("\n\nTest summary:\n\n");
-    if (fails) {
-        psumf(fails);
-    }
-    else {
-        psump;
-    }
-    printf("\n");
-	
-    return fails;
-}
