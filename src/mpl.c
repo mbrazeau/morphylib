@@ -105,6 +105,7 @@ int mpl_attach_symbols(const char *symbols, Morphy m)
     ++len;
     
     char* symbsnospaces = (char*)calloc(len, sizeof(char));
+    
     int j = 0;
     for (i = 0; symbols[i]; ++i) {
         if (isalnum(symbols[i])) {
@@ -112,7 +113,9 @@ int mpl_attach_symbols(const char *symbols, Morphy m)
             ++j;
         }
     }
-    symbsnospaces[j + 1] = '\0';
+    symbsnospaces[j] = '\0';
+    
+    printf("Symbols after removal of spaces: %s\n", symbsnospaces);
     
     if (isdataloaded) {
         char* matrixsymbs = mpl_query_symbols_from_matrix((Morphyp)m);
