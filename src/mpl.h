@@ -38,7 +38,8 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif /*__CPLUSPLUS */
+#endif /*__cplusplus */
+    
 #include <stdbool.h>
 #include "morphydefs.h"
 #include "mplerror.h"
@@ -246,12 +247,14 @@ int     mpl_finalize_tip
         (const int  nodeID,
          Morphy     m);
 
+    
 int     mpl_get_insertcost
 
         (const int  srcID,
          const int  tgt1ID,
          const int  tgt2ID,
          bool       max,
+         int        cutoff,
          Morphy     m);
 
 

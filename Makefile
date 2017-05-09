@@ -5,6 +5,7 @@ DBGF	:= -g -D DEBUG
 CFLAGS	:= -c -Wall -fPIC #$(shell pkg-config --cflags glib-2.0)
 SRC		:= *.c
 OBJS	:= *.o
+SRCDIR	:= ./src/
 SNAME	:= $(NAME).a
 DNAME	:= $(NAME).so
 TDIRS	:= ./tests/
@@ -25,8 +26,8 @@ $(SNAME) : $(OBJS)
 $(DNAME) : $(OBJS)
 	$(CC) -shared -o $(DNAME) $(OBJS) 
 
-$(OBJS) : $(SRC)
-	$(CC) $(CFLAGS) $(SRC)
+$(OBJS) : $(SRCDIR)$(SRC)
+	$(CC) $(CFLAGS) $(SRCDIR)$(SRC)
 
 clean:
 	rm *.o

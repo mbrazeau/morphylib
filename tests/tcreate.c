@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "../morphydefs.h"
-#include "../mpl.h"
+#include "../src/morphydefs.h"
+#include "../src/mpl.h"
 
 int main (void)
 {
