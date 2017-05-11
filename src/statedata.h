@@ -46,5 +46,5 @@ int         mpl_convert_rawdata(Morphyp handl);
 MPLmatrix*  mpl_new_mpl_matrix(const int ntaxa, const int nchar, const int nstates);
 int         mpl_delete_mpl_matrix(MPLmatrix* m);
 MPLmatrix*  mpl_get_mpl_matrix(Morphyp m);
-
+int         mpl_init_charac_info(Morphyp handl);
 #endif /* statedata_h */
