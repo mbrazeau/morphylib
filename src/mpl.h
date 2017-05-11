@@ -278,6 +278,24 @@ int     mpl_set_charac_weight
          Mflt       weight);
 
 
+/*!
+
+ @brief Sets a character's parsimony function type
+ 
+ @discussion Set the parsimony function type to one defined in the morphydefs.h
+ header file. Setting the character to type NONE_T will also cause it to be 
+ excluded from any further calculations.
+ 
+ @param charID The index of the character (transformation series) as defined in
+ the input matrix.
+ 
+ @param chtype The parsimony function type as defined in morphydefs.h
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return A Morphy error code.
+
+ */
 int     mpl_set_parsim_t
 
         (const int charID,
