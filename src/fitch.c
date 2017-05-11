@@ -41,19 +41,19 @@ void morphy_fitch_uppass
 
 
 /**/
-void morphy_NA_fitch_first_downpass
+int morphy_NA_fitch_first_downpass
 (MPLstate* left, MPLstate *right, MPLstate *n, int nchars)
 {
     
-    
+    return -1;
 }
 
 
-void morphy_NA_fitch_first_uppass
+int morphy_NA_fitch_first_uppass
 (MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
 {
     
-    
+    return -1;
 }
 
 
