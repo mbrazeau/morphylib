@@ -693,3 +693,27 @@ int mpl_convert_rawdata(Morphyp handl)
     return ret;
 }
 
+
+int mpl_init_charac_info(Morphyp handl)
+{
+    int nchar = mpl_get_num_charac((Morphy)handl);
+    
+    if (handl->charinfo) {
+        free(handl->charinfo);
+    }
+    
+    handl->charinfo = (MPLcharinfo*)calloc(nchar, sizeof(MPLcharinfo));
+    if (!handl->charinfo) {
+        return ERR_BAD_MALLOC;
+    }
+    
+    int i = 0;
+    for (i = 0; i < nchar; ++i) {
+        handl->charinfo[i].charindex    = i;
+        handl->charinfo[i].included     = true;
+        handl->charinfo[i].chtype       = DEFAULCHARTYPE;
+        handl->charinfo[i].intwt        = 1;
+    }
+    
+    return ERR_NO_ERROR;
+}
