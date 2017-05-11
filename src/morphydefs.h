@@ -31,7 +31,8 @@ typedef unsigned int MPLstate;
 #define MAXSTATES       (CHAR_BIT * sizeof(MPLstate))
 #define DEFAULTGAP      '-'
 #define DEFAULTMISSING  '?'
-
+#define NACUTOFF        2   // The max number of NA tokens that can be ignored in a column
+    
 typedef enum {
     
     NONE_T          = 0,
@@ -59,16 +60,7 @@ typedef struct {
     MPLstate    asint;
     char*       asstr;
 } MPLcell;
-
-typedef struct charinfo_s MPLcharinfo;
-typedef struct charinfo_s {
-    int charindex;
-    union {
-        int  intwt;
-        Mflt fltwt;
-    };
-    MPLcharinfo* next;
-} MPLcharinfo;
+    
 
 typedef struct partition_s MPLpartition;
 typedef struct partition_s {
@@ -77,6 +69,17 @@ typedef struct partition_s {
     int         ncharsinpart;
     int*        charindices;
 } MPLpartition;
+    
+typedef struct charinfo_s MPLcharinfo;
+typedef struct charinfo_s {
+    int charindex;
+    MPLchtype chtype;
+    union {
+        int  intwt;
+        Mflt fltwt;
+    };
+    MPLcharinfo* next;
+} MPLcharinfo;
 
 typedef struct {
     MPLstate*   NApass1;
@@ -91,11 +94,9 @@ typedef struct {
 } MPLstatesets;
 
 typedef struct mpl_matrix_s {
-    MPLchtype*  chtypes;
-    int*        intweights;
-    Mflt*       fltweights;
-    int         ncells;
-    MPLcell*    cells;
+    MPLcharinfo*    chinfo;
+    int             ncells;
+    MPLcell*        cells;
 } MPLmatrix;
 
 typedef struct {
