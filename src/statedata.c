@@ -427,6 +427,12 @@ MPLmatrix* mpl_new_mpl_matrix
         return NULL;
     }
     
+    ret->chtypes = (MPLchtype*)calloc(nchar, sizeof(MPLchtype));
+    if (!ret->chtypes) {
+        mpl_delete_mpl_matrix(ret);
+        return NULL;
+    }
+    
     ret->intweights = (int*)calloc(nchar, sizeof(int));
     if (!ret->intweights) {
         mpl_delete_mpl_matrix(ret);
@@ -481,6 +487,11 @@ int mpl_delete_mpl_matrix(MPLmatrix* m)
             }
         }
         free(m->cells);
+    }
+    
+    if (m->chtypes) {
+        free(m->chtypes);
+        m->chtypes = NULL;
     }
     
     if (m->fltweights) {
@@ -600,6 +611,19 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
     
     return ERR_NO_ERROR;
 }
+
+int mpl_update_partitions(MPLmatrix mat)
+{
+    // TODO: Implement
+    
+    // Note: maybe create a stack of free partitions that can be listed and then
+    // taken down each time the partitions list is updated. This will keep the
+    // analysis state of the matrix 'ready to go' at any time.
+    
+    return ERR_NO_ERROR;
+}
+
+
 
 
 int mpl_convert_rawdata(Morphyp handl)

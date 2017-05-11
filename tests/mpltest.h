@@ -1,5 +1,9 @@
 #include <stdio.h>
 
+#include "../src/mplerror.h"
+#include "../src/mpl.h"
+
+
 #define pfail \
     printf("[  FAIL  ] %s, line: %i in: %s\n", __FUNCTION__, __LINE__, __FILE__)
 
@@ -10,3 +14,4 @@
 
 #define psump printf("[  ** PASSED ** ] All tests passed.\n")
 
+#define theader(testname) printf("\n\n\t%s\n\n", testname);

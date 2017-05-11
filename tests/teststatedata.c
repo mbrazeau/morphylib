@@ -1,17 +1,16 @@
 #include <stdio.h>
 #include "mpltest.h"
-#include "../src/mplerror.h"
-#include "../src/mpl.h"
 #include "../src/statedata.h"
 
 int test_get_states(void)
 {
-	printf("Testing state getting and conversion:\n");
 
+    theader("State-extraction and conversion");
+    
     int failn = 0;
     
 	char *rawmatrix = "001101--- -100? ?[xyz876jkjk]ABaC434(59)9???";
-	char *states = "01ABaC4359";
+//	char *states = "01ABaC4359";
     char *retstats;
     
 	Morphy m1 = mpl_new_Morphy();
@@ -39,6 +38,7 @@ int test_get_states(void)
 
 int test_good_symbols(void)
 {
+    theader("Load good (non-conflicting) symbols");
     int failn = 0;
     
 	char *states1 = "0125";
@@ -92,6 +92,7 @@ int test_good_symbols(void)
 
 int test_bad_symbols(void)
 {
+    theader("Conflicting symbols lists");
     int failn = 0;
     
 	char *states1 = "0125";
@@ -157,10 +158,10 @@ int test_count_applic_inapplic(void)
 1-000-0000\
 0-00{01}100-0;";
 	
-	int expNA[] = {1,5};
-	int nexpNA  = 2;
-	int expAP[] = {0,2,3,4,6,7,8,9};
-	int nexpAP	= nchar - nexpNA;
+//	int expNA[] = {1,5};
+//	int nexpNA  = 2;
+//	int expAP[] = {0,2,3,4,6,7,8,9};
+//	int nexpAP	= nchar - nexpNA;
 
 	Morphy m1 = mpl_new_Morphy();
 //	mpl_set_numtaxa(ntax, m1);
@@ -177,6 +178,8 @@ int test_count_applic_inapplic(void)
 int test_load_symbols(void)
 {
 
+    theader("Load symbols");
+    
     int failn = 0;
 	int ntax	= 6;
 	int nchar	= 10;
@@ -244,7 +247,8 @@ int test_load_symbols(void)
 int test_bad_load_symbols(void)
 {
 
-	printf("\n\n\t Load bad symbols \n\n");
+    theader("Load bad symbols");
+
     int failn   = 0;
 	int ntax	= 6;
 	int nchar	= 10;
@@ -303,7 +307,8 @@ int test_bad_load_symbols(void)
 int test_usr_order_symbols(void)
 {
     
-    printf("\n\n\t Load bad symbols \n\n");
+    theader("Test user order of symbols");
+    
     int failn   = 0;
     int ntax	= 6;
     int nchar	= 10;
@@ -333,7 +338,6 @@ int test_usr_order_symbols(void)
     else {
         ppass;
     }
-    
     
     err = mpl_attach_symbols(symbols, m1);
     resymbols = mpl_get_symbols(m1);

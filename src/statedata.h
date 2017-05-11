@@ -26,15 +26,25 @@ typedef struct {
     char*       asstr;
 } MPLcell;
 
-typedef struct {
-    int         maxnchars;
-    int         nchars;
-    int*        charindices;
-    MPLstate*    cdata;
-} MPLpartinfo;
+typedef struct charinfo_s MPLcharinfo;
+typedef struct charinfo_s {
+    int charindex;
+    union {
+        int  intwt;
+        Mflt fltwt;
+    };
+    MPLcharinfo* next;
+} MPLcharinfo;
 
 typedef struct {
+    MPLchtype   chtype;
+    int         maxnchars;
+    int         ncharsinpart;
     int*        charindices;
+} MPLpartition;
+
+typedef struct {int*        intweights;
+    Mflt*       fltweights;
     MPLstate*   NApass1;
     MPLstate*   NApass2;
     MPLstate*   prelimset;
@@ -43,9 +53,10 @@ typedef struct {
     MPLstate*   subtree_NApass2;
     MPLstate*   subtree_prelimset;
     MPLstate*   subtree_finalset;
-} MPLancstates;
+} MPLstatesets;
 
 typedef struct mpl_matrix_s {
+    MPLchtype*  chtypes;
     int*        intweights;
     Mflt*       fltweights;
     int         ncells;
@@ -55,7 +66,7 @@ typedef struct mpl_matrix_s {
 typedef struct {
     int*            tips;
     int*            internals;
-    MPLancstates*   ancstates;
+    MPLstatesets*   ancstates;
 } MPLnodesets;
 
 /* Function prototypes */

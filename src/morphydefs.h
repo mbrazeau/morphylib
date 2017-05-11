@@ -15,9 +15,9 @@ extern "C" {
 
 #include <stdint.h>
 
-#ifdef MDBL
+#ifdef MPLDBL
 typedef double Mflt;
-#elif MLDBL
+#elif MPLLDBL
 typedef long double Mflt;
 #else
 typedef float Mflt;
@@ -25,29 +25,37 @@ typedef float Mflt;
 
 typedef uint64_t MPLstate;
 
-#define ISAPPLIC        (UINT64_MAX - 1)
 #define NA              ((MPLstate)1)
-#define MISSING         ((MPLstate)UINT64_MAX)
+#define MISSING         ((MPLstate)~0)
+#define ISAPPLIC        (((MPLstate)~0)^NA)
 #define MAXSTATES       (CHAR_BIT * sizeof(MPLstate))
 #define DEFAULTGAP      '-'
 #define DEFAULTMISSING  '?'
 
 typedef enum {
-    FITCH_T,
-    WAGNER_T,
-    DOLLO_T,
-    IRREVERSIBLE_T,
-    USERTYPE_T,
+    
+    NONE_T          = 0,
+    FITCH_T         = 1,
+    WAGNER_T        = 2,
+    DOLLO_T         = 3,
+    IRREVERSIBLE_T  = 4,
+    USERTYPE_T      = 5,
+    
     MAX_CTYPE,
-} MPLptype_t;
+    
+} MPLchtype;
 
 typedef enum {
+    
     GAP_INAPPLIC,
     GAP_MISSING,
     GAP_NEWSTATE,
+    
     GAP_MAX,
+    
 } gap_t;
 
+    
 typedef struct __morphy_s {
     
     int         numtaxa;

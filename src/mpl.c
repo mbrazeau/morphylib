@@ -62,6 +62,8 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     
     mi->symbols.statesymbols = NULL;
 
+    // 
+    
     return ret;
 }
 
@@ -85,6 +87,7 @@ int mpl_get_num_charac(Morphy m)
     
     return ((Morphyp)m)->numcharacters;
 }
+
 
 //int     mpl_attach_symbols(char* symbols, Morphy m);
 int mpl_attach_symbols(const char *symbols, Morphy m)
@@ -118,10 +121,12 @@ int mpl_attach_symbols(const char *symbols, Morphy m)
     dbg_printf("Symbols after removal of spaces: %s\n", symbsnospaces);
     
     if (isdataloaded) {
-        char* matrixsymbs = mpl_query_symbols_from_matrix((Morphyp)m);
-        // TODO: Get the matrix symbols
-        assert(matrixsymbs);
+        
         dbg_printf("Data is loaded already...\n");
+        
+        char* matrixsymbs = mpl_query_symbols_from_matrix((Morphyp)m);
+        assert(matrixsymbs);
+        
         if (mpl_compare_symbol_lists(symbsnospaces, matrixsymbs)) {
             dbg_printf("Bad symbols...\n");
             free(symbsnospaces);
@@ -136,7 +141,7 @@ int mpl_attach_symbols(const char *symbols, Morphy m)
 
 char* mpl_get_symbols(Morphy m)
 {
-// TODO: Implement get_symbols
+
     Morphyp mi = (Morphyp)m;
     
     return mi->symbols.statesymbols;
@@ -185,7 +190,7 @@ int mpl_delete_rawdata(Morphy m)
     }
     Morphyp mp = (Morphyp)m;
     
-    // TODO: This *must* reset all matrix dependencies
+    // TODO: This must reset all matrix dependencies
     if (mp->char_t_matrix) {
         free(mp->char_t_matrix);
         mp->char_t_matrix = NULL;
@@ -195,6 +200,13 @@ int mpl_delete_rawdata(Morphy m)
     return ERR_NO_ERROR;
 }
 
+//int     mpl_apply_tipdata (Morphy m);
+int mpl_apply_tipdata(Morphy m)
+{
+    Morphyp mi = (Morphyp)m;
+    
+    return ERR_NO_ERROR;
+}
 
 //int     mpl_set_postorder(const int nodeID, const int index, Morphy m);
 //

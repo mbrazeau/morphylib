@@ -9,6 +9,6 @@
 #ifndef fitch_h
 #define fitch_h
 
-#include <stdio.h>
+
 
 #endif /* fitch_h */
