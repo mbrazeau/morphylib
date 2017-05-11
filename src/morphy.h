@@ -24,10 +24,11 @@
 
 /* Function prototypes */
 
-Morphyp mpl_new_Morphy_t(void);
-void*   mpl_get_from_matrix(const int row, const int col, const int ncol, const size_t size, const void* data);
-int     mpl_set_numtaxa(const int ntax, Morphyp m);
-int     mpl_set_num_charac(const int ncharac, Morphyp m);
-int     mpl_get_gaphandl(Morphyp handl);
-int     mpl_check_data_loaded(Morphyp m);
+Morphyp     mpl_new_Morphy_t(void);
+void*       mpl_get_from_matrix(const int row, const int col, const int ncol, const size_t size, const void* data);
+int         mpl_set_numtaxa(const int ntax, Morphyp m);
+int         mpl_set_num_charac(const int ncharac, Morphyp m);
+int         mpl_get_gaphandl(Morphyp handl);
+int         mpl_check_data_loaded(Morphyp m);
+MPLchtype*  mpl_get_charac_types(Morphyp handl);
 #endif /* morphy_h */
