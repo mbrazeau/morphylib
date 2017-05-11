@@ -203,7 +203,7 @@ int mpl_delete_rawdata(Morphy m)
 //int     mpl_apply_tipdata (Morphy m);
 int mpl_apply_tipdata(Morphy m)
 {
-    Morphyp mi = (Morphyp)m;
+//    Morphyp mi = (Morphyp)m;
     
     return ERR_NO_ERROR;
 }

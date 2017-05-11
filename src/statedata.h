@@ -14,12 +14,20 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-static const char* gmpl_valid_symb =
-"\n\t[](){}; -+?0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-static const char* gmpl_valid_state =
-"+0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-static const char* gmpl_valid_matrix_wildcard = "-?";
-static const char* gmpl_valid_matrix_punc = "{}();";
+
+#define VALID_NEXMAT_PUNC  "{}();"
+#define VALID_XREAD_MATPUNC "[];"
+#define VALID_WILDCAR   "-?"
+#define VALID_STATESYMB "+0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+#define VALID_WS "\n\t "
+#define VALIDSYMB VALID_NEXMAT_PUNC VALID_XREAD_MATPUNC VALID_WILDCAR VALID_STATESYMB VALID_WS
+
+//static const char* gmpl_valid_symb =
+//"\n\t[](){}; -+?0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+//static const char* gmpl_valid_state =
+//"+0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+//static const char* gmpl_valid_matrix_wildcard = "-?";
+//static const char* gmpl_valid_matrix_punc = "{}();";
 
 typedef struct {
     MPLstate    asint;

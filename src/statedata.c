@@ -100,13 +100,13 @@ int mpl_get_states_from_rawdata(Morphyp handl)
     current = rawmatrix;
     
     do {
-        if (strchr(gmpl_valid_symb, *current)) {
+        if (strchr(VALIDSYMB, *current)) {
             
-            if (strchr(gmpl_valid_matrix_punc, *current)) {
+            if (strchr(VALID_NEXMAT_PUNC, *current)) {
                 ++current;
             }
             if (!strchr(statesymbols, *current) &&
-                strchr(gmpl_valid_state, *current)) {
+                strchr(VALID_STATESYMB, *current)) {
                 // Put in list
                 statesymbols[count] = *current;
                 ++count;
@@ -258,13 +258,13 @@ void mpl_destroy_symbolset(Morphyp m)
 
 bool mpl_is_valid_matrix_symbol(const char c)
 {
-    if (strchr(gmpl_valid_state, c)) {
+    if (strchr(VALID_STATESYMB, c)) {
         return true;
     }
-    else if (strchr(gmpl_valid_matrix_wildcard, c)) {
+    else if (strchr(VALID_WILDCAR, c)) {
         return true;
     }
-    else if (strchr(gmpl_valid_matrix_punc, c)) {
+    else if (strchr(VALID_NEXMAT_PUNC, c)) {
         return true;
     }
     
@@ -350,8 +350,8 @@ int mpl_check_nexus_matrix_dimensions
     assert(current);
     
     do {
-        if (strchr(gmpl_valid_state, *current)
-            || strchr(gmpl_valid_matrix_wildcard, *current)) {
+        if (strchr(VALID_STATESYMB, *current)
+            || strchr(VALID_WILDCAR, *current)) {
             ++matrix_size;
         }
         else if (*current == '(' || *current == '{') {
@@ -565,7 +565,7 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
     
     while (*prpdata) {
         
-        if (!strchr(gmpl_valid_matrix_punc, *prpdata)) {
+        if (!strchr(VALID_NEXMAT_PUNC, *prpdata)) {
             handl->inmatrix->cells[i].asstr[0] = *prpdata;
             handl->inmatrix->cells[i].asstr[1] = '\0';
         }

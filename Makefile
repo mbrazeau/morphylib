@@ -10,7 +10,7 @@ SNAME	:= $(NAME).a
 DNAME	:= $(NAME).so
 TDIRS	:= ./tests/
 LIBS	:= #$(shell pkg-config --libs glib-2.0)
-LDFLAGS	:= -L .$(LIBS) 
+LDFLAGS	:= -L ./ $(LIBS) 
 
 
 .PHONY: all clean test run debug
@@ -27,7 +27,7 @@ $(DNAME) : $(OBJS)
 	$(CC) -shared -o $(DNAME) $(OBJS) 
 
 $(OBJS) : $(SRCDIR)$(SRC)
-	$(CC) $(CFLAGS) $(SRCDIR)$(SRC)
+	$(CC) $(CFLAGS) $(SRCDIR)$(SRC) 
 #$(LDFLAGS)
 
 clean:

@@ -236,13 +236,17 @@ int     mpl_set_missing_symbol
 
 
 /*!
-@brief Commits parameters prior to nodal set calculations.
-@discussion Once the caller is satisfied with the setup of types, weights, and
+ 
+ @brief Commits parameters prior to nodal set calculations.
+
+ @discussion Once the caller is satisfied with the setup of types, weights, and
  partitioning, this function must be called, thereby committing the parameters
  until any changes are made. If no character types have been assigned, the 
  function will fail with an error code.
-@param An instance of the Morphy object.
-@return A Morphy error code.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return A Morphy error code.
 */
 int     mpl_apply_tipdata
     
