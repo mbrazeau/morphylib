@@ -281,7 +281,7 @@ int     mpl_set_charac_weight
 int     mpl_set_parsim_t
 
         (const int charID,
-         const MPLchtype parsfxn,
+         const MPLchtype chtype,
          Morphy           m);
 
 
