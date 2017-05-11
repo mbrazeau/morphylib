@@ -216,8 +216,8 @@ int mpl_convert_cells(Morphyp handl)
 {
     
     int i = 0;
-    int numcells = handl->inmatrix->ncells;
-    MPLmatrix *inmatrix = handl->inmatrix;
+    int numcells = handl->inmatrix.ncells;
+    MPLmatrix *inmatrix = &handl->inmatrix;
     char *celldata = NULL;
     
     for (i = 0; i < numcells; ++i) {
@@ -470,6 +470,55 @@ MPLmatrix* mpl_new_mpl_matrix
     return ret;
 }
 
+int mpl_init_inmatrix(Morphyp handl)
+{
+    assert(handl);
+    MPLmatrix* mat = &handl->inmatrix;
+    int ntaxa = mpl_get_numtaxa((Morphyp)handl);
+    int nchar = mpl_get_num_charac((Morphyp)handl);
+    int nstates = mpl_get_numsymbols(handl);
+    
+    mat->chtypes = (MPLchtype*)calloc(nchar, sizeof(MPLchtype));
+    if (!mat->chtypes) {
+        return ERR_BAD_MALLOC;
+    }
+    
+    mat->intweights = (int*)calloc(nchar, sizeof(int));
+    if (!mat->intweights) {
+        mpl_delete_mpl_matrix(mat);
+        return ERR_BAD_MALLOC;
+    }
+    
+    mat->fltweights = (Mflt*)calloc(nchar, sizeof(Mflt));
+    if (!mat->fltweights) {
+        mpl_delete_mpl_matrix(mat);
+        return ERR_BAD_MALLOC;
+    }
+    
+    mat->cells = (MPLcell*)calloc(ntaxa * nchar, sizeof(MPLcell));
+    if (!mat->cells) {
+        mpl_delete_mpl_matrix(mat);
+        return ERR_BAD_MALLOC;
+    }
+    
+    mat->ncells = ntaxa * nchar;
+    int i = 0;
+    
+    for (i = 0; i < mat->ncells; ++i) {
+        mat->cells[i].asstr = (char*)calloc(nstates + 1, sizeof(char));
+        if (!mat->cells[i].asstr) {
+            int j = 0;
+            for (j = 0; j < i; ++j) {
+                free(mat->cells[i].asstr);
+                mat->cells[i].asstr = NULL;
+            }
+            mpl_delete_mpl_matrix(mat);
+            return ERR_BAD_MALLOC;
+        }
+    }
+    
+    return ERR_NO_ERROR;
+}
 
 int mpl_delete_mpl_matrix(MPLmatrix* m)
 {
@@ -510,7 +559,7 @@ int mpl_delete_mpl_matrix(MPLmatrix* m)
 
 MPLmatrix* mpl_get_mpl_matrix(Morphyp m)
 {
-    return m->inmatrix;
+    return &m->inmatrix;
 }
 
 
@@ -566,8 +615,8 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
     while (*prpdata) {
         
         if (!strchr(VALID_NEXMAT_PUNC, *prpdata)) {
-            handl->inmatrix->cells[i].asstr[0] = *prpdata;
-            handl->inmatrix->cells[i].asstr[1] = '\0';
+            handl->inmatrix.cells[i].asstr[0] = *prpdata;
+            handl->inmatrix.cells[i].asstr[1] = '\0';
         }
         else {
             if (*prpdata == '(') {
@@ -575,22 +624,22 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
                 ++prpdata;
                 do {
                     
-                    handl->inmatrix->cells[i].asstr[j] = *prpdata;
+                    handl->inmatrix.cells[i].asstr[j] = *prpdata;
                     ++j;
                     ++prpdata;
                 } while (*prpdata != ')');
-                handl->inmatrix->cells[i].asstr[j] = '\0';
+                handl->inmatrix.cells[i].asstr[j] = '\0';
             }
             
             if (*prpdata == '{') {
                 j = 0;
                 ++prpdata;
                 do {
-                    handl->inmatrix->cells[i].asstr[j] = *prpdata;
+                    handl->inmatrix.cells[i].asstr[j] = *prpdata;
                     ++j;
                     ++prpdata;
                 } while (*prpdata != '}');
-                handl->inmatrix->cells[i].asstr[j] = '\0';
+                handl->inmatrix.cells[i].asstr[j] = '\0';
             }
             if (*prpdata == ';') {
                 break;
@@ -605,7 +654,7 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
     dbg_printf("Now: %s\n", prpdata);
 
     for (i = 0; i < length; ++i) {
-        dbg_printf("%s ", handl->inmatrix->cells[i].asstr);
+        dbg_printf("%s ", handl->inmatrix.cells[i].asstr);
     }
     dbg_printf("\n");
     
@@ -647,12 +696,14 @@ int mpl_convert_rawdata(Morphyp handl)
         }
     }
     
-    handl->inmatrix = mpl_new_mpl_matrix(handl->numtaxa,
-                                         handl->numcharacters,
-                                         mpl_get_numsymbols(handl));
-    if (!handl->inmatrix) {
-        return ERR_BAD_MALLOC;
-    }
+    mpl_init_inmatrix(handl);
+    
+//    handl->inmatrix = mpl_new_mpl_matrix(handl->numtaxa,
+//                                         handl->numcharacters,
+//                                         mpl_get_numsymbols(handl));
+//    if (!handl->inmatrix) {
+//        return ERR_BAD_MALLOC;
+//    }
     
     // Now safe to write characters into cells.
     mpl_write_input_rawchars_to_cells(handl);

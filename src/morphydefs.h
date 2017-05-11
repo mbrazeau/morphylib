@@ -128,7 +128,7 @@ typedef struct __morphy_s {
         Mflt    asfloat;
     } score;
     
-    struct mpl_matrix_s* inmatrix;
+    MPLmatrix inmatrix;
     
 } Morphy_t, *Morphyp;
 
