@@ -44,6 +44,8 @@ int mpl_delete_Morphy(Morphy m)
 
 int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
 {
+    // TODO: Checking against resets: if this call resets exising dimensions,
+    // then the whole object should get destroyed and reinitialised.
     if (!ntax || !nchar) {
         return ERR_NO_DIMENSIONS;
     }
@@ -55,6 +57,7 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     if (ret) {
         return ret;
     }
+    
     ret = mpl_set_num_charac(nchar, mi);
     if (ret) {
         return ret;
@@ -62,7 +65,7 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     
     mi->symbols.statesymbols = NULL;
 
-    // 
+    mpl_init_charac_info(mi);
     
     return ret;
 }
@@ -216,6 +219,29 @@ int mpl_apply_tipdata(Morphy m)
 //int     mpl_set_charac_weight(const int charID, Mflt weight);
 //
 //int     mpl_set_parsim_t(const int charID, const ptype_t parsfxn, Morphy m);
+int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
+{
+    if (!m) {
+        return ERR_BAD_PARAM;
+    }
+    
+    if (chtype >= MAX_CTYPE) {
+        return ERR_BAD_PARAM; // TODO: Invalid CTYPE
+    }
+    
+    Morphyp handl = (Morphyp)m;
+    handl->charinfo[charID].chtype = chtype;
+    
+    // Setting a character to 'NONE_T' should exclude it from use.
+    if (chtype == NONE_T) {
+        handl->charinfo[charID].included = false;
+    }
+    else {
+        handl->charinfo[charID].included = true;
+    }
+    
+    return ERR_NO_ERROR;
+}
 
 //int     mpl_set_gaphandl(const gap_t gaptype, Morphy m);
 // TODO: Document gap_t
