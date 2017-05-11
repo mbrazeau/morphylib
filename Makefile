@@ -27,7 +27,8 @@ $(DNAME) : $(OBJS)
 	$(CC) -shared -o $(DNAME) $(OBJS) 
 
 $(OBJS) : $(SRCDIR)$(SRC)
-	$(CC) $(CFLAGS) $(SRCDIR)$(SRC) #$(LDFLAGS)
+	$(CC) $(CFLAGS) $(SRCDIR)$(SRC)
+#$(LDFLAGS)
 
 clean:
 	rm *.o
