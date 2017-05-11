@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-
+#include <stdbool.h>
 #ifdef MPLDBL
 typedef double Mflt;
 #elif MPLLDBL
@@ -31,7 +31,9 @@ typedef unsigned int MPLstate;
 #define MAXSTATES       (CHAR_BIT * sizeof(MPLstate))
 #define DEFAULTGAP      '-'
 #define DEFAULTMISSING  '?'
-#define NACUTOFF        2   // The max number of NA tokens that can be ignored in a column
+#define DEFAULCHARTYPE  FITCH_T
+#define NACUTOFF        2   // The max number of NA tokens that can be ignored
+                            // in a column
     
 typedef enum {
     
@@ -62,26 +64,43 @@ typedef struct {
 } MPLcell;
     
 
+typedef int (*MPLdownfxn)
+            (MPLstate* left, MPLstate* right, MPLstate* n, int nchars);
+typedef int (*MPLupfxn)
+            (MPLstate* left, MPLstate* right, MPLstate* n, MPLstate *anc,
+            int nchars);
+    
 typedef struct partition_s MPLpartition;
 typedef struct partition_s {
+    
     MPLchtype   chtype;
+    bool        isNAtype;
     int         maxnchars;
     int         ncharsinpart;
     int*        charindices;
+    MPLdownfxn  inappdownfxn;
+    MPLupfxn    inappupfxn;
+    MPLdownfxn  prelimfxn;
+    MPLupfxn    finalfxn;
+    
 } MPLpartition;
     
 typedef struct charinfo_s MPLcharinfo;
 typedef struct charinfo_s {
-    int charindex;
-    MPLchtype chtype;
+    
+    int          charindex;
+    int          ninapplics;
+    bool         included;
+    MPLchtype    chtype;
     union {
-        int  intwt;
-        Mflt fltwt;
+        int      intwt;
+        Mflt     fltwt;
     };
-    MPLcharinfo* next;
+
 } MPLcharinfo;
 
 typedef struct {
+    
     MPLstate*   NApass1;
     MPLstate*   NApass2;
     MPLstate*   prelimset;
@@ -91,6 +110,7 @@ typedef struct {
     MPLstate*   subtree_NApass2;
     MPLstate*   subtree_prelimset;
     MPLstate*   subtree_finalset;
+    
 } MPLstatesets;
 
 typedef struct mpl_matrix_s {
@@ -107,11 +127,13 @@ typedef struct {
 
 typedef struct __morphy_s {
     
-    int         numtaxa;
-    int         numcharacters;
-    char*       char_t_matrix;
-    int         numnodes;
-    int*        nodesequence;
+    int           numtaxa;
+    int           numcharacters;
+    char*         char_t_matrix;
+    int           numnodes;
+    int*          nodesequence;
+    MPLcharinfo*  charinfo;
+    MPLpartition* partinfo;
     
     struct MPLsymbols {
         int         numstates;
