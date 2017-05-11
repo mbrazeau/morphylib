@@ -35,7 +35,7 @@ int mpl_delete_Morphy(Morphy m)
     // TODO: All Morphy destructors
     mpl_delete_rawdata(m);
     mpl_destroy_symbolset(m1);
-    mpl_delete_mpl_matrix(m1->inmatrix);
+//    mpl_delete_mpl_matrix(m1->inmatrix);
     free(m1);
     
     return ERR_NO_ERROR;
@@ -195,7 +195,7 @@ int mpl_delete_rawdata(Morphy m)
         free(mp->char_t_matrix);
         mp->char_t_matrix = NULL;
         mpl_delete_mpl_matrix(mpl_get_mpl_matrix((Morphyp)m));
-        mp->inmatrix = NULL;
+//        mp->inmatrix = NULL;
     }
     return ERR_NO_ERROR;
 }

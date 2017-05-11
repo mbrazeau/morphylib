@@ -29,54 +29,6 @@
 //static const char* gmpl_valid_matrix_wildcard = "-?";
 //static const char* gmpl_valid_matrix_punc = "{}();";
 
-typedef struct {
-    MPLstate    asint;
-    char*       asstr;
-} MPLcell;
-
-typedef struct charinfo_s MPLcharinfo;
-typedef struct charinfo_s {
-    int charindex;
-    union {
-        int  intwt;
-        Mflt fltwt;
-    };
-    MPLcharinfo* next;
-} MPLcharinfo;
-
-typedef struct {
-    MPLchtype   chtype;
-    int         maxnchars;
-    int         ncharsinpart;
-    int*        charindices;
-} MPLpartition;
-
-typedef struct {int*        intweights;
-    Mflt*       fltweights;
-    MPLstate*   NApass1;
-    MPLstate*   NApass2;
-    MPLstate*   prelimset;
-    MPLstate*   finalset;
-    MPLstate*   subtree_NApass1;
-    MPLstate*   subtree_NApass2;
-    MPLstate*   subtree_prelimset;
-    MPLstate*   subtree_finalset;
-} MPLstatesets;
-
-typedef struct mpl_matrix_s {
-    MPLchtype*  chtypes;
-    int*        intweights;
-    Mflt*       fltweights;
-    int         ncells;
-    MPLcell*    cells;
-} MPLmatrix;
-
-typedef struct {
-    int*            tips;
-    int*            internals;
-    MPLstatesets*   ancstates;
-} MPLnodesets;
-
 /* Function prototypes */
 int         mpl_init_symbolset(Morphyp m);
 int         mpl_set_numsymbols(int numsymb, Morphyp handl);

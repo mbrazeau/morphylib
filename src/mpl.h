@@ -296,7 +296,7 @@ int     mpl_query_gaphandl
         (Morphy     m);
 
 
-int     mpl_down_recon
+int     mpl_resolve_applic_down
 
         (const int  nodeID,
          const int  lChild,
@@ -304,7 +304,7 @@ int     mpl_down_recon
          Morphy     m);
 
 
-int     mpl_up_recon
+int     mpl_resolve_applic_up
 
         (const int  nodeID,
          const int  lChild,
@@ -312,8 +312,15 @@ int     mpl_up_recon
          const int  parentID,
          Morphy     m);
 
+int     mpl_prelim_recon
+    
+        (const int  nodeID,
+         const int  lChild,
+         const int  rChild,
+         Morphy     m);
+    
 
-int     mpl_up_final_recon
+int     mpl_final_recon
 
         (const int  nodeID,
          const int  lChild,

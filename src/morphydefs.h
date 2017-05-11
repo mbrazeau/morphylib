@@ -23,7 +23,7 @@ typedef long double Mflt;
 typedef float Mflt;
 #endif
 
-typedef uint64_t MPLstate;
+typedef unsigned int MPLstate;
 
 #define NA              ((MPLstate)1)
 #define MISSING         ((MPLstate)~0)
@@ -55,7 +55,55 @@ typedef enum {
     
 } gap_t;
 
-    
+typedef struct {
+    MPLstate    asint;
+    char*       asstr;
+} MPLcell;
+
+typedef struct charinfo_s MPLcharinfo;
+typedef struct charinfo_s {
+    int charindex;
+    union {
+        int  intwt;
+        Mflt fltwt;
+    };
+    MPLcharinfo* next;
+} MPLcharinfo;
+
+typedef struct partition_s MPLpartition;
+typedef struct partition_s {
+    MPLchtype   chtype;
+    int         maxnchars;
+    int         ncharsinpart;
+    int*        charindices;
+} MPLpartition;
+
+typedef struct {
+    MPLstate*   NApass1;
+    MPLstate*   NApass2;
+    MPLstate*   prelimset;
+    MPLstate*   finalset;
+    MPLstate*   subtree_actives;
+    MPLstate*   subtree_NApass1;
+    MPLstate*   subtree_NApass2;
+    MPLstate*   subtree_prelimset;
+    MPLstate*   subtree_finalset;
+} MPLstatesets;
+
+typedef struct mpl_matrix_s {
+    MPLchtype*  chtypes;
+    int*        intweights;
+    Mflt*       fltweights;
+    int         ncells;
+    MPLcell*    cells;
+} MPLmatrix;
+
+typedef struct {
+    int*            tips;
+    int*            internals;
+    MPLstatesets**  ancstates;
+} MPLnodesets;
+
 typedef struct __morphy_s {
     
     int         numtaxa;
