@@ -9,16 +9,15 @@
 
 
 // Morphy handler for R
-// SEXP morphy_handler_R(SEXP matrix, SEXP ntaxa_R, SEXP nchar_R, SEXP list_anc, SEXP list_child, SEXP weight) {
-SEXP morphy_handler_R(SEXP ntaxa_R, SEXP nchar_R, SEXP list_anc, SEXP list_child, SEXP weight) {
+SEXP morphy_handler_R(SEXP matrix, SEXP ntaxa_R, SEXP nchar_R, SEXP list_anc, SEXP list_child, SEXP weight) {
 
     // Input variables
     int ntaxa = asInteger(ntaxa_R);
     int nchar = asInteger(nchar_R);
 
     // Vectors from R
-    // matrix = coerceVector(matrix, STRSXP);
-    // PROTECT(matrix);
+    matrix = coerceVector(matrix, STRSXP);
+    PROTECT(matrix);
     list_anc = coerceVector(list_anc, INTSXP);
     PROTECT(list_anc);
     list_child = coerceVector(list_child, INTSXP);
@@ -32,17 +31,20 @@ SEXP morphy_handler_R(SEXP ntaxa_R, SEXP nchar_R, SEXP list_anc, SEXP list_child
     char* symbols = NULL;
     int i = 0;
 
-    // Create a morphy handle
+    // Create a morphy handle Here
+
+
+    
 
     // Do some stuff on the handle
     printf("ntaxa  = %i \n", ntaxa);
     printf("nchar  = %i \n", nchar);
 
-    // printf("matrix  = ");
-    // for(i = 0; i < ntaxa*nchar; ++i) {
-    //     printf("%c", STRING(matrix)[i]) ;
-    // }
-    // printf("\n");
+    printf("matrix  = ");
+    for(i = 0; i < ntaxa*nchar; ++i) {
+        printf("%c", CHAR(asChar(matrix))[i]) ;
+    }
+    printf("\n");
 
     printf("ancestors  = ");
     for(i = 0; i < nnodes+ntaxa; ++i) {
