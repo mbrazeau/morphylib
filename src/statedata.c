@@ -78,6 +78,7 @@ int mpl_assign_symbol_list_from_matrix
     return ERR_NO_ERROR;
 }
 
+
 char *mpl_query_symbols_from_matrix(Morphyp m)
 {
     return m->symbols.symbolsinmatrix;
@@ -141,6 +142,7 @@ int mpl_set_numsymbols(int numsymb, Morphyp handl)
     return ERR_NO_ERROR;
 }
 
+
 int mpl_get_numsymbols(Morphyp handl)
 {
     dbg_printf("Getting numsymbols\n");
@@ -193,6 +195,7 @@ MPLstate mpl_convert_gap_symbol(Morphyp handl)
     return ERR_NO_DATA;
 }
 
+
 MPLstate mpl_convert_char_to_MPLstate(const char* celldata, Morphyp handl)
 {
     int i = 0;
@@ -211,6 +214,7 @@ MPLstate mpl_convert_char_to_MPLstate(const char* celldata, Morphyp handl)
     
     return result;
 }
+
 
 int mpl_convert_cells(Morphyp handl)
 {
@@ -236,14 +240,6 @@ int mpl_convert_cells(Morphyp handl)
     
     return ERR_NO_ERROR;
 }
-
-//int mpl_init_symbolset(Morphyp m)
-//{
-//    if (!mpl_get_numsymbols(m)) {
-////        //somthing
-//    }
-//    return ERR_NO_ERROR;
-//}
 
 
 void mpl_destroy_symbolset(Morphyp m)
@@ -427,23 +423,23 @@ MPLmatrix* mpl_new_mpl_matrix
         return NULL;
     }
     
-    ret->chtypes = (MPLchtype*)calloc(nchar, sizeof(MPLchtype));
-    if (!ret->chtypes) {
-        mpl_delete_mpl_matrix(ret);
-        return NULL;
-    }
-    
-    ret->intweights = (int*)calloc(nchar, sizeof(int));
-    if (!ret->intweights) {
-        mpl_delete_mpl_matrix(ret);
-        return NULL;
-    }
-    
-    ret->fltweights = (Mflt*)calloc(nchar, sizeof(Mflt));
-    if (!ret->fltweights) {
-        mpl_delete_mpl_matrix(ret);
-        return NULL;
-    }
+//    ret->chtypes = (MPLchtype*)calloc(nchar, sizeof(MPLchtype));
+//    if (!ret->chtypes) {
+//        mpl_delete_mpl_matrix(ret);
+//        return NULL;
+//    }
+//    
+//    ret->intweights = (int*)calloc(nchar, sizeof(int));
+//    if (!ret->intweights) {
+//        mpl_delete_mpl_matrix(ret);
+//        return NULL;
+//    }
+//    
+//    ret->fltweights = (Mflt*)calloc(nchar, sizeof(Mflt));
+//    if (!ret->fltweights) {
+//        mpl_delete_mpl_matrix(ret);
+//        return NULL;
+//    }
     
     ret->cells = (MPLcell*)calloc(ntaxa * nchar, sizeof(MPLcell));
     if (!ret->cells) {
@@ -470,6 +466,7 @@ MPLmatrix* mpl_new_mpl_matrix
     return ret;
 }
 
+
 int mpl_init_inmatrix(Morphyp handl)
 {
     assert(handl);
@@ -478,22 +475,22 @@ int mpl_init_inmatrix(Morphyp handl)
     int nchar = mpl_get_num_charac((Morphyp)handl);
     int nstates = mpl_get_numsymbols(handl);
     
-    mat->chtypes = (MPLchtype*)calloc(nchar, sizeof(MPLchtype));
-    if (!mat->chtypes) {
-        return ERR_BAD_MALLOC;
-    }
-    
-    mat->intweights = (int*)calloc(nchar, sizeof(int));
-    if (!mat->intweights) {
-        mpl_delete_mpl_matrix(mat);
-        return ERR_BAD_MALLOC;
-    }
-    
-    mat->fltweights = (Mflt*)calloc(nchar, sizeof(Mflt));
-    if (!mat->fltweights) {
-        mpl_delete_mpl_matrix(mat);
-        return ERR_BAD_MALLOC;
-    }
+//    mat->chtypes = (MPLchtype*)calloc(nchar, sizeof(MPLchtype));
+//    if (!mat->chtypes) {
+//        return ERR_BAD_MALLOC;
+//    }
+//    
+//    mat->intweights = (int*)calloc(nchar, sizeof(int));
+//    if (!mat->intweights) {
+//        mpl_delete_mpl_matrix(mat);
+//        return ERR_BAD_MALLOC;
+//    }
+//    
+//    mat->fltweights = (Mflt*)calloc(nchar, sizeof(Mflt));
+//    if (!mat->fltweights) {
+//        mpl_delete_mpl_matrix(mat);
+//        return ERR_BAD_MALLOC;
+//    }
     
     mat->cells = (MPLcell*)calloc(ntaxa * nchar, sizeof(MPLcell));
     if (!mat->cells) {
@@ -520,6 +517,7 @@ int mpl_init_inmatrix(Morphyp handl)
     return ERR_NO_ERROR;
 }
 
+
 int mpl_delete_mpl_matrix(MPLmatrix* m)
 {
     if (!m) {
@@ -538,20 +536,20 @@ int mpl_delete_mpl_matrix(MPLmatrix* m)
         free(m->cells);
     }
     
-    if (m->chtypes) {
-        free(m->chtypes);
-        m->chtypes = NULL;
-    }
-    
-    if (m->fltweights) {
-        free(m->fltweights);
-        m->fltweights = NULL;
-    }
-    
-    if (m->intweights) {
-        free(m->intweights);
-        m->intweights = NULL;
-    }
+//    if (m->chtypes) {
+//        free(m->chtypes);
+//        m->chtypes = NULL;
+//    }
+//    
+//    if (m->fltweights) {
+//        free(m->fltweights);
+//        m->fltweights = NULL;
+//    }
+//    
+//    if (m->intweights) {
+//        free(m->intweights);
+//        m->intweights = NULL;
+//    }
     
     return ERR_NO_ERROR;
 }
@@ -661,19 +659,6 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
     return ERR_NO_ERROR;
 }
 
-int mpl_update_partitions(MPLmatrix mat)
-{
-    // TODO: Implement
-    
-    // Note: maybe create a stack of free partitions that can be listed and then
-    // taken down each time the partitions list is updated. This will keep the
-    // analysis state of the matrix 'ready to go' at any time.
-    
-    return ERR_NO_ERROR;
-}
-
-
-
 
 int mpl_convert_rawdata(Morphyp handl)
 {
@@ -697,13 +682,6 @@ int mpl_convert_rawdata(Morphyp handl)
     }
     
     mpl_init_inmatrix(handl);
-    
-//    handl->inmatrix = mpl_new_mpl_matrix(handl->numtaxa,
-//                                         handl->numcharacters,
-//                                         mpl_get_numsymbols(handl));
-//    if (!handl->inmatrix) {
-//        return ERR_BAD_MALLOC;
-//    }
     
     // Now safe to write characters into cells.
     mpl_write_input_rawchars_to_cells(handl);
