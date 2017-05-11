@@ -40,7 +40,7 @@ void* mpl_get_from_matrix
  const size_t   size,
  const void*    data)
 {
-    return (void*)&data[row * col * size + (size * col - 1)];
+    return (void*)(data + row * col * size + (size * col - 1));
 }
 
 
