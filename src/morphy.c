@@ -40,7 +40,7 @@ void* mpl_get_from_matrix
  const size_t   size,
  const void*    data)
 {
-    return (void*)(data + row * col * size + (size * col - 1));
+    return (void*)(data + (row * ncol * size + (size * col)));
 }
 
 
@@ -83,8 +83,42 @@ int mpl_check_data_loaded(Morphyp m)
     return 0;
 }
 
-int mpl_down_recon
-(const int nodeID, const int lChild, const int rChild, Morphy m)
+char mpl_get_gap_symbol(Morphyp handl)
 {
-    return 1;
+    return handl->symbols.gap;
 }
+
+int mpl_count_gaps_in_columns(Morphyp handl)
+{
+    int i = 0;
+    int j = 0;
+    char gap            = mpl_get_gap_symbol(handl);
+    int numchar         = mpl_get_num_charac((Morphy)handl);
+    int numtax          = mpl_get_numtaxa((Morphy)handl);
+    MPLmatrix* matrix   = mpl_get_mpl_matrix(handl);
+    MPLcharinfo* chinfo = handl->charinfo;
+    int numna = 0;
+    
+    for (i = 0; i < numchar; ++i) {
+        chinfo[i].ninapplics = 0;
+        for (j = 0; j < numtax; ++j) {
+            
+            MPLcell* cell = &matrix->cells[j * numchar + i];
+            
+            if (strchr(cell->asstr, gap)) {
+                ++chinfo[i].ninapplics;
+            }
+            
+            // Once the number of NAs exceeds 2, then we can be satisfied that
+            // there are sufficient NAs to apply NA functions, otherwise, just
+            // treat it as a gap
+            if (chinfo[i].ninapplics > NACUTOFF) {
+                ++numna;
+                break;
+            }
+        }
+    }
+    
+    return numna;
+}
+
