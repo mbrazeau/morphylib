@@ -120,18 +120,12 @@ int mpl_attach_symbols(const char *symbols, Morphy m)
         }
     }
     symbsnospaces[j] = '\0';
-    
-    dbg_printf("Symbols after removal of spaces: %s\n", symbsnospaces);
-    
+
     if (isdataloaded) {
-        
-        dbg_printf("Data is loaded already...\n");
-        
         char* matrixsymbs = mpl_query_symbols_from_matrix((Morphyp)m);
         assert(matrixsymbs);
         
         if (mpl_compare_symbol_lists(symbsnospaces, matrixsymbs)) {
-            dbg_printf("Bad symbols...\n");
             free(symbsnospaces);
             return ERR_SYMBOL_MISMATCH;
         }
@@ -174,8 +168,6 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
                                                 mpl_get_num_charac(m1));
     
     if (err) {
-        // Cleanup; return error
-        dbg_printf("Invalid data :(\n");
         mpl_delete_rawdata(m1);
         return err;
     }
