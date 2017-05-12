@@ -112,9 +112,8 @@ typedef struct {
     MPLstate*   subtree_finalset;
     
 } MPLstatesets;
-
+    
 typedef struct mpl_matrix_s {
-    MPLcharinfo*    chinfo;
     int             ncells;
     MPLcell*        cells;
 } MPLmatrix;
@@ -125,33 +124,34 @@ typedef struct {
     MPLstatesets**  ancstates;
 } MPLnodesets;
 
+typedef struct symbols_s {
+    int         numstates;
+    char*       statesymbols;
+    char*       symbolsinmatrix;
+    MPLstate*   packed;
+    char        gap;
+    char        missing;
+} MPLsymbols;
+    
 typedef struct __morphy_s {
     
-    int           numtaxa;
-    int           numcharacters;
-    char*         char_t_matrix;
-    int           numnodes;
-    int*          nodesequence;
-    MPLcharinfo*  charinfo;
-    MPLpartition* partinfo;
-    
-    struct MPLsymbols {
-        int         numstates;
-        char*       statesymbols;
-        char*       symbolsinmatrix;
-        MPLstate*   packed;
-        char        gap;
-        char        missing;
-    } symbols;
-    
-    gap_t       gaphandl;
-    
+    int             numtaxa;
+    int             numcharacters;
+    MPLcharinfo*    charinfo;
+    int             numschtypes[MAX_CTYPE];
+    int             numwNAchtypes[MAX_CTYPE];
+    int             numparts;
+    MPLpartition*   partinfo;
+    MPLsymbols      symbols;
+    gap_t           gaphandl;
     union {
-        int     asint;
-        Mflt    asfloat;
+        int         asint;
+        Mflt        asfloat;
     } score;
-    
-    MPLmatrix inmatrix;
+    MPLmatrix       inmatrix;
+    char*           char_t_matrix;
+    int             numnodes;
+    int*            nodesequence;
     
 } Morphy_t, *Morphyp;
 
