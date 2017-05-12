@@ -30,5 +30,7 @@ int         mpl_set_numtaxa(const int ntax, Morphyp m);
 int         mpl_set_num_charac(const int ncharac, Morphyp m);
 int         mpl_get_gaphandl(Morphyp handl);
 int         mpl_check_data_loaded(Morphyp m);
+char        mpl_get_gap_symbol(Morphyp handl);
 MPLchtype*  mpl_get_charac_types(Morphyp handl);
+int         mpl_count_gaps_in_columns(Morphyp handl);
 #endif /* morphy_h */
