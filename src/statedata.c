@@ -60,7 +60,7 @@ int mpl_compare_symbol_lists(const char* sym1, const char* sym2)
 
 
 int mpl_assign_symbol_list_from_matrix
-(const char *symbs, struct MPLsymbols* symlist)
+(const char *symbs, MPLsymbols* symlist)
 {
     assert(symbs && symlist);
     
@@ -126,7 +126,6 @@ int mpl_get_states_from_rawdata(Morphyp handl)
     qsort(statesymbols, strlen(statesymbols), sizeof(char),
           compare_char_t_states);
     
-    dbg_printf("The state symbols: %s\n", statesymbols);
     int numstates = (int)strlen(statesymbols);
     mpl_set_numsymbols(numstates, handl);
     mpl_assign_symbol_list_from_matrix(statesymbols, &handl->symbols);
@@ -136,7 +135,6 @@ int mpl_get_states_from_rawdata(Morphyp handl)
 
 int mpl_set_numsymbols(int numsymb, Morphyp handl)
 {
-    dbg_printf("Setting numsymbols\n");
     assert(handl);
     handl->symbols.numstates = numsymb;
     return ERR_NO_ERROR;
@@ -145,7 +143,6 @@ int mpl_set_numsymbols(int numsymb, Morphyp handl)
 
 int mpl_get_numsymbols(Morphyp handl)
 {
-    dbg_printf("Getting numsymbols\n");
     assert(handl);
     return handl->symbols.numstates;
 }
@@ -180,10 +177,15 @@ int mpl_create_state_dictionary(Morphyp handl)
 }
 
 
-MPLstate mpl_convert_gap_symbol(Morphyp handl)
+MPLstate mpl_convert_gap_symbol(Morphyp handl, bool over_cutoff)
 {
     if (handl->gaphandl == GAP_INAPPLIC) {
-        return NA;
+        if (over_cutoff) {
+            return NA;
+        }
+        else {
+            return MISSING;
+        }
     }
     else if (handl->gaphandl == GAP_NEWSTATE) {
         return (MPLstate)1;
@@ -220,22 +222,41 @@ int mpl_convert_cells(Morphyp handl)
 {
     
     int i = 0;
-    int numcells = handl->inmatrix.ncells;
+    int j = 0;
+    int ncols = mpl_get_num_charac((Morphy)handl);
+    int nrows = mpl_get_numtaxa((Morphy)handl);
     MPLmatrix *inmatrix = &handl->inmatrix;
+    MPLcharinfo* chinfo = handl->charinfo;
+    MPLcell *cell;
+    
     char *celldata = NULL;
     
-    for (i = 0; i < numcells; ++i) {
-        celldata = inmatrix->cells[i].asstr;
-        if (*celldata == handl->symbols.gap) {
-            inmatrix->cells[i].asint = mpl_convert_gap_symbol(handl);
+    for (i = 0; i < ncols; ++i) {
+        
+        for (j = 0; j < nrows; ++j) {
+            
+            cell = &inmatrix->cells[j * ncols + i];
+            celldata = cell->asstr;
+            
+            if (*celldata == handl->symbols.gap) {
+                
+                bool over_cutoff = false;
+                
+                if (chinfo[i].ninapplics > NACUTOFF) {
+                    over_cutoff = true;
+                }
+                
+                cell->asint = mpl_convert_gap_symbol(handl, over_cutoff);
+            }
+            else if (*celldata == handl->symbols.missing) {
+                cell->asint = MISSING;
+            }
+            else {
+                cell->asint = mpl_convert_char_to_MPLstate(celldata, handl);
+            }
+            
         }
-        else if (*celldata == handl->symbols.missing) {
-            inmatrix->cells[i].asint = MISSING;
-        }
-        else {
-            inmatrix->cells[i].asint = mpl_convert_char_to_MPLstate(celldata,
-                                                                    handl);
-        }
+    
     }
     
     return ERR_NO_ERROR;
@@ -306,7 +327,6 @@ void mpl_copy_valid_matrix_data(char *copy, const char* rawmatrix)
     } while (*matptr);
     
     copy[i-1] = '\0';
-    dbg_printf("The truncated matrix: %s\n", copy);
 }
 
 
@@ -371,9 +391,6 @@ int mpl_check_nexus_matrix_dimensions
 
         ++current;
     } while (*current);
-    
-    dbg_printf("Expected dimensions: %i\n", expected_size);
-    dbg_printf("matrix length: %i\n", matrix_size);
     
     if (matrix_size > expected_size) {
         return ERR_DIMENS_UNDER;
@@ -602,13 +619,11 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
 {
     int i = 0;
     int j = 0;
-    int rows = mpl_get_numtaxa((Morphyp)handl);
-    int cols = mpl_get_num_charac((Morphyp)handl);
-    int length = rows * cols;
+//    int rows = mpl_get_numtaxa((Morphyp)handl);
+//    int cols = mpl_get_num_charac((Morphyp)handl);
+//    int length = rows * cols;
     
     char* prpdata = mpl_get_preprocessed_matrix(handl);
-    
-    dbg_printf("Made it this far...\n%s\n", prpdata);
     
     while (*prpdata) {
         
@@ -649,12 +664,6 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
     };
     
     prpdata = mpl_get_preprocessed_matrix(handl);
-    dbg_printf("Now: %s\n", prpdata);
-
-    for (i = 0; i < length; ++i) {
-        dbg_printf("%s ", handl->inmatrix.cells[i].asstr);
-    }
-    dbg_printf("\n");
     
     return ERR_NO_ERROR;
 }
@@ -688,6 +697,7 @@ int mpl_convert_rawdata(Morphyp handl)
     mpl_create_state_dictionary(handl);
 
     // Use dictionary to convert
+    mpl_count_gaps_in_columns(handl);
     mpl_convert_cells(handl);
     
     return ret;
