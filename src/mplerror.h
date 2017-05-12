@@ -13,7 +13,9 @@
  used by some internal functions) to report errors back to the caller.
  */
 typedef enum {
-    ERR_SYMBOL_MISMATCH     = -11,  /*! Symbols list and matrix have a mismatch 
+    ERR_UNKNOWN_CHTYPE      = -12,
+    
+    ERR_SYMBOL_MISMATCH     = -11,  /*! Symbols list and matrix have a mismatch
                                        (i.e. symbol not found).*/
     ERR_MATCHING_PARENTHS   = -10,  /*! Data input has unexpected non-matching 
                                         parentheses.*/
