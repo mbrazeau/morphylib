@@ -8,7 +8,7 @@
 
 #include "mpltest.h"
 //#include "testmorphy.h"
-#include "morphy.h"
+#include "../src/morphy.h"
 
 int test_count_gaps_basic(void)
 {
