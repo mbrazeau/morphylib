@@ -13,6 +13,8 @@
  used by some internal functions) to report errors back to the caller.
  */
 typedef enum {
+    ERR_CASE_NOT_IMPL       = -13,
+    
     ERR_UNKNOWN_CHTYPE      = -12,
     
     ERR_SYMBOL_MISMATCH     = -11,  /*! Symbols list and matrix have a mismatch
