@@ -9,15 +9,15 @@
 
 
 // Morphy handler for R
-SEXP morphy_handler_R(SEXP matrix, SEXP ntaxa_R, SEXP nchar_R, SEXP list_anc, SEXP list_child, SEXP weight) {
+SEXP morphy_handler_R(SEXP matrix_R, SEXP ntaxa_R, SEXP nchar_R, SEXP list_anc, SEXP list_child, SEXP weight) {
 
     // Input variables
     int ntaxa = asInteger(ntaxa_R);
     int nchar = asInteger(nchar_R);
+    const char *matrix = CHAR(asChar(matrix_R)); // As the matrix will be sent in the format of a single string
 
     // Vectors from R
-    matrix = coerceVector(matrix, STRSXP);
-    PROTECT(matrix);
+    
     list_anc = coerceVector(list_anc, INTSXP);
     PROTECT(list_anc);
     list_child = coerceVector(list_child, INTSXP);
@@ -37,35 +37,35 @@ SEXP morphy_handler_R(SEXP matrix, SEXP ntaxa_R, SEXP nchar_R, SEXP list_anc, SE
     
 
     // Do some stuff on the handle
-    printf("ntaxa  = %i \n", ntaxa);
-    printf("nchar  = %i \n", nchar);
+    Rprintf("ntaxa  = %i \n", ntaxa);
+    Rprintf("nchar  = %i \n", nchar);
 
     printf("matrix  = ");
     for(i = 0; i < ntaxa*nchar; ++i) {
-        printf("%c", CHAR(asChar(matrix))[i]) ;
+        Rprintf("%c", CHAR(asChar(matrix))[i]) ;
     }
-    printf("\n");
+    Rprintf("\n");
 
-    printf("ancestors  = ");
+    Rprintf("ancestors  = ");
     for(i = 0; i < nnodes+ntaxa; ++i) {
-        printf("%i", INTEGER(list_anc)[i]) ;
+        Rprintf("%i", INTEGER(list_anc)[i]) ;
     }
-    printf("\n");
+    Rprintf("\n");
 
-    printf("children  = ");
+    Rprintf("children  = ");
     for(i = 0; i < nnodes*2; ++i) {
-        printf("%i", INTEGER(list_child)[i]) ;
+        Rprintf("%i", INTEGER(list_child)[i]) ;
     }
-    printf("\n");
+    Rprintf("\n");
 
-    printf("weights  = ");
+    Rprintf("weights  = ");
     for(i = 0; i < nchar; ++i) {
-        printf("%i", INTEGER(weight)[i]) ;
+        Rprintf("%i", INTEGER(weight)[i]) ;
     }
-    printf("\n");
+    Rprintf("\n");
 
-    printf("nedges  = %i \n", nedges);
-    printf("nnodes  = %i \n", nnodes);
+    Rprintf("nedges  = %i \n", nedges);
+    Rprintf("nnodes  = %i \n", nnodes);
 
 
     // Reconvert outputs
@@ -74,7 +74,7 @@ SEXP morphy_handler_R(SEXP matrix, SEXP ntaxa_R, SEXP nchar_R, SEXP list_anc, SE
     // Some silly output
     SEXP output = PROTECT(allocVector(REALSXP, 1));
 
-    UNPROTECT(5);
+    UNPROTECT(4);
 
     // Return
     return output;
