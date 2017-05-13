@@ -12,7 +12,7 @@
 #include "statedata.h"
 
 /**/
-int morphy_fitch_downpass
+int mpl_fitch_downpass
 (MPLstate* left, MPLstate* right, MPLstate* n, int nchars)
 {
     int i = 0;
@@ -32,16 +32,16 @@ int morphy_fitch_downpass
 }
 
 
-void morphy_fitch_uppass
+int mpl_fitch_uppass
 (MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
 {
     
-    
+    return -1;
 }
 
 
 /**/
-int morphy_NA_fitch_first_downpass
+int mpl_NA_fitch_first_downpass
 (MPLstate* left, MPLstate *right, MPLstate *n, int nchars)
 {
     
@@ -49,7 +49,7 @@ int morphy_NA_fitch_first_downpass
 }
 
 
-int morphy_NA_fitch_first_uppass
+int mpl_NA_fitch_first_uppass
 (MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
 {
     
@@ -57,7 +57,7 @@ int morphy_NA_fitch_first_uppass
 }
 
 
-int morphy_NA_fitch_second_downpass
+int mpl_NA_fitch_second_downpass
 (MPLstate* left, MPLstate* right, MPLstate* n, int nchars)
 {
     int steps = 0;
@@ -66,7 +66,7 @@ int morphy_NA_fitch_second_downpass
 }
 
 
-int morphy_NA_fitch_second_uppass
+int mpl_NA_fitch_second_uppass
 (MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
 {
     int steps = 0;
