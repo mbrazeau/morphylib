@@ -27,6 +27,7 @@ int main (void)
     
     // morphy.c tests
     fails += test_count_gaps_basic();
+    fails += test_partition_push_index();
     
     printf("\n\nTest summary:\n\n");
     if (fails) {

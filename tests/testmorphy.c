@@ -12,7 +12,7 @@
 
 int test_count_gaps_basic(void)
 {
-    printf("Testing counting of gaps in matrix\n");
+    theader("Testing counting of gaps in matrix");
     int failn = 0;
     int ntax	= 6;
     int nchar	= 10;
@@ -40,4 +40,56 @@ int test_count_gaps_basic(void)
     
     return failn;
 
+}
+
+int test_partition_push_index(void)
+{
+
+    theader("Testing new index pushing in partitioning");
+    int failn = 0;
+    
+    MPLpartition* part = mpl_new_partition(FITCH_T, false);
+    if (!part) {
+        ++failn;
+        pfail;
+        return failn;
+    }
+    
+    int nindices    = 4;
+    int indices[]   = {10, 32, 21, 110};
+    int i = 0;
+    
+    for (i = 0; i < nindices; ++i) {
+        mpl_part_push_index(indices[i], part);
+    }
+    
+    for (i = 0; i < nindices; ++i) {
+        if (indices[i] != part->charindices[i]) {
+            ++failn;
+            pfail;
+        }
+        else {
+            ppass;
+        }
+    }
+    
+    if (part->ncharsinpart != nindices) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (part->ncharsinpart != part->maxnchars) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_delete_partition(part);
+    
+    return failn;
 }

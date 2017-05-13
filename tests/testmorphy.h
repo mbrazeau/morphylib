@@ -10,5 +10,5 @@
 #define testmorphy_h
 
 int test_count_gaps_basic(void);
-
+int test_partition_push_index(void);
 #endif /* testmorphy_h */
