@@ -177,6 +177,7 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
     return err;
 }
 
+
 //int     mpl_delete_rawdata(Morphy m);
 int mpl_delete_rawdata(Morphy m)
 {
@@ -194,6 +195,7 @@ int mpl_delete_rawdata(Morphy m)
     }
     return ERR_NO_ERROR;
 }
+
 
 //int     mpl_apply_tipdata (Morphy m);
 int mpl_apply_tipdata(Morphy m)
@@ -216,6 +218,7 @@ int mpl_apply_tipdata(Morphy m)
     
     return ERR_NO_ERROR;
 }
+
 
 //int     mpl_set_postorder(const int nodeID, const int index, Morphy m);
 //
