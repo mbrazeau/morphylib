@@ -40,7 +40,7 @@ char            mpl_get_gap_symbol(Morphyp handl);
 MPLchtype*      mpl_get_charac_types(Morphyp handl);
 int             mpl_part_push_index(int newint, MPLpartition* part);
 int             mpl_delete_partition(MPLpartition* part);
-MPLpartition*   mpl_new_partition(MPLchtype chtype, bool hasNA);
+MPLpartition*   mpl_new_partition(const MPLchtype chtype, const bool hasNA);
 int             mpl_count_gaps_in_columns(Morphyp handl);
 //MPLarray*   mpl_new_array(size_t elemsize);
 //void        mpl_destroy_array(MPLarray* arr);

@@ -242,7 +242,7 @@ int mpl_delete_partition(MPLpartition* part)
 }
 
 
-MPLpartition* mpl_new_partition(MPLchtype chtype, bool hasNA)
+MPLpartition* mpl_new_partition(const MPLchtype chtype, const bool hasNA)
 {
     assert(chtype);
     
@@ -301,3 +301,50 @@ int mpl_count_gaps_in_columns(Morphyp handl)
     return numna;
 }
 
+int mpl_compare_partition_with_char_info
+(const MPLcharinfo *chinfo, const MPLpartition* part)
+{
+    int ret = 0;
+    
+    if (chinfo->chtype != part->chtype) {
+        ++ret;
+    }
+    if (chinfo->ninapplics <= NACUTOFF) {
+        if (part->isNAtype) {
+            ++ret;
+        }
+    }
+    else {
+        if (!part->isNAtype) {
+            ++ret;
+        }
+    }
+    
+    return ret = 0;
+}
+
+/*!
+ @brief Searches the partition list for a partition matching the supplied info
+ @discussion Traverses a linked list of partitions, looking for a partition 
+ matching the supplied information. If this function returns NULL, then the
+ supplied info does not match a character in the list. A new partition will 
+ need to be created.
+ @param chinfo MPLchtype providing data on a character in the matrix.
+ @param part A data partition; should be the first partition in the list.
+ @return A pointer to the partition corresponding to the supplied character
+ information.
+ */
+MPLpartition* mpl_search_partitions(MPLcharinfo *chinfo, MPLpartition* part)
+{
+    assert(chinfo);
+    MPLpartition* p = part;
+    
+    while (p) {
+        if (mpl_compare_partition_with_char_info(chinfo, p)) {
+            return p;
+        }
+        p = p->next;
+    }
+    
+    return p;
+}
