@@ -372,31 +372,33 @@ int mpl_setup_partitions(Morphyp handle)
         // Examine the character info for each character in the matrix
         chinfo = &handle->charinfo[i];
         
-        p = mpl_search_partitions(chinfo, first, mpl_get_gaphandl(handle));
-        
-        if (p) {
-            mpl_part_push_index(i, p);
-        }
-        else {
-            bool hasNA = false;
-            if (handle->gaphandl == GAP_INAPPLIC) {
-                if (chinfo->ninapplics > NACUTOFF) {
-                    hasNA = true;
-                }
-            }
-            p = mpl_new_partition(chinfo->chtype, hasNA);
-//            last->next =
-            mpl_part_push_index(i, p);
-            if (!first) {
-                first = p;
-                last = p;
+        if (chinfo->included) {
+            p = mpl_search_partitions(chinfo, first, mpl_get_gaphandl(handle));
+            
+            if (p) {
+                mpl_part_push_index(i, p);
             }
             else {
-                last->next = p;
-                last = p;
+                bool hasNA = false;
+                if (handle->gaphandl == GAP_INAPPLIC) {
+                    if (chinfo->ninapplics > NACUTOFF) {
+                        hasNA = true;
+                    }
+                }
+                p = mpl_new_partition(chinfo->chtype, hasNA);
+                //            last->next =
+                mpl_part_push_index(i, p);
+                if (!first) {
+                    first = p;
+                    last = p;
+                }
+                else {
+                    last->next = p;
+                    last = p;
+                }
+                
+                ++numparts;
             }
-            
-            ++numparts;
         }
     }
     
