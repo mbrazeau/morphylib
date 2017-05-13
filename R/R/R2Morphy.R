@@ -78,8 +78,9 @@ ancestors <- as.integer(c(vapply(1:n.tip, ancestor, double(1)), 0, vapply((n.tip
 descendants <- as.integer(vapply(preorder, descendant, double(2))) # children of each node, a pair at a time, left-right, left-right
 
 
-dyn.load('C:/users/ms609/RMorphy.dll') ## Replace with a sensible path to RMorphy.o
+dyn.load('C:/Users/ms609/RMorphy.dll') ## Replace with a sensible path to RMorphy.o
 .Call('Morphy', as.integer(n.char), as.integer(n.tip), as.integer(descendants), as.integer(ancestors), as.character(matrix_as_string))
+dyn.unload('C:/Users/ms609/RMorphy.dll') ## Replace with a sensible path to RMorphy.o
 
 
 
