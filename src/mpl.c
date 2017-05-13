@@ -181,7 +181,7 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
 int mpl_delete_rawdata(Morphy m)
 {
     if (!m) {
-        return ERR_BAD_PARAM;
+        return ERR_UNEXP_NULLPTR;
     }
     Morphyp mp = (Morphyp)m;
     
@@ -198,7 +198,21 @@ int mpl_delete_rawdata(Morphy m)
 //int     mpl_apply_tipdata (Morphy m);
 int mpl_apply_tipdata(Morphy m)
 {
-//    Morphyp mi = (Morphyp)m;
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp mi = (Morphyp)m;
+
+    // TODO: Check for existing partitions;
+    // Call here
+    
+    // Setup the partitions
+    mpl_setup_partitions(mi);
+    
+    // TODO: Create all the internal data memory
+    
+    // TODO: Apply the data to the tips
     
     return ERR_NO_ERROR;
 }

@@ -190,13 +190,13 @@ int mpl_assign_partition_fxns(MPLpartition* part)
 }
 
 
-int mpl_extend_intarray(int* array, size_t size)
+int mpl_extend_intarray(int** array, size_t size)
 {
-    int* temp = (int*)realloc(array, size);
+    int* temp = (int*)realloc(*array, size);
     if (!temp) {
         return ERR_BAD_MALLOC;
     }
-    array = temp;
+    *array = temp;
     return ERR_NO_ERROR;
 }
 
@@ -210,7 +210,7 @@ int mpl_part_push_index(int newint, MPLpartition* part)
         ++part->ncharsinpart;
     }
     else {
-        err = mpl_extend_intarray(part->charindices,
+        err = mpl_extend_intarray(&part->charindices,
                                  (part->maxnchars + 1) * sizeof(int));
         if (!err) {
             part->charindices[part->ncharsinpart] = newint;
@@ -302,49 +302,110 @@ int mpl_count_gaps_in_columns(Morphyp handl)
 }
 
 int mpl_compare_partition_with_char_info
-(const MPLcharinfo *chinfo, const MPLpartition* part)
+(const MPLcharinfo *chinfo, const MPLpartition* part, const gap_t gaphandl)
 {
     int ret = 0;
     
     if (chinfo->chtype != part->chtype) {
         ++ret;
     }
-    if (chinfo->ninapplics <= NACUTOFF) {
-        if (part->isNAtype) {
-            ++ret;
+    
+    if (gaphandl == GAP_INAPPLIC) {
+        if (chinfo->ninapplics <= NACUTOFF) {
+            if (part->isNAtype) {
+                ++ret;
+            }
         }
-    }
-    else {
-        if (!part->isNAtype) {
-            ++ret;
+        else {
+            if (!part->isNAtype) {
+                ++ret;
+            }
         }
     }
     
-    return ret = 0;
+    return ret;
 }
 
 /*!
  @brief Searches the partition list for a partition matching the supplied info
  @discussion Traverses a linked list of partitions, looking for a partition 
  matching the supplied information. If this function returns NULL, then the
- supplied info does not match a character in the list. A new partition will 
+ supplied info does not match a character in the list. A new partition will
  need to be created.
  @param chinfo MPLchtype providing data on a character in the matrix.
  @param part A data partition; should be the first partition in the list.
  @return A pointer to the partition corresponding to the supplied character
  information.
  */
-MPLpartition* mpl_search_partitions(MPLcharinfo *chinfo, MPLpartition* part)
+MPLpartition* mpl_search_partitions
+(MPLcharinfo *chinfo, MPLpartition* part, gap_t gaphandl)
 {
     assert(chinfo);
     MPLpartition* p = part;
     
     while (p) {
-        if (mpl_compare_partition_with_char_info(chinfo, p)) {
+        if (!mpl_compare_partition_with_char_info(chinfo, p, gaphandl)) {
             return p;
         }
         p = p->next;
     }
     
     return p;
+}
+
+int mpl_setup_partitions(Morphyp handle)
+{
+    assert(handle);
+    
+    int err = ERR_NO_ERROR;
+    
+    int i = 0;
+    int nchar = mpl_get_num_charac((Morphyp)handle);
+    
+    MPLcharinfo* chinfo = NULL;
+    MPLpartition* first = NULL;
+    MPLpartition* last  = NULL;
+    MPLpartition* p     = NULL;
+    int numparts        = 0;
+    
+    for (i = 0; i < nchar; ++i) {
+        // Examine the character info for each character in the matrix
+        chinfo = &handle->charinfo[i];
+        
+        p = mpl_search_partitions(chinfo, first, mpl_get_gaphandl(handle));
+        
+        if (p) {
+            mpl_part_push_index(i, p);
+        }
+        else {
+            bool hasNA = false;
+            if (handle->gaphandl == GAP_INAPPLIC) {
+                if (chinfo->ninapplics > NACUTOFF) {
+                    hasNA = true;
+                }
+            }
+            p = mpl_new_partition(chinfo->chtype, hasNA);
+//            last->next =
+            mpl_part_push_index(i, p);
+            if (!first) {
+                first = p;
+                last = p;
+            }
+            else {
+                last->next = p;
+                last = p;
+            }
+            
+            ++numparts;
+        }
+    }
+    
+    handle->numparts = numparts;
+    
+    return err;
+}
+
+int mpl_get_numparts(Morphyp handl)
+{
+    return handl->numparts;
 }

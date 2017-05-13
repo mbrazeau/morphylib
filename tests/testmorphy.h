@@ -11,4 +11,7 @@
 
 int test_count_gaps_basic(void);
 int test_partition_push_index(void);
+int test_data_partitioning_simple(void);
+int test_data_partitioning_gapmissing(void);
+int test_data_partitioning_gapnewstate(void);
 #endif /* testmorphy_h */

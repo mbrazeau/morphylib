@@ -93,3 +93,119 @@ int test_partition_push_index(void)
     
     return failn;
 }
+
+int test_data_partitioning_simple(void)
+{
+    theader("Testing counting of gaps in matrix");
+    int failn = 0;
+    int ntax	= 6;
+    int nchar	= 10;
+    int numna   = 0;
+    char *rawmatrix =
+"0000000010\
+0-001-22-0\
+0-001-110-\
+10(03)0101100\
+1-000-0000\
+0-00{01}100-0;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    mpl_attach_rawdata(rawmatrix, m1);
+    mpl_setup_partitions((Morphyp)m1);
+//    
+//    Morphyp m = (Morphyp)m1;
+    int nparts = mpl_get_numparts((Morphyp)m1);
+    
+    if (nparts != 2) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_delete_Morphy(m1);
+    
+    return failn;
+    
+}
+
+
+int test_data_partitioning_gapmissing(void)
+{
+    theader("Testing counting of gaps in matrix");
+    int failn = 0;
+    int ntax	= 6;
+    int nchar	= 10;
+    int numna   = 0;
+    char *rawmatrix =
+    "0000000010\
+    0-001-22-0\
+    0-001-110-\
+    10(03)0101100\
+    1-000-0000\
+    0-00{01}100-0;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    mpl_attach_rawdata(rawmatrix, m1);
+        mpl_set_gaphandl(GAP_MISSING, m1);
+    mpl_setup_partitions((Morphyp)m1);
+    //
+    //    Morphyp m = (Morphyp)m1;
+    int nparts = mpl_get_numparts((Morphyp)m1);
+    
+    if (nparts != 1) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_delete_Morphy(m1);
+    
+    return failn;
+    
+}
+
+int test_data_partitioning_gapnewstate(void)
+{
+    theader("Testing counting of gaps in matrix");
+    int failn = 0;
+    int ntax	= 6;
+    int nchar	= 10;
+    int numna   = 0;
+    char *rawmatrix =
+    "0000000010\
+    0-001-22-0\
+    0-001-110-\
+    10(03)0101100\
+    1-000-0000\
+    0-00{01}100-0;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    mpl_attach_rawdata(rawmatrix, m1);
+    mpl_set_gaphandl(GAP_NEWSTATE, m1);
+    mpl_setup_partitions((Morphyp)m1);
+    //
+    //    Morphyp m = (Morphyp)m1;
+    int nparts = mpl_get_numparts((Morphyp)m1);
+    
+    if (nparts != 1) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_delete_Morphy(m1);
+    
+    return failn;
+    
+}
+
+

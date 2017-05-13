@@ -28,6 +28,9 @@ int main (void)
     // morphy.c tests
     fails += test_count_gaps_basic();
     fails += test_partition_push_index();
+    fails += test_data_partitioning_simple();
+    fails += test_data_partitioning_gapmissing();
+    fails += test_data_partitioning_gapnewstate();
     
     printf("\n\nTest summary:\n\n");
     if (fails) {
