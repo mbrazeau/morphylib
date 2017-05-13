@@ -35,6 +35,15 @@ typedef unsigned int MPLstate;
 #define NACUTOFF        2   // The max number of NA tokens that can be ignored
                             // in a column
     
+
+// Evaluator function pointers
+typedef int (*MPLdownfxn)
+(MPLstate* left, MPLstate* right, MPLstate* n, int nchars);
+
+typedef int (*MPLupfxn)
+(MPLstate* left, MPLstate* right, MPLstate* n, MPLstate *anc, int nchars);
+
+// Key data types
 typedef enum {
     
     NONE_T          = 0,
@@ -64,27 +73,6 @@ typedef struct {
 } MPLcell;
     
 
-typedef int (*MPLdownfxn)
-            (MPLstate* left, MPLstate* right, MPLstate* n, int nchars);
-typedef int (*MPLupfxn)
-            (MPLstate* left, MPLstate* right, MPLstate* n, MPLstate *anc,
-            int nchars);
-    
-typedef struct partition_s MPLpartition;
-typedef struct partition_s {
-    
-    MPLchtype   chtype;
-    bool        isNAtype;
-    int         maxnchars;
-    int         ncharsinpart;
-    int*        charindices;
-    MPLdownfxn  inappdownfxn;
-    MPLupfxn    inappupfxn;
-    MPLdownfxn  prelimfxn;
-    MPLupfxn    finalfxn;
-    
-} MPLpartition;
-    
 typedef struct charinfo_s MPLcharinfo;
 typedef struct charinfo_s {
     
@@ -96,8 +84,27 @@ typedef struct charinfo_s {
         int      intwt;
         Mflt     fltwt;
     };
-
+    
 } MPLcharinfo;
+    
+    
+typedef struct partition_s MPLpartition;
+typedef struct partition_s {
+    
+    MPLchtype       chtype;
+    bool            isNAtype;
+    int             maxnchars;
+    int             ncharsinpart;
+    int*            charindices;
+    MPLdownfxn      inappdownfxn;
+    MPLupfxn        inappupfxn;
+    MPLdownfxn      prelimfxn;
+    MPLupfxn        finalfxn;
+    MPLpartition*   next;
+    
+} MPLpartition;
+    
+
 
 typedef struct {
     
