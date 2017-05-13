@@ -10,6 +10,7 @@ So far, building is supported for Unix-like systems (e.g. Linux, Mac OS). A make
 Additionally, a Python file is included and maintained which supplies all the bindings for that language. 
 
 **Using MorphyLib**
+
 The API is documented in the `mpl.h` file. 
 
 The caller creates an instance of the Morphy object through the `mpl_new_Morphy` function. No direct access to the members of this structure are required, and all interaction is through functions declared in `mpl.h`.
