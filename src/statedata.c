@@ -695,9 +695,9 @@ int mpl_convert_rawdata(Morphyp handl)
     // Now safe to write characters into cells.
     mpl_write_input_rawchars_to_cells(handl);
     mpl_create_state_dictionary(handl);
-
-    // Use dictionary to convert
     mpl_count_gaps_in_columns(handl);
+    
+    // Use dictionary to convert
     mpl_convert_cells(handl);
     
     return ret;
