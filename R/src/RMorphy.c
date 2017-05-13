@@ -35,14 +35,37 @@ SEXP Morphy(SEXP r_n_char, SEXP r_n_taxa, SEXP r_descendants, SEXP r_ancestors, 
   int max_node = n_taxa + n_internal;
   Rprintf(" - %i nodes, of which %i are internal, %i are tips, and one is the root\n", max_node, n_internal, n_taxa);
   
+  // Declare and protect result, to return to R
+  SEXP RESULT, node_parent, node_children;
+  PROTECT(RESULT = allocVector(VECSXP, 2));
+  PROTECT(node_parent = allocVector(INTSXP, 1));
+  PROTECT(node_children = allocVector(INTSXP, 2));
+  
+  // Initialize return variables
+  int i;
+  int *parent_temp, *children_temp;
+  //INTEGER(node_parent)[0] = 0;
+  parent_temp = INTEGER(node_parent);
+  children_temp = INTEGER(node_children);
+  for (i = 0; i < 2; i++) {
+    children_temp[i] = 0;
+  }
+    
+  
   // This is just to test that the ancestor identification is working as expected
   int root_node_left_child = n_taxa + 1;
+  *parent_temp = ancestors[root_node_left_child];
+  children_temp[0] = descendants[(root_node_left_child - n_taxa) * 2];
+  children_temp[1] = descendants[((root_node_left_child - n_taxa) * 2)+ 1];
+  
   Rprintf(" - Root node's left child has node %i as its ancestor, and %i and %i as its left and right children\n",
-    ancestors[root_node_left_child],
-    descendants[(root_node_left_child - n_taxa) * 2],
-    descendants[((root_node_left_child - n_taxa) * 2)+ 1]
+    parent_temp, children_temp[0], children_temp[1]
   );
-  return R_NilValue;
+  
+  SET_VECTOR_ELT(RESULT, 0, node_parent);
+  SET_VECTOR_ELT(RESULT, 1, node_children);
+  UNPROTECT(3);
+  return (RESULT);
   
   
   // Run relevant functions from Morphy Library

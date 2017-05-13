@@ -5,7 +5,7 @@
 #' @param \list {
 #'   \item{tree} A tree in \code{PhyDat} format;
 #'   \item{data} A object of class phyDat containing sequences
-#'   \item{site} return iether 'pscore' or 'site' wise parsimony scores
+#'   \item{site} return either 'pscore' or 'site' wise parsimony scores
 #' 
 #' @examples
 #' ## Load a tree and a matrix
@@ -79,7 +79,8 @@ descendants <- as.integer(vapply(preorder, descendant, double(2))) # children of
 
 
 dyn.load('C:/Users/ms609/RMorphy.dll') ## Replace with a sensible path to RMorphy.o
-.Call('Morphy', as.integer(n.char), as.integer(n.tip), as.integer(descendants), as.integer(ancestors), as.character(matrix_as_string))
+ret <- .Call('Morphy', as.integer(n.char), as.integer(n.tip), as.integer(descendants), as.integer(ancestors), as.character(matrix_as_string))
+ret # Returns a list with two entries: [1], the root node; [2], the descendants of the root node's left child.
 dyn.unload('C:/Users/ms609/RMorphy.dll') ## Replace with a sensible path to RMorphy.o
 
 
