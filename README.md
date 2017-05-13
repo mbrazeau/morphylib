@@ -1,7 +1,12 @@
 # MorphyLib     [![Build Status](https://travis-ci.org/mbrazeau/MorphyLib.svg?branch=master)](https://travis-ci.org/mbrazeau/MorphyLib)
 Phylogenetic reconstruction library using inapplicable data reconstruction
 
-**This library will supersede any older versions of MorPhy, Morphy, or any other project I've written with that name**
+**About MorphyLib right now**
+MorphyLib is a work in progress. It is currently only in development and not ready for use with any real-world (or fake world) data. However, stay tuned for updates as development progresses. A crude working version should be coming in a few weeks (13 May, 2017).
+
+MorphyLib is a library for phylogenetic analysis programming and is therefore likely to be of use or interest only to those who are writing phylogenetic software. However, if you are interested in MorphyLib's functionality at a user level, stay tuned as we will most certainly be making this possible through a 'front-end' application. 
+
+A forthcoming paper by myself and co-authors will describe the algorithms used by MorphyLib. 
 
 **Building Morphy**
 
@@ -14,3 +19,5 @@ Additionally, a Python file is included and maintained which supplies all the bi
 The API is documented in the `mpl.h` file. 
 
 The caller creates an instance of the Morphy object through the `mpl_new_Morphy` function. No direct access to the members of this structure are required, and all interaction is through functions declared in `mpl.h`.
+
+MorphyLib has its own rules for 'packing' state data as set bits in integers and therefore you are required to supply a data matrix and dimensions to it in order to perform any calculations.
