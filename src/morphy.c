@@ -360,14 +360,58 @@ MPLpartition* mpl_search_partitions
     return p;
 }
 
-int mpl_setup_partitions(Morphyp handle)
+int mpl_compare_partitions(const void* ptr1, const void* ptr2)
 {
-    assert(handle);
+    MPLpartition* part1 = *(MPLpartition**)ptr1;
+    MPLpartition* part2 = *(MPLpartition**)ptr2;
+    
+    int ret;
+    MPLchtype cdiff = NONE_T;
+    
+    cdiff = part1->chtype - part2->chtype;
+    ret = (int)cdiff;
+    
+    if (!cdiff) {
+        if (!part1->isNAtype) {
+            ret = 1;
+        }
+        else {
+            ret = 0;
+        }
+    }
+    return ret;
+}
+
+int mpl_put_partitions_in_handle(MPLpartition* first, Morphyp handl)
+{
+    handl->partitions = (MPLpartition**)calloc(handl->numparts,
+                                                sizeof(MPLpartition*));
+    if (!handl->partitions) {
+        return ERR_BAD_MALLOC;
+    }
+    
+    int i = 0;
+    MPLpartition* p = first;
+    while (p) {
+        handl->partitions[i] = p;
+        ++i;
+        p = p->next;
+    }
+    assert(i == handl->numparts);
+    
+    // Sort the partitions.
+    qsort(handl->partitions, handl->numparts, sizeof(MPLpartition*), mpl_compare_partitions);
+    return ERR_NO_ERROR;
+}
+
+int mpl_setup_partitions(Morphyp handl)
+{
+    assert(handl);
     
     int err = ERR_NO_ERROR;
     
     int i = 0;
-    int nchar = mpl_get_num_charac((Morphyp)handle);
+    int nchar = mpl_get_num_charac((Morphyp)handl);
     
     MPLcharinfo* chinfo = NULL;
     MPLpartition* first = NULL;
@@ -377,17 +421,17 @@ int mpl_setup_partitions(Morphyp handle)
     
     for (i = 0; i < nchar; ++i) {
         // Examine the character info for each character in the matrix
-        chinfo = &handle->charinfo[i];
+        chinfo = &handl->charinfo[i];
         
         if (chinfo->included) {
-            p = mpl_search_partitions(chinfo, first, mpl_get_gaphandl(handle));
+            p = mpl_search_partitions(chinfo, first, mpl_get_gaphandl(handl));
             
             if (p) {
                 mpl_part_push_index(i, p);
             }
             else {
                 bool hasNA = false;
-                if (handle->gaphandl == GAP_INAPPLIC) {
+                if (handl->gaphandl == GAP_INAPPLIC) {
                     if (chinfo->ninapplics > NACUTOFF) {
                         hasNA = true;
                     }
@@ -409,7 +453,8 @@ int mpl_setup_partitions(Morphyp handle)
         }
     }
     
-    handle->numparts = numparts;
+    handl->numparts = numparts;
+    err = mpl_put_partitions_in_handle(first, handl);
     
     return err;
 }

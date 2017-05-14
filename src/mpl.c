@@ -261,6 +261,8 @@ int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
         handl->charinfo[charID].included = true;
     }
     
+    // TODO: Update any data partitionings.
+    
     return ERR_NO_ERROR;
 }
 

@@ -148,7 +148,7 @@ typedef struct __morphy_s {
     int             numschtypes[MAX_CTYPE];
     int             numwNAchtypes[MAX_CTYPE];
     int             numparts;
-    MPLpartition*   partinfo;
+    MPLpartition**  partitions;
     MPLsymbols      symbols;
     gap_t           gaphandl;
     union {
