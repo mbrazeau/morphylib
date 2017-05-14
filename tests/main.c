@@ -10,6 +10,7 @@
 #include "mpltest.h"
 #include "teststatedata.h"
 #include "testmorphy.h"
+#include "testmpl.h"
 
 int main (void)
 {
@@ -31,6 +32,11 @@ int main (void)
     fails += test_data_partitioning_simple();
     fails += test_data_partitioning_gapmissing();
     fails += test_data_partitioning_gapnewstate();
+    
+    // mpl.c tests
+    fails += test_simple_chtype_setting();
+    fails += test_delete_Morphy_no_input();
+//    fails += test_deletion_success();
     
     printf("\n\nTest summary:\n\n");
     if (fails) {

@@ -144,47 +144,54 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
 {
     assert(part);
     
-    part->prelimfxn     = mpl_fitch_downpass;
-    part->finalfxn      = mpl_fitch_uppass;
-    part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
-    part->inappupfxn    = NULL;
-}
-
-void mpl_assign_fitch_NA_fxns(MPLpartition* part)
-{
-    assert(part);
-
-    part->inappdownfxn  = mpl_NA_fitch_first_downpass;
-    part->inappupfxn    = mpl_NA_fitch_first_uppass;
-    part->prelimfxn     = mpl_NA_fitch_second_downpass;
-    part->finalfxn      = mpl_NA_fitch_second_uppass;
+    if (part->isNAtype) {
+        part->inappdownfxn  = mpl_NA_fitch_first_downpass;
+        part->inappupfxn    = mpl_NA_fitch_first_uppass;
+        part->prelimfxn     = mpl_NA_fitch_second_downpass;
+        part->finalfxn      = mpl_NA_fitch_second_uppass;
+    }
+    else {
+        part->prelimfxn     = mpl_fitch_downpass;
+        part->finalfxn      = mpl_fitch_uppass;
+        part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
+        part->inappupfxn    = NULL;
+        
+    }
+    
     
 }
 
-
-int mpl_assign_partition_fxns(MPLpartition* part)
+int mpl_fetch_parsim_fxn_setter
+(void(*pars_assign)(MPLpartition*), MPLchtype chtype)
 {
-    assert(part);
     int err = ERR_NO_ERROR;
-    MPLchtype chtype = part->chtype;
-    assert(chtype);
     
     switch (chtype) {
         case FITCH_T:
-            if (part->isNAtype) {
-                mpl_assign_fitch_NA_fxns(part);
-            }
-            else {
-                mpl_assign_fitch_fxns(part);
-            }
+            pars_assign = &mpl_assign_fitch_fxns;
             break;
             
-        // TODO: Implement other functions here
+            // TODO: Implement other functions here
         default:
             err = ERR_CASE_NOT_IMPL;
             break;
     }
     
+    return err;
+}
+
+int mpl_assign_partition_fxns(MPLpartition* part)
+{
+    assert(part);
+    int err = ERR_NO_ERROR;
+//    MPLchtype chtype = part->chtype;
+//    assert(chtype);
+    
+    void (*pars_assign)(MPLpartition*);
+    
+    err = mpl_fetch_parsim_fxn_setter(pars_assign, part->chtype);
+    
+    pars_assign(part);
     
     return err;
 }

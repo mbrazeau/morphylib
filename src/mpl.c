@@ -212,6 +212,8 @@ int mpl_apply_tipdata(Morphy m)
     // Setup the partitions
     mpl_setup_partitions(mi);
     
+    // TODO: Check if any weights are floats; then all arith is FP.
+    
     // TODO: Create all the internal data memory
     
     // TODO: Apply the data to the tips
@@ -234,8 +236,18 @@ int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
         return ERR_BAD_PARAM;
     }
     
+    MPL_ERR_T err = ERR_NO_ERROR;
+    
     if (chtype >= MAX_CTYPE) {
-        return ERR_BAD_PARAM; // TODO: Invalid CTYPE
+        return ERR_UNKNOWN_CHTYPE; // TODO: Invalid CTYPE
+    }
+    
+    if (charID >= mpl_get_num_charac(m)) {
+        return ERR_OUT_OF_BOUNDS;
+    }
+    
+    if ((err = mpl_fetch_parsim_fxn_setter(NULL, chtype))) {
+        return err;
     }
     
     Morphyp handl = (Morphyp)m;
@@ -264,6 +276,7 @@ int mpl_set_gaphandl(const gap_t gaptype, Morphy m)
     mp->gaphandl = gaptype;
     return ERR_NO_ERROR;
 }
+
 
 int mpl_query_gaphandl(Morphy m)
 {

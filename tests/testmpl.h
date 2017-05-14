@@ -9,6 +9,8 @@
 #ifndef testmpl_h
 #define testmpl_h
 
-#include <stdio.h>
+int test_simple_chtype_setting(void);
+int test_delete_Morphy_no_input(void);
+int test_deletion_success(void);
 
 #endif /* testmpl_h */

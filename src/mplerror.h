@@ -13,9 +13,15 @@
  used by some internal functions) to report errors back to the caller.
  */
 typedef enum {
-    ERR_CASE_NOT_IMPL       = -13,
+    ERR_OUT_OF_BOUNDS       = -14,  /*! Attempt to index out of bounds of an 
+                                        array */
     
-    ERR_UNKNOWN_CHTYPE      = -12,
+    ERR_CASE_NOT_IMPL       = -13,  /*! Case not implemented. */
+    
+    ERR_UNKNOWN_CHTYPE      = -12,  /*! Character type is unknown. It either 
+                                        exceeds the list of character types or
+                                        a user type matrix has not yet been 
+                                        supplied. */
     
     ERR_SYMBOL_MISMATCH     = -11,  /*! Symbols list and matrix have a mismatch
                                        (i.e. symbol not found).*/
