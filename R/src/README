@@ -1,0 +1,15 @@
+To use these bindings, you need to build RMorphyex.c on your system. The 
+easiest thing to do is build the Morphy library as an archive for static 
+linkage (that's automatically done by the supplied Makefile in the root 
+directory).
+
+You should have a resultant file called 'libmorphy_<systemdetails>.a'. The
+.a file is just an archive of the loaded object files.
+
+Then you run R CMD SHLIB -o RMorphyex.so RMorphyex.c /Path/To/libmorphy_<systemdetails.a>
+
+That should build the shared library that R will be happy with.
+
+The R wrappers for the C wrappers can then be found in Morphyex.R
+
+
