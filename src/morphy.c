@@ -161,14 +161,17 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
     
 }
 
+
 int mpl_fetch_parsim_fxn_setter
-(void(*pars_assign)(MPLpartition*), MPLchtype chtype)
+(void(**pars_assign)(MPLpartition*), MPLchtype chtype)
 {
     int err = ERR_NO_ERROR;
     
     switch (chtype) {
         case FITCH_T:
-            pars_assign = &mpl_assign_fitch_fxns;
+            if (pars_assign) {
+                *pars_assign = &mpl_assign_fitch_fxns;
+            }
             break;
             
             // TODO: Implement other functions here
@@ -189,7 +192,7 @@ int mpl_assign_partition_fxns(MPLpartition* part)
     
     void (*pars_assign)(MPLpartition*);
     
-    err = mpl_fetch_parsim_fxn_setter(pars_assign, part->chtype);
+    err = mpl_fetch_parsim_fxn_setter(&pars_assign, part->chtype);
     
     pars_assign(part);
     
@@ -372,7 +375,7 @@ int mpl_compare_partitions(const void* ptr1, const void* ptr2)
     ret = (int)cdiff;
     
     if (!cdiff) {
-        if (!part1->isNAtype) {
+        if (part2->isNAtype) {
             ret = 1;
         }
         else {
@@ -401,6 +404,7 @@ int mpl_put_partitions_in_handle(MPLpartition* first, Morphyp handl)
     
     // Sort the partitions.
     qsort(handl->partitions, handl->numparts, sizeof(MPLpartition*), mpl_compare_partitions);
+    
     return ERR_NO_ERROR;
 }
 

@@ -37,6 +37,7 @@ int         mpl_get_states_from_rawdata(Morphyp handl);
 int         mpl_copy_raw_matrix(const char* rawmatrix, Morphyp handl);
 int         mpl_check_nexus_matrix_dimensions(char *input_matrix, int input_num_taxa, int input_num_chars);
 char*       mpl_get_preprocessed_matrix(Morphyp handl);
+int         mpl_write_input_rawchars_to_cells(Morphyp handl);
 int         mpl_convert_rawdata(Morphyp handl);
 MPLmatrix*  mpl_new_mpl_matrix(const int ntaxa, const int nchar, const int nstates);
 int         mpl_delete_mpl_matrix(MPLmatrix* m);

@@ -53,6 +53,17 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     int ret = ERR_NO_ERROR;
     Morphyp mi = (Morphyp)m;
     
+    if (ntax != mpl_get_numtaxa(m)) {
+        if (mi->char_t_matrix) {
+            return ERR_EX_DATA_CONF;
+        }
+    }
+    if (nchar != mpl_get_num_charac(m)) {
+        if (mi->char_t_matrix) {
+            return ERR_EX_DATA_CONF;
+        }
+    }
+    
     ret = mpl_set_numtaxa(ntax, mi);
     if (ret) {
         return ret;
@@ -62,9 +73,8 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     if (ret) {
         return ret;
     }
-    
-    mi->symbols.statesymbols = NULL;
 
+    // TODO: Revise this?
     mpl_init_charac_info(mi);
     
     return ret;
@@ -239,7 +249,7 @@ int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
     MPL_ERR_T err = ERR_NO_ERROR;
     
     if (chtype >= MAX_CTYPE) {
-        return ERR_UNKNOWN_CHTYPE; // TODO: Invalid CTYPE
+        return ERR_UNKNOWN_CHTYPE;
     }
     
     if (charID >= mpl_get_num_charac(m)) {

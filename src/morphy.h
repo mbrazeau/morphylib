@@ -39,7 +39,7 @@ int             mpl_check_data_loaded(Morphyp m);
 char            mpl_get_gap_symbol(Morphyp handl);
 MPLchtype*      mpl_get_charac_types(Morphyp handl);
 int             mpl_assign_partition_fxns(MPLpartition* part);
-int mpl_fetch_parsim_fxn_setter (void(*pars_assign)(MPLpartition*), MPLchtype chtype);
+int             mpl_fetch_parsim_fxn_setter ( void(**pars_assign)(MPLpartition*), MPLchtype chtype);
 int             mpl_extend_intarray(int** array, size_t size);
 int             mpl_part_push_index(int newint, MPLpartition* part);
 int             mpl_delete_partition(MPLpartition* part);

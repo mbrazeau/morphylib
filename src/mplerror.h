@@ -13,6 +13,7 @@
  used by some internal functions) to report errors back to the caller.
  */
 typedef enum {
+    ERR_EX_DATA_CONF        = -15,  /*! Input conflicts with existing dataset */
     ERR_OUT_OF_BOUNDS       = -14,  /*! Attempt to index out of bounds of an 
                                         array */
     

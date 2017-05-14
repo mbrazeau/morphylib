@@ -229,6 +229,13 @@ int mpl_convert_cells(Morphyp handl)
     MPLcharinfo* chinfo = handl->charinfo;
     MPLcell *cell;
     
+    mpl_write_input_rawchars_to_cells(handl);
+    mpl_create_state_dictionary(handl);
+    
+    if (handl->gaphandl == GAP_INAPPLIC) {
+        mpl_count_gaps_in_columns(handl);
+    }
+    
     char *celldata = NULL;
     
     for (i = 0; i < ncols; ++i) {
@@ -693,11 +700,7 @@ int mpl_convert_rawdata(Morphyp handl)
     mpl_init_inmatrix(handl);
     
     // Now safe to write characters into cells.
-    mpl_write_input_rawchars_to_cells(handl);
-    mpl_create_state_dictionary(handl);
-    mpl_count_gaps_in_columns(handl);
-    
-    // Use dictionary to convert
+    // Create dictionary and convert
     mpl_convert_cells(handl);
     
     return ret;
