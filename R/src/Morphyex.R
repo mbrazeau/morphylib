@@ -58,3 +58,8 @@ mpl_get_symbols <- function(morphyobj)
 	str = .Call("_R_wrap_mpl_get_symbols", morphyobj)
 	return(str)
 }
+
+mpl_set_parsim_t <-function(char_id, tname = "typename", morphyobj)
+{
+	return(.Call("_R_wrap_mpl_set_parsim_t", as.integer(char_id), tname, morphyobj))
+}

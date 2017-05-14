@@ -1,13 +1,25 @@
 #include <R.h>
 #include <Rinternals.h>
 #include "../../src/mpl.h"
+#include "RMorphyUtils.h"
 
 SEXP _R_wrap_mpl_new_Morphy(void)
 {
 	Morphy new = mpl_new_Morphy();
 	SEXP result = R_MakeExternalPtr(new, R_NilValue, R_NilValue);
-
+	
 	return result;
+}
+
+SEXP _R_wrap_mpl_delete_Morphy(SEXP MorphyHandl)
+{
+	int ret = 0;
+	SEXP Rret = PROTECT(allocVector(INTSXP, 1));
+	Morphy handl = R_ExternalPtrAddr(MorphyHandl);
+	ret = mpl_delete_Morphy(handl);
+	INTEGER(Rret)[0] = ret;
+	UNPROTECT(1);
+	return Rret;
 }
 
 SEXP _R_wrap_mpl_init_Morphy(SEXP Rntax, SEXP Rnchar, SEXP MorphHandl)
@@ -89,5 +101,22 @@ SEXP _R_wrap_mpl_attach_rawdata(SEXP Rmatrix, SEXP MorphyHandl)
 
 	UNPROTECT(1);
 
+	return Rret;
+}
+
+SEXP _R_wrap_mpl_set_parsim_t(SEXP RcharID, SEXP Rchtype, SEXP MorphyHandl)
+{
+	
+	SEXP Rret = PROTECT(allocVector(INTSXP, 1));
+	MPLchtype chtype;
+	int Mret = 0;
+
+	const char* chtypename = CHAR(asChar(Rchtype));
+	
+	chtype = _R_mpl_str2chtype(chtypename);
+	Mret = mpl_set_parsim_t(INTEGER(RcharID)[0], chtype, R_ExternalPtrAddr(MorphyHandl));
+
+	INTEGER(Rret)[0] = Mret;
+	UNPROTECT(1);
 	return Rret;
 }
