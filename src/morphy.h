@@ -42,6 +42,7 @@ int             mpl_assign_partition_fxns(MPLpartition* part);
 int             mpl_fetch_parsim_fxn_setter ( void(**pars_assign)(MPLpartition*), MPLchtype chtype);
 int             mpl_extend_intarray(int** array, size_t size);
 int             mpl_part_push_index(int newint, MPLpartition* part);
+int             mpl_part_remove_index(int index, MPLpartition* part);
 int             mpl_delete_partition(MPLpartition* part);
 MPLpartition*   mpl_new_partition(const MPLchtype chtype, const bool hasNA);
 int             mpl_count_gaps_in_columns(Morphyp handl);
