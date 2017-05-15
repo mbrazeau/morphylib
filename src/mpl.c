@@ -28,7 +28,7 @@ Morphy mpl_new_Morphy(void)
 int mpl_delete_Morphy(Morphy m)
 {
     if (!m) {
-        return ERR_BAD_PARAM;
+        return ERR_UNEXP_NULLPTR;
     }
     Morphyp m1 = (Morphyp)m;
     
@@ -44,6 +44,9 @@ int mpl_delete_Morphy(Morphy m)
 
 int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
 {
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
     // TODO: Checking against resets: if this call resets exising dimensions,
     // then the whole object should get destroyed and reinitialised.
     if (!ntax || !nchar) {
@@ -84,7 +87,7 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
 int mpl_get_numtaxa(Morphy m)
 {
     if (!m) {
-        return ERR_BAD_PARAM;
+        return ERR_UNEXP_NULLPTR;
     }
     
     return ((Morphyp)m)->numtaxa;
@@ -95,12 +98,38 @@ int mpl_get_numtaxa(Morphy m)
 int mpl_get_num_charac(Morphy m)
 {
     if (!m) {
-        return ERR_BAD_PARAM;
+        return ERR_UNEXP_NULLPTR;
     }
     
     return ((Morphyp)m)->numcharacters;
 }
 
+
+int mpl_set_num_internal_nodes(const int nnodes, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    // There must be numtaxa supplied:
+    int ntax = 0;
+    if (!(ntax = mpl_get_numtaxa(m))) {
+        return ERR_NO_DIMENSIONS;
+    }
+    
+    ((Morphyp)m)->numnodes = ntax + nnodes;
+    
+    return ERR_NO_ERROR;
+}
+
+int mpl_get_num_internal_nodes(Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    return (((Morphyp)m)->numnodes - mpl_get_numtaxa(m));
+}
 
 //int     mpl_attach_symbols(char* symbols, Morphy m);
 int mpl_attach_symbols(const char *symbols, Morphy m)
@@ -230,6 +259,8 @@ int mpl_apply_tipdata(Morphy m)
     
     return ERR_NO_ERROR;
 }
+
+
 
 
 //int     mpl_set_postorder(const int nodeID, const int index, Morphy m);

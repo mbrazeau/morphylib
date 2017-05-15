@@ -141,6 +141,43 @@ int     mpl_get_num_charac
     
 
 /*!
+ 
+ @brief Sets the number of internal nodes in the dataset
+ 
+ @discussion This specifies the number of internal nodes over which
+ reconstruction sets need to be made. It is up to the caller to ensure the 
+ correct number of nodes and the relationships between them.
+ 
+ @param nnodes The desired number of internal nodes.
+ 
+ @param m An instance of the Morphy object
+ 
+ @return A Morphy error code.
+ 
+*/
+int     mpl_set_num_internal_nodes
+    
+        (const int nnodes,
+         Morphy     m);
+
+/*!
+ 
+ @brief Gets the number of internal nodal reconstruction sets being used by
+ MorphyLib.
+
+ @discussion Gets the number of internal nodal reconstruction sets being used by
+ MorphyLib.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return The number of internal nodes.
+ 
+*/
+int     mpl_get_num_internal_nodes
+    
+        (Morphy     m);
+
+/*!
 
  @brief Attach a caller-specified list of symbols.
 
