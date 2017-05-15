@@ -485,3 +485,138 @@ int mpl_get_numparts(Morphyp handl)
 {
     return handl->numparts;
 }
+
+MPLstatesets* mpl_alloc_stateset(int numchars)
+{
+    MPLstatesets* new = (MPLstatesets*)calloc(1, sizeof(MPLstatesets));
+    if (!new) {
+        return NULL;
+    }
+    
+    new->NApass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->NApass1) {
+        mpl_free_stateset(new);
+    }
+    
+    new->NApass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->NApass2) {
+        mpl_free_stateset(new);
+    }
+    
+    new->prelimset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->prelimset) {
+        mpl_free_stateset(new);
+    }
+    
+    new->finalset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->finalset) {
+        mpl_free_stateset(new);
+    }
+    
+    new->subtree_actives = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->subtree_actives) {
+        mpl_free_stateset(new);
+    }
+    
+    new->subtree_NApass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->subtree_NApass1) {
+        mpl_free_stateset(new);
+    }
+    
+    new->subtree_NApass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->subtree_NApass2) {
+        mpl_free_stateset(new);
+    }
+    
+    new->subtree_prelimset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->subtree_prelimset) {
+        mpl_free_stateset(new);
+    }
+    
+    new->subtree_finalset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->subtree_finalset) {
+        mpl_free_stateset(new);
+    }
+    
+    return new;
+}
+
+void mpl_free_stateset(MPLstatesets* statesets)
+{
+    if (statesets->NApass1) {
+        free(statesets->NApass1);
+        statesets->NApass1 = NULL;
+    }
+    if (statesets->NApass2) {
+        free(statesets->NApass2);
+        statesets->NApass2 = NULL;
+    }
+    if (statesets->prelimset) {
+        free(statesets->prelimset);
+        statesets->prelimset = NULL;
+    }
+    if (statesets->finalset) {
+        free(statesets->finalset);
+        statesets->finalset = NULL;
+    }
+    if (statesets->subtree_actives) {
+        free(statesets->subtree_actives);
+        statesets->subtree_actives = NULL;
+    }
+    if (statesets->subtree_NApass1) {
+        free(statesets->subtree_NApass1);
+        statesets->subtree_NApass1 = NULL;
+    }
+    if (statesets->subtree_NApass2) {
+        free(statesets->subtree_NApass2);
+        statesets->subtree_NApass2 = NULL;
+    }
+    if (statesets->subtree_prelimset) {
+        free(statesets->subtree_prelimset);
+        statesets->subtree_prelimset = NULL;
+    }
+    if (statesets->subtree_finalset) {
+        free(statesets->subtree_finalset);
+        statesets->subtree_finalset = NULL;
+    }
+    free(statesets);
+}
+
+int mpl_setup_statesets(Morphyp handl)
+{
+    MPL_ERR_T err = ERR_NO_ERROR;
+    // TODO: Implement total numnodes getter
+    int numnodes = handl->numnodes;
+    handl->statesets = (MPLstatesets**)calloc(numnodes,
+                                              sizeof(MPLstatesets*));
+    if (!handl->statesets) {
+        return ERR_BAD_MALLOC;
+    }
+    int i = 0;
+    int nchars = mpl_get_num_charac((Morphyp)handl);
+    for (i = 0; i < numnodes; ++i) {
+        if (!(handl->statesets[i] = mpl_alloc_stateset(nchars))) {
+            err = ERR_BAD_MALLOC;
+            mpl_destroy_statesets(handl);
+            break;
+        }
+    }
+    return ERR_NO_DATA; // TODO: Replace
+}
+
+int mpl_destroy_statesets(Morphyp handl)
+{
+    int i = 0;
+    // TODO: Implement total numnodes getter
+    int numnodes = handl->numnodes;
+    
+    for (i = 0; i < numnodes; ++i) {
+        mpl_free_stateset(handl->statesets[i]);
+    }
+    
+    if (handl->statesets) {
+        free(handl->statesets);
+        handl->statesets = NULL;
+    }
+    return ERR_NO_ERROR; // TODO: Replace
+}

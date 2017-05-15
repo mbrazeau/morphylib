@@ -36,6 +36,7 @@ int mpl_delete_Morphy(Morphy m)
     mpl_delete_rawdata(m);
     mpl_destroy_symbolset(m1);
 //    mpl_delete_mpl_matrix(m1->inmatrix);
+    mpl_destroy_statesets(m1);
     free(m1);
     
     return ERR_NO_ERROR;

@@ -126,11 +126,11 @@ typedef struct mpl_matrix_s {
     MPLcell*        cells;
 } MPLmatrix;
 
-typedef struct {
-    int*            tips;
-    int*            internals;
-    MPLstatesets**  ancstates;
-} MPLnodesets;
+//typedef struct {
+//    int*            tips;
+//    int*            internals;
+//    MPLstatesets**  ancstates;
+//} MPLnodesets;
 
 typedef struct symbols_s {
     int         numstates;
@@ -161,6 +161,7 @@ typedef struct Morphy_t {
     char*           char_t_matrix;  // The matrix as a NULL-terminated string
     int             numnodes;   // The number of nodes
     int*            nodesequence;   // The postorder sequence of nodes.
+    MPLstatesets**  statesets;
     
 } Morphy_t, *Morphyp;
 
