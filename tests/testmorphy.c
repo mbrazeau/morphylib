@@ -234,7 +234,9 @@ int test_basic_tip_apply(void)
     int i = 0;
     int j = 0;
     for (i = 0; i < ntax; ++i) {
+        printf("\t");
         for (j = 0; j < nchar; ++j) {
+            
             MPLstate res = mi->statesets[i]->prelimset[j];
             if (res == (~0)) {
                 printf("%c\t", '?');
