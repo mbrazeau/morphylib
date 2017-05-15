@@ -34,6 +34,7 @@ typedef unsigned int MPLstate;
 #define DEFAULCHARTYPE  FITCH_T
 #define NACUTOFF        2   // The max number of NA tokens that can be ignored
                             // in a column
+#define MPLCHARMAX      INT_MAX
     
 
 // Evaluator function pointers
@@ -139,26 +140,27 @@ typedef struct symbols_s {
     char        gap;
     char        missing;
 } MPLsymbols;
+ 
     
-typedef struct __morphy_s {
+/*! \struct*/
+typedef struct Morphy_t {
     
-    int             numtaxa;
-    int             numcharacters;
-    MPLcharinfo*    charinfo;
-    int             numschtypes[MAX_CTYPE];
-    int             numwNAchtypes[MAX_CTYPE];
-    int             numparts;
-    MPLpartition**  partitions;
-    MPLsymbols      symbols;
-    gap_t           gaphandl;
+    int             numtaxa;    // The number of terminal taxa
+    int             numcharacters;  // The number of characters (transformation series)
+    MPLcharinfo*    charinfo;   // Data type information about each character
+    int             numparts;   // The number of data type partitions
+    MPLpartition*   partstack;  // A place for unused partitions
+    MPLpartition**  partitions; // The array of partitions
+    MPLsymbols      symbols;    // The symbols used in the dataset
+    gap_t           gaphandl;   // The method of gap treatment
     union {
         int         asint;
         Mflt        asfloat;
-    } score;
-    MPLmatrix       inmatrix;
-    char*           char_t_matrix;
-    int             numnodes;
-    int*            nodesequence;
+    } score;   // The score (parsimony, likelihood etc.) of the evaluated data
+    MPLmatrix       inmatrix;   // Internal representation of the matrix
+    char*           char_t_matrix;  // The matrix as a NULL-terminated string
+    int             numnodes;   // The number of nodes
+    int*            nodesequence;   // The postorder sequence of nodes.
     
 } Morphy_t, *Morphyp;
 
