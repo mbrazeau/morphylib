@@ -232,6 +232,23 @@ int mpl_part_push_index(int newint, MPLpartition* part)
     return err;
 }
 
+int mpl_part_remove_index(int index, MPLpartition* part)
+{
+    if (!part->ncharsinpart) {
+        return 1;
+    }
+    
+    --part->ncharsinpart;
+    assert(part->ncharsinpart >= 0);
+    
+    int i = 0;
+    for (i = 0; i < part->ncharsinpart; ++i) {
+        part->charindices[i] = part->charindices[i + 1];
+    }
+    part->charindices[i] = MPLCHARMAX; // Gives some clue if an error occurs
+    
+    return 0;
+}
 
 int mpl_delete_partition(MPLpartition* part)
 {
@@ -404,6 +421,7 @@ int mpl_put_partitions_in_handle(MPLpartition* first, Morphyp handl)
     
     // Sort the partitions.
     qsort(handl->partitions, handl->numparts, sizeof(MPLpartition*), mpl_compare_partitions);
+    handl->partstack = first;
     
     return ERR_NO_ERROR;
 }
