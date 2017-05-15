@@ -330,8 +330,32 @@ int mpl_query_gaphandl(Morphy m)
     
     return mpl_get_gaphandl((Morphyp)m);
 }
+
+
 //
-//int     mpl_down_recon(const int nodeID, const int lChild, const int rChild, Morphy m);
+int mpl_down_recon
+(const int nodeID, const int lChild, const int rChild, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp handl = (Morphyp)m;
+//    MPLstatesets* nstates = handl->statesets[nodeID];
+//    MPLstatesets* lstates = handl->statesets[lChild];
+//    MPLstatesets* rstates = handl->statesets[rChild];
+    
+    int i = 0;
+    int numparts = mpl_get_numparts(handl);
+    MPLdownfxn downfxn = NULL;
+    
+    for (i = 0; i < numparts; ++i) {
+        downfxn = handl->partitions[i]->prelimfxn;
+//        downfxn(<#params#>);
+    }
+    
+    return ERR_NO_ERROR; //
+}
 //int     mpl_up_recon(const int nodeID, const int lChild, const int rChild, const int parentID, Morphy m);
 //int     mpl_up_final_recon(const int nodeID, const int lChild, const int rChild, const int parentID, Morphy m);
 //int     mpl_update_tip(const int nodeID, Morphy m);
