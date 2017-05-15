@@ -157,7 +157,7 @@ int     mpl_get_num_charac
 */
 int     mpl_set_num_internal_nodes
     
-        (const int nnodes,
+        (const int  nnodes,
          Morphy     m);
 
 /*!
@@ -268,6 +268,7 @@ int     mpl_set_gap_symbol
 
 
 int     mpl_set_missing_symbol
+    
         (const char missymb,
          Morphy     m);
 
@@ -351,11 +352,35 @@ int     mpl_query_gaphandl
         (Morphy     m);
 
 
-int     mpl_resolve_applic_down
+/*!
+ 
+ @brief Reconstructs the first (downpass) nodal reconstructions
+ 
+ @discussion Reconstructs the preliminary nodal set for all characters for a 
+ particular node. This function is called over a postorder sequence of internal
+ nodes where left and right descendants are known.
+ 
+ Because this function needs to be fairly high-performance, it does not do much 
+ checking for parameter validity, thus unsafe usage of this function might not
+ be caught. It is up to calling functions to ensure that the appropriate 
+ parameters have been set before use.
+ 
+ @param node_id The index of the node being reconstructed.
+ 
+ @param left_id The index of the left descendant.
+ 
+ @param right_id The index of the right descendant.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return The integral parsimony length (right now)
+ 
+ */
+int     mpl_first_down_recon
 
-        (const int  nodeID,
-         const int  lChild,
-         const int  rChild,
+        (const int  node_id,
+         const int  left_id,
+         const int  right_id,
          Morphy     m);
 
 

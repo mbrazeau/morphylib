@@ -12,17 +12,13 @@
 #include "morphy.h"
 #include "statedata.h"
 
+
 Morphy mpl_new_Morphy(void)
 {
-    Morphyp new     = mpl_new_Morphy_t();
-    
-//    if (new) {
-//        new->symboldict = mpl_alloc_symbolset();
-//    }
+    Morphyp new = mpl_new_Morphy_t();
     
     return (Morphy)new;
 }
-
 
 
 int mpl_delete_Morphy(Morphy m)
@@ -90,7 +86,7 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     return ret;
 }
 
-//int     mpl_get_numtaxa(Morphy m);
+
 int mpl_get_numtaxa(Morphy m)
 {
     if (!m) {
@@ -101,7 +97,6 @@ int mpl_get_numtaxa(Morphy m)
 }
 
 
-//int     mpl_get_num_charac(Morphy m);
 int mpl_get_num_charac(Morphy m)
 {
     if (!m) {
@@ -138,7 +133,7 @@ int mpl_get_num_internal_nodes(Morphy m)
     return (((Morphyp)m)->numnodes - mpl_get_numtaxa(m));
 }
 
-//int     mpl_attach_symbols(char* symbols, Morphy m);
+
 int mpl_attach_symbols(const char *symbols, Morphy m)
 {
     if (!symbols || !m) {
@@ -182,6 +177,7 @@ int mpl_attach_symbols(const char *symbols, Morphy m)
     return ERR_NO_ERROR;
 }
 
+
 char* mpl_get_symbols(Morphy m)
 {
 
@@ -191,7 +187,6 @@ char* mpl_get_symbols(Morphy m)
 }
 
 
-//int     mpl_attach_rawdata(const char* rawmatrix, const Morphy m);
 int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
 {
     if (!rawmatrix || !m) {
@@ -201,8 +196,6 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
     if (!mpl_get_numtaxa(m) || !mpl_get_num_charac(m)) {
         return ERR_NO_DIMENSIONS;
     }
-    
-    
     
     Morphyp m1 = (Morphyp)m;
     mpl_copy_raw_matrix(rawmatrix, m1);
@@ -224,7 +217,6 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
 }
 
 
-//int     mpl_delete_rawdata(Morphy m);
 int mpl_delete_rawdata(Morphy m)
 {
     if (!m) {
@@ -243,7 +235,6 @@ int mpl_delete_rawdata(Morphy m)
 }
 
 
-//int     mpl_apply_tipdata (Morphy m);
 int mpl_apply_tipdata(Morphy m)
 {
     if (!m) {
@@ -270,16 +261,19 @@ int mpl_apply_tipdata(Morphy m)
 }
 
 
-
-
 //int     mpl_set_postorder(const int nodeID, const int index, Morphy m);
 //
+
 //int     mpl_incl_charac(const int charID, Morphy m);
+//
+
 //int     mpl_excl_charac(const int charID, Morphy m);
 //
+
 //int     mpl_set_charac_weight(const int charID, Mflt weight);
 //
-//int     mpl_set_parsim_t(const int charID, const ptype_t parsfxn, Morphy m);
+
+
 int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
 {
     if (!m) {
@@ -316,7 +310,7 @@ int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
     return ERR_NO_ERROR;
 }
 
-//int     mpl_set_gaphandl(const gap_t gaptype, Morphy m);
+
 // TODO: Document gap_t
 int mpl_set_gaphandl(const gap_t gaptype, Morphy m)
 {
@@ -340,29 +334,29 @@ int mpl_query_gaphandl(Morphy m)
 }
 
 
-//
-int mpl_down_recon
-(const int nodeID, const int lChild, const int rChild, Morphy m)
+int mpl_first_down_recon
+(const int node_id, const int left_id, const int right_id, Morphy m)
 {
     if (!m) {
         return ERR_UNEXP_NULLPTR;
     }
     
-    Morphyp handl = (Morphyp)m;
-    MPLndsets* nstates = handl->statesets[nodeID];
-    MPLndsets* lstates = handl->statesets[lChild];
-    MPLndsets* rstates = handl->statesets[rChild];
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  nstates = handl->statesets[node_id];
+    MPLndsets*  lstates = handl->statesets[left_id];
+    MPLndsets*  rstates = handl->statesets[right_id];
     
     int i = 0;
+    int res = 0;
     int numparts = mpl_get_numparts(handl);
     MPLdownfxn downfxn = NULL;
     
     for (i = 0; i < numparts; ++i) {
         downfxn = handl->partitions[i]->prelimfxn;
-        downfxn(lstates, rstates, nstates, handl->partitions[i]);
+        res += downfxn(lstates, rstates, nstates, handl->partitions[i]);
     }
     
-    return ERR_NO_ERROR; //
+    return res; //
 }
 //int     mpl_up_recon(const int nodeID, const int lChild, const int rChild, const int parentID, Morphy m);
 //int     mpl_up_final_recon(const int nodeID, const int lChild, const int rChild, const int parentID, Morphy m);
