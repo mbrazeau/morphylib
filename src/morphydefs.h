@@ -36,13 +36,21 @@ typedef unsigned int MPLstate;
                             // in a column
 #define MPLCHARMAX      INT_MAX
     
-
+typedef struct MPLstatesets MPLstatesets;
+typedef struct partition_s MPLpartition;
 // Evaluator function pointers
 typedef int (*MPLdownfxn)
-(MPLstate* left, MPLstate* right, MPLstate* n, int nchars);
+            (MPLstatesets* lset,
+             MPLstatesets* rset,
+             MPLstatesets* nset,
+             MPLpartition* part);
 
 typedef int (*MPLupfxn)
-(MPLstate* left, MPLstate* right, MPLstate* n, MPLstate *anc, int nchars);
+            (MPLstatesets* lset,
+             MPLstatesets* rset,
+             MPLstatesets* nset,
+             MPLstatesets* anc,
+             MPLpartition* part);
 
 // Key data types
 typedef enum {
@@ -107,7 +115,7 @@ typedef struct partition_s {
     
 
 
-typedef struct {
+typedef struct MPLstatesets {
     
     MPLstate*   NApass1;
     MPLstate*   NApass2;

@@ -13,17 +13,24 @@
 
 /**/
 int mpl_fitch_downpass
-(MPLstate* left, MPLstate* right, MPLstate* n, int nchars)
+(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLpartition* part)
 {
-    int i = 0;
+    int i     = 0;
+    int j     = 0;
     int steps = 0;
+    int* indices    = part->charindices;
+    int nchars      = part->ncharsinpart;
+    MPLstate* left  = lset->prelimset;
+    MPLstate* right = rset->prelimset;
+    MPLstate* n     = nset->prelimset;
     
     for (i = 0; i < nchars; ++i) {
-        if (left[i] & right[i]) {
-            n[i] = left[i] & right[i];
+        j = indices[i];
+        if (left[j] & right[j]) {
+            n[j] = left[j] & right[j];
         }
         else {
-            n[i] = left[i] | right[i];
+            n[i] = left[j] | right[j];
             ++steps;
         }
     }
@@ -33,7 +40,11 @@ int mpl_fitch_downpass
 
 
 int mpl_fitch_uppass
-(MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
+(MPLstatesets* lset,
+ MPLstatesets* rset,
+ MPLstatesets* nset,
+ MPLstatesets* anc,
+ MPLpartition* part)
 {
     
     return -1;
@@ -42,7 +53,7 @@ int mpl_fitch_uppass
 
 /**/
 int mpl_NA_fitch_first_downpass
-(MPLstate* left, MPLstate *right, MPLstate *n, int nchars)
+(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLpartition* part)
 {
     
     return -1;
@@ -50,7 +61,11 @@ int mpl_NA_fitch_first_downpass
 
 
 int mpl_NA_fitch_first_uppass
-(MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
+(MPLstatesets* lset,
+ MPLstatesets* rset,
+ MPLstatesets* nset,
+ MPLstatesets* anc,
+ MPLpartition* part)
 {
     
     return -1;
@@ -58,7 +73,7 @@ int mpl_NA_fitch_first_uppass
 
 
 int mpl_NA_fitch_second_downpass
-(MPLstate* left, MPLstate* right, MPLstate* n, int nchars)
+(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLpartition* part)
 {
     int steps = 0;
     
@@ -67,7 +82,11 @@ int mpl_NA_fitch_second_downpass
 
 
 int mpl_NA_fitch_second_uppass
-(MPLstate *left, MPLstate *right, MPLstate *n, MPLstate *anc, int nchars)
+(MPLstatesets* lset,
+ MPLstatesets* rset,
+ MPLstatesets* nset,
+ MPLstatesets* anc,
+ MPLpartition* part)
 {
     int steps = 0;
     

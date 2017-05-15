@@ -341,9 +341,9 @@ int mpl_down_recon
     }
     
     Morphyp handl = (Morphyp)m;
-//    MPLstatesets* nstates = handl->statesets[nodeID];
-//    MPLstatesets* lstates = handl->statesets[lChild];
-//    MPLstatesets* rstates = handl->statesets[rChild];
+    MPLstatesets* nstates = handl->statesets[nodeID];
+    MPLstatesets* lstates = handl->statesets[lChild];
+    MPLstatesets* rstates = handl->statesets[rChild];
     
     int i = 0;
     int numparts = mpl_get_numparts(handl);
@@ -351,7 +351,7 @@ int mpl_down_recon
     
     for (i = 0; i < numparts; ++i) {
         downfxn = handl->partitions[i]->prelimfxn;
-//        downfxn(<#params#>);
+        downfxn(lstates, rstates, nstates, handl->partitions[i]);
     }
     
     return ERR_NO_ERROR; //
