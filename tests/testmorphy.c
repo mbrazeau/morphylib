@@ -100,7 +100,7 @@ int test_data_partitioning_simple(void)
     int failn = 0;
     int ntax	= 6;
     int nchar	= 10;
-    int numna   = 0;
+//    int numna   = 0;
     char *rawmatrix =
 "0000000010\
 0-001-22-0\
@@ -138,7 +138,7 @@ int test_data_partitioning_gapmissing(void)
     int failn = 0;
     int ntax	= 6;
     int nchar	= 10;
-    int numna   = 0;
+//    int numna   = 0;
     char *rawmatrix =
     "0000000010\
     0-001-22-0\
@@ -176,7 +176,7 @@ int test_data_partitioning_gapnewstate(void)
     int failn = 0;
     int ntax	= 6;
     int nchar	= 10;
-    int numna   = 0;
+//    int numna   = 0;
     char *rawmatrix =
     "0000000010\
     0-001-22-0\
