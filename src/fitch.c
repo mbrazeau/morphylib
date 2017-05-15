@@ -13,7 +13,7 @@
 
 /**/
 int mpl_fitch_downpass
-(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLpartition* part)
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
 {
     int i     = 0;
     int j     = 0;
@@ -30,7 +30,7 @@ int mpl_fitch_downpass
             n[j] = left[j] & right[j];
         }
         else {
-            n[i] = left[j] | right[j];
+            n[j] = left[j] | right[j];
             ++steps;
         }
     }
@@ -40,20 +40,44 @@ int mpl_fitch_downpass
 
 
 int mpl_fitch_uppass
-(MPLstatesets* lset,
- MPLstatesets* rset,
- MPLstatesets* nset,
- MPLstatesets* anc,
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
  MPLpartition* part)
 {
+    int i     = 0;
+    int j     = 0;
+    int* indices    = part->charindices;
+    int nchars      = part->ncharsinpart;
+    MPLstate* left  = lset->prelimset;
+    MPLstate* right = rset->prelimset;
+    MPLstate* npre  = nset->prelimset;
+    MPLstate* nfin  = nset->finalset;
+    MPLstate* anc   = ancset->finalset;
     
-    return -1;
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if ((anc[j] & npre[j]) == anc[j]) {
+            nfin[j] = anc[j] & npre[j];
+        }
+        else {
+            if (left[j] & right[j]) {
+                nfin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
+            }
+            else {
+                nfin[j] = npre[j] | anc[j];
+            }
+        }
+        
+    }
+    
+    return 0;
 }
 
 
 /**/
 int mpl_NA_fitch_first_downpass
-(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLpartition* part)
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
 {
     
     return -1;
@@ -61,10 +85,7 @@ int mpl_NA_fitch_first_downpass
 
 
 int mpl_NA_fitch_first_uppass
-(MPLstatesets* lset,
- MPLstatesets* rset,
- MPLstatesets* nset,
- MPLstatesets* anc,
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
  MPLpartition* part)
 {
     
@@ -73,7 +94,7 @@ int mpl_NA_fitch_first_uppass
 
 
 int mpl_NA_fitch_second_downpass
-(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLpartition* part)
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
 {
     int steps = 0;
     
@@ -82,10 +103,7 @@ int mpl_NA_fitch_second_downpass
 
 
 int mpl_NA_fitch_second_uppass
-(MPLstatesets* lset,
- MPLstatesets* rset,
- MPLstatesets* nset,
- MPLstatesets* anc,
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
  MPLpartition* part)
 {
     int steps = 0;

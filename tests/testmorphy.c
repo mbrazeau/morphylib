@@ -208,4 +208,50 @@ int test_data_partitioning_gapnewstate(void)
     
 }
 
+int test_basic_tip_apply(void)
+{
+    theader("Testing application of state data to tips");
+    int failn = 0;
+    int ntax	= 6;
+    int nchar	= 10;
+    //    int numna   = 0;
+    char *rawmatrix =
+    "0000000010\
+    0-001-22-0\
+    0-001-110-\
+    10(03)0101100\
+    1-000-0000\
+    0-00{01}100-0;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    mpl_attach_rawdata(rawmatrix, m1);
+    
+    mpl_apply_tipdata(m1);
+    
+    Morphyp mi = (Morphy)m1;
+    
+    int i = 0;
+    int j = 0;
+    for (i = 0; i < ntax; ++i) {
+        for (j = 0; j < nchar; ++j) {
+            MPLstate res = mi->statesets[i]->prelimset[j];
+            if (res == (~0)) {
+                printf("%c\t", '?');
+            }
+            else {
+                printf("%u\t", res);
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+    
+    mpl_delete_Morphy(m1);
+    
+    failn = 0;
+    
+    return failn;
+    
+}
 

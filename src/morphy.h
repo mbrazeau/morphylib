@@ -48,10 +48,11 @@ MPLpartition*   mpl_new_partition(const MPLchtype chtype, const bool hasNA);
 int             mpl_count_gaps_in_columns(Morphyp handl);
 int             mpl_setup_partitions(Morphyp handle);
 int             mpl_get_numparts(Morphyp handl);
-MPLstatesets*   mpl_alloc_stateset(int numchars);
-void            mpl_free_stateset(MPLstatesets* statesets);
+MPLndsets*      mpl_alloc_stateset(int numchars);
+void            mpl_free_stateset(MPLndsets* statesets);
 int             mpl_setup_statesets(Morphyp handl);
 int             mpl_destroy_statesets(Morphyp handl);
+int             mpl_copy_data_into_tips(Morphyp handl);
 //MPLarray*   mpl_new_array(size_t elemsize);
 //void        mpl_destroy_array(MPLarray* arr);
 #endif /* morphy_h */

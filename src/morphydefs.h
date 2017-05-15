@@ -36,21 +36,21 @@ typedef unsigned int MPLstate;
                             // in a column
 #define MPLCHARMAX      INT_MAX
     
-typedef struct MPLstatesets MPLstatesets;
+typedef struct MPLndsets MPLndsets;
 typedef struct partition_s MPLpartition;
 // Evaluator function pointers
 typedef int (*MPLdownfxn)
-            (MPLstatesets* lset,
-             MPLstatesets* rset,
-             MPLstatesets* nset,
-             MPLpartition* part);
+            (MPLndsets*     lset,
+             MPLndsets*     rset,
+             MPLndsets*     nset,
+             MPLpartition*  part);
 
 typedef int (*MPLupfxn)
-            (MPLstatesets* lset,
-             MPLstatesets* rset,
-             MPLstatesets* nset,
-             MPLstatesets* anc,
-             MPLpartition* part);
+            (MPLndsets*     lset,
+             MPLndsets*     rset,
+             MPLndsets*     nset,
+             MPLndsets*     ancset,
+             MPLpartition*  part);
 
 // Key data types
 typedef enum {
@@ -115,7 +115,7 @@ typedef struct partition_s {
     
 
 
-typedef struct MPLstatesets {
+typedef struct MPLndsets {
     
     MPLstate*   NApass1;
     MPLstate*   NApass2;
@@ -127,7 +127,7 @@ typedef struct MPLstatesets {
     MPLstate*   subtree_prelimset;
     MPLstate*   subtree_finalset;
     
-} MPLstatesets;
+} MPLndsets;
     
 typedef struct mpl_matrix_s {
     int             ncells;
@@ -137,7 +137,7 @@ typedef struct mpl_matrix_s {
 //typedef struct {
 //    int*            tips;
 //    int*            internals;
-//    MPLstatesets**  ancstates;
+//    MPLndsets**  ancstates;
 //} MPLnodesets;
 
 typedef struct symbols_s {
@@ -169,7 +169,7 @@ typedef struct Morphy_t {
     char*           char_t_matrix;  // The matrix as a NULL-terminated string
     int             numnodes;   // The number of nodes
     int*            nodesequence;   // The postorder sequence of nodes.
-    MPLstatesets**  statesets;
+    MPLndsets**  statesets;
     
 } Morphy_t, *Morphyp;
 

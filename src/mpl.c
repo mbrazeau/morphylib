@@ -62,6 +62,7 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
             return ERR_EX_DATA_CONF;
         }
     }
+    
     if (nchar != mpl_get_num_charac(m)) {
         if (mi->char_t_matrix) {
             return ERR_EX_DATA_CONF;
@@ -69,6 +70,11 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     }
     
     ret = mpl_set_numtaxa(ntax, mi);
+    if (ret) {
+        return ret;
+    }
+    
+    ret = mpl_set_num_internal_nodes(ntax, mi);
     if (ret) {
         return ret;
     }
@@ -118,7 +124,7 @@ int mpl_set_num_internal_nodes(const int nnodes, Morphy m)
         return ERR_NO_DIMENSIONS;
     }
     
-    ((Morphyp)m)->numnodes = ntax + nnodes;
+    ((Morphyp)m)->numnodes += nnodes;
     
     return ERR_NO_ERROR;
 }
@@ -254,9 +260,11 @@ int mpl_apply_tipdata(Morphy m)
     
     // TODO: Check if any weights are floats; then all arith is FP.
     
-    // TODO: Create all the internal data memory
+    // Create all the internal data memory
+    mpl_setup_statesets(mi);
     
-    // TODO: Apply the data to the tips
+    // Apply the data to the tips
+    mpl_copy_data_into_tips(mi);
     
     return ERR_NO_ERROR;
 }
@@ -341,9 +349,9 @@ int mpl_down_recon
     }
     
     Morphyp handl = (Morphyp)m;
-    MPLstatesets* nstates = handl->statesets[nodeID];
-    MPLstatesets* lstates = handl->statesets[lChild];
-    MPLstatesets* rstates = handl->statesets[rChild];
+    MPLndsets* nstates = handl->statesets[nodeID];
+    MPLndsets* lstates = handl->statesets[lChild];
+    MPLndsets* rstates = handl->statesets[rChild];
     
     int i = 0;
     int numparts = mpl_get_numparts(handl);

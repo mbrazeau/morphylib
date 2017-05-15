@@ -36,6 +36,7 @@ int main (void)
     // mpl.c tests
     fails += test_simple_chtype_setting();
     fails += test_delete_Morphy_no_input();
+    fails += test_basic_tip_apply();
 //    fails += test_deletion_success();
     
     printf("\n\nTest summary:\n\n");

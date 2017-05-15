@@ -9,16 +9,16 @@
 #ifndef fitch_h
 #define fitch_h
 
-int mpl_fitch_downpass(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLpartition* part);
+int mpl_fitch_downpass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part);
 
-int mpl_fitch_uppass(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLstatesets* anc, MPLpartition* part);
+int mpl_fitch_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset, MPLpartition* part);
 
-int mpl_NA_fitch_first_downpass(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLpartition* part);
+int mpl_NA_fitch_first_downpass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part);
 
-int mpl_NA_fitch_first_uppass(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLstatesets* anc, MPLpartition* part);
+int mpl_NA_fitch_first_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset, MPLpartition* part);
 
-int mpl_NA_fitch_second_downpass(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLpartition* part);
+int mpl_NA_fitch_second_downpass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part);
 
-int mpl_NA_fitch_second_uppass(MPLstatesets* lset, MPLstatesets* rset, MPLstatesets* nset, MPLstatesets* anc, MPLpartition* part);
+int mpl_NA_fitch_second_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset, MPLpartition* part);
 
 #endif /* fitch_h */

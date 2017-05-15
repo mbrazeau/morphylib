@@ -21,6 +21,7 @@ void *mpl_alloc(size_t size, int setval)
     return ret;
 }
 
+
 Morphyp mpl_new_Morphy_t(void)
 {
     Morphyp new = (Morphyp)calloc(1, sizeof(Morphy_t));
@@ -51,6 +52,7 @@ int mpl_get_gaphandl(Morphyp handl)
     return handl->gaphandl;
 }
 
+
 //int     mpl_set_num_charac(const int nchar, Morphy m);
 int mpl_set_num_charac(const int nchar, Morphyp m)
 {
@@ -63,6 +65,7 @@ int mpl_set_num_charac(const int nchar, Morphyp m)
     return ERR_NO_ERROR;
 }
 
+
 //int     mpl_set_numtaxa(const int ntax, Morphy m);
 int mpl_set_numtaxa(const int ntax, Morphyp m)
 {
@@ -74,6 +77,7 @@ int mpl_set_numtaxa(const int ntax, Morphyp m)
     
     return ERR_NO_ERROR;
 }
+
 
 int mpl_check_data_loaded(Morphyp m)
 {
@@ -155,10 +159,7 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
         part->finalfxn      = mpl_fitch_uppass;
         part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
         part->inappupfxn    = NULL;
-        
     }
-    
-    
 }
 
 
@@ -183,6 +184,7 @@ int mpl_fetch_parsim_fxn_setter
     return err;
 }
 
+
 int mpl_assign_partition_fxns(MPLpartition* part)
 {
     assert(part);
@@ -206,7 +208,9 @@ int mpl_extend_intarray(int** array, size_t size)
     if (!temp) {
         return ERR_BAD_MALLOC;
     }
+    
     *array = temp;
+    
     return ERR_NO_ERROR;
 }
 
@@ -232,6 +236,7 @@ int mpl_part_push_index(int newint, MPLpartition* part)
     return err;
 }
 
+
 int mpl_part_remove_index(int index, MPLpartition* part)
 {
     if (!part->ncharsinpart) {
@@ -249,6 +254,7 @@ int mpl_part_remove_index(int index, MPLpartition* part)
     
     return 0;
 }
+
 
 int mpl_delete_partition(MPLpartition* part)
 {
@@ -328,6 +334,7 @@ int mpl_count_gaps_in_columns(Morphyp handl)
     return numna;
 }
 
+
 int mpl_compare_partition_with_char_info
 (const MPLcharinfo *chinfo, const MPLpartition* part, const gap_t gaphandl)
 {
@@ -352,6 +359,7 @@ int mpl_compare_partition_with_char_info
     
     return ret;
 }
+
 
 /*!
  @brief Searches the partition list for a partition matching the supplied info
@@ -380,6 +388,7 @@ MPLpartition* mpl_search_partitions
     return p;
 }
 
+
 int mpl_compare_partitions(const void* ptr1, const void* ptr2)
 {
     MPLpartition* part1 = *(MPLpartition**)ptr1;
@@ -399,8 +408,10 @@ int mpl_compare_partitions(const void* ptr1, const void* ptr2)
             ret = 0;
         }
     }
+    
     return ret;
 }
+
 
 int mpl_put_partitions_in_handle(MPLpartition* first, Morphyp handl)
 {
@@ -425,6 +436,7 @@ int mpl_put_partitions_in_handle(MPLpartition* first, Morphyp handl)
     
     return ERR_NO_ERROR;
 }
+
 
 int mpl_setup_partitions(Morphyp handl)
 {
@@ -481,14 +493,16 @@ int mpl_setup_partitions(Morphyp handl)
     return err;
 }
 
+
 int mpl_get_numparts(Morphyp handl)
 {
     return handl->numparts;
 }
 
-MPLstatesets* mpl_alloc_stateset(int numchars)
+
+MPLndsets* mpl_alloc_stateset(int numchars)
 {
-    MPLstatesets* new = (MPLstatesets*)calloc(1, sizeof(MPLstatesets));
+    MPLndsets* new = (MPLndsets*)calloc(1, sizeof(MPLndsets));
     if (!new) {
         return NULL;
     }
@@ -541,7 +555,8 @@ MPLstatesets* mpl_alloc_stateset(int numchars)
     return new;
 }
 
-void mpl_free_stateset(MPLstatesets* statesets)
+
+void mpl_free_stateset(MPLndsets* statesets)
 {
     if (statesets->NApass1) {
         free(statesets->NApass1);
@@ -579,21 +594,26 @@ void mpl_free_stateset(MPLstatesets* statesets)
         free(statesets->subtree_finalset);
         statesets->subtree_finalset = NULL;
     }
+    
     free(statesets);
 }
+
 
 int mpl_setup_statesets(Morphyp handl)
 {
     MPL_ERR_T err = ERR_NO_ERROR;
+    
     // TODO: Implement total numnodes getter
     int numnodes = handl->numnodes;
-    handl->statesets = (MPLstatesets**)calloc(numnodes,
-                                              sizeof(MPLstatesets*));
+    handl->statesets = (MPLndsets**)calloc(numnodes,
+                                              sizeof(MPLndsets*));
     if (!handl->statesets) {
         return ERR_BAD_MALLOC;
     }
+    
     int i = 0;
     int nchars = mpl_get_num_charac((Morphyp)handl);
+    
     for (i = 0; i < numnodes; ++i) {
         if (!(handl->statesets[i] = mpl_alloc_stateset(nchars))) {
             err = ERR_BAD_MALLOC;
@@ -601,8 +621,10 @@ int mpl_setup_statesets(Morphyp handl)
             break;
         }
     }
+    
     return ERR_NO_DATA; // TODO: Replace
 }
+
 
 int mpl_destroy_statesets(Morphyp handl)
 {
@@ -610,13 +632,36 @@ int mpl_destroy_statesets(Morphyp handl)
     // TODO: Implement total numnodes getter
     int numnodes = handl->numnodes;
     
-    for (i = 0; i < numnodes; ++i) {
-        mpl_free_stateset(handl->statesets[i]);
-    }
+    
     
     if (handl->statesets) {
+        
+        for (i = 0; i < numnodes; ++i) {
+            mpl_free_stateset(handl->statesets[i]);
+        }
+        
         free(handl->statesets);
         handl->statesets = NULL;
     }
+    
     return ERR_NO_ERROR; // TODO: Replace
+}
+
+
+int mpl_copy_data_into_tips(Morphyp handl)
+{
+    int i = 0;
+    int j = 0;
+    int ntax = mpl_get_numtaxa((Morphy)handl);
+    int nchar = mpl_get_num_charac((Morphy)handl);
+    MPLndsets** nsets = handl->statesets;
+    
+    for (i = 0; i < ntax; ++i) {
+        for (j = 0; j < nchar; ++j) {
+            nsets[i]->prelimset[j] =
+            handl->inmatrix.cells[i * nchar + j].asint;
+        }
+    }
+    
+    return ERR_NO_ERROR;
 }
