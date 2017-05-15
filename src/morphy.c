@@ -296,6 +296,8 @@ MPLpartition* mpl_new_partition(const MPLchtype chtype, const bool hasNA)
     new->maxnchars      = 1;
     new->ncharsinpart   = 0;
     
+    mpl_assign_partition_fxns(new);
+    
     return new;
 }
 
