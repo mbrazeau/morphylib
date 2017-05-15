@@ -2,6 +2,7 @@
 Phylogenetic reconstruction library using inapplicable data reconstruction
 
 **About MorphyLib right now**
+
 MorphyLib is a work in progress. It is currently only in development and not ready for use with any real-world (or fake world) data. However, stay tuned for updates as development progresses. A crude working version should be coming in a few weeks (13 May, 2017).
 
 MorphyLib is a library for phylogenetic analysis programming and is therefore likely to be of use or interest only to those who are writing phylogenetic software. However, if you are interested in MorphyLib's functionality at a user level, stay tuned as we will most certainly be making this possible through a 'front-end' application. 
