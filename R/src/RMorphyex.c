@@ -45,7 +45,6 @@ SEXP _R_wrap_mpl_get_numtaxa(SEXP MorphHandl)
 	INTEGER(Rret)[0] = mpl_get_numtaxa(R_ExternalPtrAddr(MorphHandl));
 
 	UNPROTECT(1);
-
 	return Rret;
 }
 
@@ -56,7 +55,6 @@ SEXP _R_wrap_mpl_get_num_charac(SEXP MorphHandl)
 	INTEGER(Rret)[0] = mpl_get_num_charac(R_ExternalPtrAddr(MorphHandl));
 
 	UNPROTECT(1);
-
 	return Rret;
 }
 
@@ -73,7 +71,6 @@ SEXP _R_wrap_mpl_attach_symbols(SEXP Rsymbols, SEXP MorphyHandl)
 	INTEGER(Rret)[0] = Mret;
 
 	UNPROTECT(1);
-
 	return Rret;
 }
 
@@ -84,8 +81,8 @@ SEXP _R_wrap_mpl_get_symbols(SEXP MorphyHandl)
 	char* symbols = mpl_get_symbols(R_ExternalPtrAddr(MorphyHandl));
 
 	Rret = mkString(symbols);
+	
 	UNPROTECT(1);
-
 	return Rret;
 }
 
@@ -97,8 +94,8 @@ SEXP _R_wrap_mpl_attach_rawdata(SEXP Rmatrix, SEXP MorphyHandl)
 	const char *Mmatrix = CHAR(asChar(Rmatrix));
 
 	Mret = mpl_attach_rawdata(Mmatrix, R_ExternalPtrAddr(MorphyHandl));
+	
 	INTEGER(Rret)[0] = Mret;
-
 	UNPROTECT(1);
 
 	return Rret;
@@ -106,7 +103,6 @@ SEXP _R_wrap_mpl_attach_rawdata(SEXP Rmatrix, SEXP MorphyHandl)
 
 SEXP _R_wrap_mpl_set_parsim_t(SEXP RcharID, SEXP Rchtype, SEXP MorphyHandl)
 {
-	
 	SEXP Rret = PROTECT(allocVector(INTSXP, 1));
 	MPLchtype chtype;
 	int Mret = 0;
@@ -118,6 +114,7 @@ SEXP _R_wrap_mpl_set_parsim_t(SEXP RcharID, SEXP Rchtype, SEXP MorphyHandl)
 							R_ExternalPtrAddr(MorphyHandl));
 
 	INTEGER(Rret)[0] = Mret;
+
 	UNPROTECT(1);
 	return Rret;
 }
