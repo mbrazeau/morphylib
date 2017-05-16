@@ -357,7 +357,7 @@ int     mpl_query_gaphandl
  @brief Reconstructs the first (downpass) nodal reconstructions
  
  @discussion Reconstructs the preliminary nodal set for all characters for a 
- particular node. This function is called over a postorder sequence of internal
+ particular node. This function is called over a postorder sequence of internal 
  nodes where left and right descendants are known.
  
  Because this function needs to be fairly high-performance, it does not do much 
