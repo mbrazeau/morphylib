@@ -374,7 +374,6 @@ int mpl_update_tip(const int tip_id, const int anc_id, Morphy m)
     MPLndsets*  ancset  = handl->statesets[anc_id];
     
     int i = 0;
-    int res = 0;
     int numparts = mpl_get_numparts(handl);
     
     for (i = 0; i < numparts; ++i) {
@@ -397,7 +396,6 @@ int mpl_finalize_tip(const int tip_id, const int anc_id, Morphy m)
     MPLndsets*  ancset  = handl->statesets[anc_id];
     
     int i = 0;
-    int res = 0;
     int numparts = mpl_get_numparts(handl);
     
     for (i = 0; i < numparts; ++i) {
@@ -406,6 +404,30 @@ int mpl_finalize_tip(const int tip_id, const int anc_id, Morphy m)
     
     
     return  ERR_NO_ERROR;
+}
+
+int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  lower  = handl->statesets[l_root_id];
+    MPLndsets*  upper  = handl->statesets[root_id];
+    MPLpartition **parts = handl->partitions;
+    int i = 0;
+    int numparts = mpl_get_numparts(handl);
+    
+    for (i = 0; i < numparts; ++i) {
+        if (!parts[i]->isNAtype) {
+            mpl_update_root(lower, upper, parts[i]);
+        } else {
+            mpl_update_NA_root(lower, upper, parts[i]);
+        }
+    }
+    
+    return ERR_NO_ERROR;
 }
 
 

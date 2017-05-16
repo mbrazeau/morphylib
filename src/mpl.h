@@ -422,6 +422,30 @@ int     mpl_finalize_tip
          const int anc_id,
          Morphy m);
 
+/*!
+ 
+ @brief Updates the nodal sets for a lower ('dummy') root node
+ 
+ @discussion If trees are rooted, then Morphy uppass functions
+ require a lower or 'dummy' root in order to function properly. This
+ function should be called to set the nodal state sets to the dummy
+ root. The nodal set will be equal to the set of the root node, unless
+ there is an ambiguous union of applicable and gap tokens when gaps are 
+ treated as in applicable. In which case, the set union is resolved in 
+ favour of any applicable tokens in the set.
+ 
+ @param l_root_id The index of the lower root.
+ 
+ @param root_id The index of the upper root node.
+ 
+ @return A Morphy error code.
+ 
+ */
+int     mpl_update_lower_root
+    
+        (const int l_root_id,
+         const int root_id,
+         Morphy m);
     
 int     mpl_get_insertcost
 
