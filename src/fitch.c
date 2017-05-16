@@ -285,3 +285,19 @@ int mpl_NA_fitch_second_uppass
     return steps;
 }
 
+int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
+{
+    return -1;
+}
+
+int mpl_fitch_NA_tip_update
+(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
+{
+    return -1;
+}
+
+int mpl_fitch_NA_tip_finalize
+(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
+{
+    return -1;
+}

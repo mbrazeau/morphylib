@@ -21,4 +21,9 @@ int mpl_NA_fitch_second_downpass(MPLndsets* lset, MPLndsets* rset, MPLndsets* ns
 
 int mpl_NA_fitch_second_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset, MPLpartition* part);
 
+int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part);
+
+int mpl_fitch_NA_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part);
+
+int mpl_fitch_NA_tip_finalize(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part);
 #endif /* fitch_h */
