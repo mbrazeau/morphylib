@@ -11,6 +11,7 @@
 #include "teststatedata.h"
 #include "testmorphy.h"
 #include "testmpl.h"
+#include "testfitch.h"
 
 int main (void)
 {
@@ -37,7 +38,12 @@ int main (void)
     fails += test_simple_chtype_setting();
     fails += test_delete_Morphy_no_input();
     fails += test_basic_tip_apply();
-//    fails += test_deletion_success();
+ //    fails += test_deletion_success();
+    
+    // fitch.c tests
+    fails += test_small_fitch();
+    fails += test_small_fitch_na();
+
     
     printf("\n\nTest summary:\n\n");
     if (fails) {

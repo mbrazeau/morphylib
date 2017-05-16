@@ -225,8 +225,8 @@ int test_basic_tip_apply(void)
     
     Morphy m1 = mpl_new_Morphy();
     mpl_init_Morphy(ntax, nchar, m1);
+    //    mpl_set_gaphandl(GAP_NEWSTATE, m1);
     mpl_attach_rawdata(rawmatrix, m1);
-    
     mpl_apply_tipdata(m1);
     
     Morphyp mi = (Morphy)m1;
@@ -256,4 +256,3 @@ int test_basic_tip_apply(void)
     return failn;
     
 }
-
