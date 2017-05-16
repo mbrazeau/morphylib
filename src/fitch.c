@@ -95,13 +95,11 @@ int mpl_NA_fitch_first_downpass
         j = indices[i];
         
         if ((temp = (left[j] & right[j]))) {
+            n[j] = temp;
             if (temp == NA) {
                 if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
                     n[j] = (left[j] | right[j]);
                 }
-            }
-            else {
-                n[j] = temp;
             }
         }
         else {
