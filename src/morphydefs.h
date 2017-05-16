@@ -93,6 +93,10 @@ typedef struct charinfo_s {
         int      intwt;
         Mflt     fltwt;
     };
+    Mflt         CIndex;
+    Mflt         RCIndex;
+    Mflt         HIndex;
+    Mflt         RetIndex;
     
 } MPLcharinfo;
     
