@@ -475,8 +475,8 @@ int mpl_finalize_tip(const int tip_id, const int anc_id, Morphy m)
     }
     
     Morphyp     handl   = (Morphyp)m;
-    MPLndsets*  tipset  = handl->statesets[tip_id];
-    MPLndsets*  ancset  = handl->statesets[anc_id];
+//    MPLndsets*  tipset  = handl->statesets[tip_id];
+//    MPLndsets*  ancset  = handl->statesets[anc_id];
     
     int i = 0;
     int numparts = mpl_get_numparts(handl);

@@ -318,7 +318,7 @@ int mpl_fitch_NA_tip_update
     MPLstate* tpass1    = tset->NApass1;
     MPLstate* tprelim   = tset->prelimset;
     MPLstate* tifinal   = tset->NApass2;
-    MPLstate* tfinal    = tset->finalset;
+//    MPLstate* tfinal    = tset->finalset;
     MPLstate* astates   = ancset->NApass2;
     MPLstate* stacts    = tset->subtree_actives;
     
