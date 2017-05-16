@@ -51,6 +51,11 @@ typedef int (*MPLupfxn)
              MPLndsets*     nset,
              MPLndsets*     ancset,
              MPLpartition*  part);
+    
+typedef int (*MPLtipfxn)
+            (MPLndsets*     tset,
+             MPLndsets*     ancset,
+             MPLpartition*  part);
 
 // Key data types
 typedef enum {
