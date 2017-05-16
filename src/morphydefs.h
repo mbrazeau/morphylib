@@ -114,6 +114,8 @@ typedef struct partition_s {
     int             maxnchars;
     int             ncharsinpart;
     int*            charindices;
+    MPLtipfxn       tipupdate;
+    MPLtipfxn       tipfinalize;
     MPLdownfxn      inappdownfxn;
     MPLupfxn        inappupfxn;
     MPLdownfxn      prelimfxn;
