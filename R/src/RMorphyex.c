@@ -114,9 +114,56 @@ SEXP _R_wrap_mpl_set_parsim_t(SEXP RcharID, SEXP Rchtype, SEXP MorphyHandl)
 	const char* chtypename = CHAR(asChar(Rchtype));
 	
 	chtype = _R_mpl_str2chtype(chtypename);
-	Mret = mpl_set_parsim_t(INTEGER(RcharID)[0], chtype, R_ExternalPtrAddr(MorphyHandl));
+	Mret = mpl_set_parsim_t(INTEGER(RcharID)[0], chtype,
+							R_ExternalPtrAddr(MorphyHandl));
 
 	INTEGER(Rret)[0] = Mret;
+	UNPROTECT(1);
+	return Rret;
+}
+
+SEXP _R_wrap_mpl_set_num_internal_nodes(SEXP Rnnodes, SEXP MorphyHandl)
+{
+	SEXP Rret = PROTECT(allocVector(INTSXP, 1));
+
+	INTEGER(Rret)[0] = mpl_set_num_internal_nodes
+						(INTEGER(Rnnodes)[0], 
+						 R_ExternalPtrAddr(MorphyHandl));
+
+	UNPROTECT(1);
+	return Rret;
+}
+
+SEXP _R_wrap_mpl_get_num_internal_nodes(SEXP MorphyHandl)
+{
+	SEXP Rret = PROTECT(allocVector(INTSXP, 1));
+
+	INTEGER(Rret)[0] = mpl_get_num_internal_nodes
+						(R_ExternalPtrAddr(MorphyHandl));
+
+	UNPROTECT(1);
+	return Rret;
+}
+
+SEXP _R_wrap_mpl_apply_tipdata(SEXP MorphyHandl)
+{
+	SEXP Rret = PROTECT(allocVector(INTSXP, 1));
+
+	INTEGER(Rret)[0] = mpl_apply_tipdata(R_ExternalPtrAddr(MorphyHandl));
+	
+	UNPROTECT(1);	
+	return Rret;
+}
+
+SEXP _R_wrap_mpl_first_down_recon
+(SEXP Rnode_id, SEXP Rleft_id, SEXP Rright_id, SEXP MorphyHandl)
+{
+	SEXP Rret = PROTECT(allocVector(INTSXP, 1));
+
+	INTEGER(Rret)[0] = 
+	mpl_first_down_recon(INTEGER(Rnode_id)[0], INTEGER(Rleft_id)[0],
+						 INTEGER(Rright_id)[0],
+						 R_ExternalPtrAddr(MorphyHandl));
 	UNPROTECT(1);
 	return Rret;
 }

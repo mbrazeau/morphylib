@@ -59,7 +59,27 @@ mpl_get_symbols <- function(morphyobj)
 	return(str)
 }
 
-mpl_set_parsim_t <-function(char_id, tname = "typename", morphyobj)
+mpl_set_parsim_t <- function(char_id, tname = "typename", morphyobj)
 {
 	return(.Call("_R_wrap_mpl_set_parsim_t", as.integer(char_id), tname, morphyobj))
+}
+
+mpl_set_num_internal_nodes <- function(numnodes, morphyobj)
+{
+	return(.Call("_R_wrap_mpl_set_num_internal_nodes", as.integer(numnodes), morphyobj))
+}
+
+mpl_get_num_internal_nodes <- function(morphyobj)
+{
+	return(.Call("_R_wrap_mpl_get_num_internal_nodes", morphyobj))
+}
+
+mpl_apply_tipdata <- function(morphyobj)
+{
+	return(.Call("_R_wrap_mpl_apply_tipdata", morphyobj))
+}
+
+mpl_first_down_recon <- function(node_id, left_id, right_id, morphyobj)
+{
+	return(.Call("_R_wrap_mpl_first_down_recon", as.integer(node_id), as.integer(left_id), as.integer(right_id), morphyobj))
 }
