@@ -287,13 +287,57 @@ int mpl_NA_fitch_second_uppass
 
 int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
 {
-    return -1;
+    int i     = 0;
+    int j     = 0;
+    int* indices    = part->charindices;
+    int nchars      = part->ncharsinpart;
+    MPLstate* tprelim = tset->prelimset;
+    MPLstate* tfinal  = tset->finalset;
+    MPLstate* astates = ancset->finalset;
+    
+    for (i = 0; i < nchars; ++i) {
+        j = indices[i];
+        if (tprelim[j] & astates[j]) {
+            tfinal[j] = tprelim[j] & astates[j];
+        }
+        else {
+            tfinal[j] = tprelim[j];
+        }
+        assert(tfinal[j]);
+    }
+    return 0;
 }
 
 int mpl_fitch_NA_tip_update
 (MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
 {
-    return -1;
+    int i     = 0;
+    int j     = 0;
+    int* indices    = part->charindices;
+    int nchars      = part->ncharsinpart;
+    MPLstate* tprelim = tset->NApass1;
+    MPLstate* tfinal  = tset->prelimset;
+    MPLstate* astates = ancset->NApass2;
+    MPLstate* stacts  = tset->subtree_actives;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (tprelim[j] & astates[j]) {
+            stacts[j] = (tprelim[j] & astates[j] & ISAPPLIC);
+        }
+        else {
+            stacts[j] |= tprelim[j] & ISAPPLIC;
+        }
+        
+        
+        
+        tfinal[j] = tprelim[j];
+        
+        assert(tfinal[j]);
+    }
+    return 0;
 }
 
 int mpl_fitch_NA_tip_finalize

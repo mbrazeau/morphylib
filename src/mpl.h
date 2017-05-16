@@ -383,31 +383,27 @@ int     mpl_first_down_recon
          const int  right_id,
          Morphy     m);
 
+int     mpl_first_up_recon
+        (const int node_id,
+         const int left_id,
+         const int right_id,
+         const int anc_id,
+         Morphy m);
 
-int     mpl_resolve_applic_up
-
-        (const int  nodeID,
-         const int  lChild,
-         const int  rChild,
-         const int  parentID,
-         Morphy     m);
-
-int     mpl_prelim_recon
+int     mpl_second_down_recon
     
-        (const int  nodeID,
-         const int  lChild,
-         const int  rChild,
-         Morphy     m);
-    
-
-int     mpl_final_recon
-
-        (const int  nodeID,
-         const int  lChild,
-         const int  rChild,
-         const int  parentID,
+        (const int  node_id,
+         const int  left_id,
+         const int  right_id,
          Morphy     m);
 
+int     mpl_second_up_recon
+
+        (const int node_id,
+         const int left_id,
+         const int right_id,
+         const int anc_id,
+         Morphy m);
 
 int     mpl_update_tip
     
