@@ -410,15 +410,17 @@ int     mpl_final_recon
 
 
 int     mpl_update_tip
-
-        (const int  nodeID,
-         Morphy     m);
+    
+        (const int tip_id,
+         const int anc_id,
+         Morphy m);
 
 
 int     mpl_finalize_tip
 
-        (const int  nodeID,
-         Morphy     m);
+        (const int tip_id,
+         const int anc_id,
+         Morphy m);
 
     
 int     mpl_get_insertcost

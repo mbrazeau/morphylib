@@ -358,11 +358,57 @@ int mpl_first_down_recon
     
     return res; //
 }
+
+
 //int     mpl_up_recon(const int nodeID, const int lChild, const int rChild, const int parentID, Morphy m);
+
 //int     mpl_up_final_recon(const int nodeID, const int lChild, const int rChild, const int parentID, Morphy m);
-//int     mpl_update_tip(const int nodeID, Morphy m);
-//int     mpl_finalize_tip(const int nodeID, Morphy m);
-//
+int mpl_update_tip(const int tip_id, const int anc_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  tipset  = handl->statesets[tip_id];
+    MPLndsets*  ancset  = handl->statesets[anc_id];
+    
+    int i = 0;
+    int res = 0;
+    int numparts = mpl_get_numparts(handl);
+    
+    for (i = 0; i < numparts; ++i) {
+        
+    }
+
+    
+    return  ERR_NO_ERROR;
+}
+
+
+int mpl_finalize_tip(const int tip_id, const int anc_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  tipset  = handl->statesets[tip_id];
+    MPLndsets*  ancset  = handl->statesets[anc_id];
+    
+    int i = 0;
+    int res = 0;
+    int numparts = mpl_get_numparts(handl);
+    
+    for (i = 0; i < numparts; ++i) {
+        
+    }
+    
+    
+    return  ERR_NO_ERROR;
+}
+
+
 //int     mpl_get_insertcost_max(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //int     mpl_get_insertcost_min(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //
