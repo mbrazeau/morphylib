@@ -387,7 +387,63 @@ int mpl_first_up_recon
     return res; //
 }
 
-//int     mpl_up_final_recon(const int nodeID, const int lChild, const int rChild, const int parentID, Morphy m);
+
+int mpl_second_down_recon
+(const int node_id, const int left_id, const int  right_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  nstates = handl->statesets[node_id];
+    MPLndsets*  lstates = handl->statesets[left_id];
+    MPLndsets*  rstates = handl->statesets[right_id];
+    
+    int i = 0;
+    int res = 0;
+    int numparts = mpl_get_numparts(handl);
+    MPLdownfxn downfxn = NULL;
+    
+    for (i = 0; i < numparts; ++i) {
+        downfxn = handl->partitions[i]->inappdownfxn;
+        if (downfxn) {
+            res += downfxn(lstates, rstates, nstates, handl->partitions[i]);
+        }
+        downfxn = NULL;
+    }
+    
+    return res;
+}
+
+
+int mpl_second_up_recon
+(const int node_id, const int left_id, const int right_id, const int anc_id,
+ Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  nstates = handl->statesets[node_id];
+    MPLndsets*  lstates = handl->statesets[left_id];
+    MPLndsets*  rstates = handl->statesets[right_id];
+    MPLndsets*  astates = handl->statesets[anc_id];
+    
+    int i = 0;
+    int res = 0;
+    int numparts = mpl_get_numparts(handl);
+    MPLupfxn upfxn = NULL;
+    
+    for (i = 0; i < numparts; ++i) {
+        upfxn = handl->partitions[i]->inappupfxn;
+        res += upfxn(lstates, rstates, nstates, astates, handl->partitions[i]);
+    }
+    
+    return res; //
+}
+
 int mpl_update_tip(const int tip_id, const int anc_id, Morphy m)
 {
     if (!m) {

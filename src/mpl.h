@@ -289,13 +289,6 @@ int     mpl_set_missing_symbol
 int     mpl_apply_tipdata
     
         (Morphy m);
-    
-
-int     mpl_set_postorder
-
-        (const int  nodeID,
-         const int  index,
-         Morphy     m);
 
 
 int     mpl_incl_charac
@@ -383,6 +376,32 @@ int     mpl_first_down_recon
          const int  right_id,
          Morphy     m);
 
+    
+/*!
+
+ @brief Reconstructs the second (uppass) nodal reconstructions.
+ 
+ @discussion Reconstructs second-pass nodal sets. For normal (all-applicable)
+ characters, this is the final pass. This function is called over a preorder
+ sequence of nodes where left, right, and ancestral nodes are known.
+ 
+ Because this function needs to be fairly high-performance, it does not do much
+ checking for parameter validity, thus unsafe usage of this function might not
+ be caught. It is up to calling functions to ensure that the appropriate
+ parameters have been set before use.
+ 
+ @param node_id The index of the node being reconstructed.
+ 
+ @param left_id The index of the left descendant.
+ 
+ @param right_id The index of the right descendant.
+
+ @param anc_id The index of the immediate ancestor of the node.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return A null value (for now).
+ */
 int     mpl_first_up_recon
         (const int node_id,
          const int left_id,
@@ -390,6 +409,31 @@ int     mpl_first_up_recon
          const int anc_id,
          Morphy m);
 
+    
+/*!
+ 
+ @brief Performs the second nodal reconstructions for characters with
+ inapplicability.
+ 
+ @discussion Updates the nodal sets that had ambiguous unions with the 
+ inapplicable state and calculates steps involving applicable states after 
+ the update.
+ 
+ Because this function needs to be fairly high-performance, it does not do much
+ checking for parameter validity, thus unsafe usage of this function might not
+ be caught. It is up to calling functions to ensure that the appropriate
+ parameters have been set before use.
+ 
+ @param node_id The index of the node being reconstructed.
+ 
+ @param left_id The index of the left descendant.
+ 
+ @param right_id The index of the right descendant.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return The integral parsimony length (right now)
+ */
 int     mpl_second_down_recon
     
         (const int  node_id,
@@ -397,6 +441,33 @@ int     mpl_second_down_recon
          const int  right_id,
          Morphy     m);
 
+    
+/*!
+ 
+ @brief Finalises the ancestral state reconstructions for characters with 
+ inapplicable values.
+ 
+ @discussion Finalises the nodal sets for any characters that may have involved
+ the inapplicable token and counts excess regions of applicability at nodes
+ having at least two descendant subtrees that possess any applicable characters.
+ 
+ Because this function needs to be fairly high-performance, it does not do much
+ checking for parameter validity, thus unsafe usage of this function might not
+ be caught. It is up to calling functions to ensure that the appropriate
+ parameters have been set before use.
+ 
+ @param node_id The index of the node being reconstructed.
+ 
+ @param left_id The index of the left descendant.
+ 
+ @param right_id The index of the right descendant.
+ 
+ @param anc_id The index of the immediate ancestor of the node.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return The integral parsimony length (for now)
+ */
 int     mpl_second_up_recon
 
         (const int node_id,
@@ -405,6 +476,31 @@ int     mpl_second_up_recon
          const int anc_id,
          Morphy m);
 
+    
+/*!
+ 
+ @brief Initial update of tip values following uppass reconstruction
+ 
+ @discussion Ambiguous terminal state sets need to be resolved after the uppass
+ based on descendant state values in order for local reoptimisation procedures 
+ to be accurate and for inapplicable step counting to proceed accurately. This
+ function calls updaters for the records of states active on the subtrees, 
+ thereby allowing the second downpass to accurately reconstruct subtree state
+ activity.
+ 
+ Because this function needs to be fairly high-performance, it does not do much
+ checking for parameter validity, thus unsafe usage of this function might not
+ be caught. It is up to calling functions to ensure that the appropriate
+ parameters have been set before use.
+ 
+ @param tip_id The index of the tip being updated.
+ 
+ @param anc_id The index of the tip's immediate ancestor.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return A null value (for now).
+ */
 int     mpl_update_tip
     
         (const int tip_id,
@@ -418,6 +514,7 @@ int     mpl_finalize_tip
          const int anc_id,
          Morphy m);
 
+    
 /*!
  
  @brief Updates the nodal sets for a lower ('dummy') root node
