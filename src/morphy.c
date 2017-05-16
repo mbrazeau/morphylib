@@ -149,10 +149,10 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
     assert(part);
     
     if (part->isNAtype) {
-        part->inappdownfxn  = mpl_NA_fitch_first_downpass;
-        part->inappupfxn    = mpl_NA_fitch_first_uppass;
-        part->prelimfxn     = mpl_NA_fitch_second_downpass;
-        part->finalfxn      = mpl_NA_fitch_second_uppass;
+        part->inappdownfxn  = mpl_NA_fitch_second_downpass;
+        part->inappupfxn    = mpl_NA_fitch_second_uppass;
+        part->prelimfxn     = mpl_NA_fitch_first_downpass;//mpl_NA_fitch_second_downpass;
+        part->finalfxn      = mpl_NA_fitch_first_uppass;
     }
     else {
         part->prelimfxn     = mpl_fitch_downpass;
@@ -662,6 +662,7 @@ int mpl_copy_data_into_tips(Morphyp handl)
         for (j = 0; j < nchar; ++j) {
             nsets[i]->prelimset[j] =
             handl->inmatrix.cells[i * nchar + j].asint;
+            nsets[i]->NApass1[j] = nsets[i]->prelimset[j];
         }
     }
     
