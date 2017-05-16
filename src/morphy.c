@@ -153,10 +153,14 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
         part->inappupfxn    = mpl_NA_fitch_second_uppass;
         part->prelimfxn     = mpl_NA_fitch_first_downpass;//mpl_NA_fitch_second_downpass;
         part->finalfxn      = mpl_NA_fitch_first_uppass;
+        part->tipupdate     = mpl_fitch_NA_tip_update;
+        part->tipfinalize   = mpl_fitch_NA_tip_finalize;
     }
     else {
         part->prelimfxn     = mpl_fitch_downpass;
         part->finalfxn      = mpl_fitch_uppass;
+        part->tipupdate     = mpl_fitch_tip_update;
+        part->tipfinalize   = NULL;
         part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
         part->inappupfxn    = NULL;
     }
@@ -667,4 +671,49 @@ int mpl_copy_data_into_tips(Morphyp handl)
     }
     
     return ERR_NO_ERROR;
+}
+
+int mpl_update_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)
+{
+    int i = 0;
+    int j = 0;
+    int nchar = part->ncharsinpart;
+    int *indices = part->charindices;
+    
+
+    for (i = 0; i < nchar; ++i) {
+        j = indices[i];
+        lower->prelimset[j] = upper->prelimset[j];
+        lower->finalset[j]  = upper->prelimset[j];
+    }
+    
+    return 0;
+}
+
+
+int mpl_update_NA_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)
+{
+    int i = 0;
+    int j = 0;
+    int nchar = part->ncharsinpart;
+    int *indices = part->charindices;
+    
+    for (i = 0; i < nchar; ++i) {
+        j = indices[i];
+        
+        if (lower->prelimset[j] & ISAPPLIC) {
+            lower->prelimset[j] = upper->prelimset[j] & ISAPPLIC;
+        }
+        else {
+            lower->prelimset[j] = NA;
+        }
+        
+        // Some of these assignments are a bit overkill, but they should
+        // be fairly safe in case of changes in how the nodal functions work.
+        lower->finalset[j]  = lower->prelimset[j];
+        lower->NApass1[j]   = lower->prelimset[j];
+        lower->NApass2[j]   = lower->prelimset[j];
+    }
+    
+    return 0;
 }
