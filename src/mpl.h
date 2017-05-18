@@ -334,12 +334,41 @@ int     mpl_set_parsim_t
          Morphy           m);
 
 
+/*!
+
+ @brief Tells MorphyLib how to treat the gap symbol.
+
+ @discussion The caller can specify the type of gap handling to use before the
+ tipdata are applied. The options are documented in the morphydefs.h header file
+ but include at least GAP_INAPPLIC, GAP_MISSING, and GAP_NEWSTATE to specify
+ inapplicable, missing, or new state values respectively. These values are
+ applied to all characters for which they are appropriate.
+ 
+ @param gaptype The type of gap treatment to be applied (documented in
+ morphydefs.h).
+ 
+ @param m An instance of the Morphy object.
+
+ @return A Morphy error code.
+ 
+*/
 int     mpl_set_gaphandl
 
         (const gap_t gaptype,
          Morphy      m);
 
-
+/*!
+ 
+ @brief Returns the type of gap handling method currently in effect.
+ 
+ @discussion Returns the type of gap handling method currently in effect. The 
+ methods are defined in the morphydefs.h file.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return A Morphy error code.
+ 
+*/
 int     mpl_query_gaphandl
 
         (Morphy     m);
