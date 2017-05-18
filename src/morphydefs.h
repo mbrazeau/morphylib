@@ -180,7 +180,8 @@ typedef struct Morphy_t {
     char*           char_t_matrix;  // The matrix as a NULL-terminated string
     int             numnodes;   // The number of nodes
     int*            nodesequence;   // The postorder sequence of nodes.
-    MPLndsets**  statesets;
+    int             nthreads;   // For programs that wish to multithread
+    MPLndsets**     statesets;
     
 } Morphy_t, *Morphyp;
 

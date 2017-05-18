@@ -30,6 +30,7 @@ Morphyp mpl_new_Morphy_t(void)
     mpl_set_gaphandl(GAP_INAPPLIC, (Morphy)new);
     new->symbols.gap        = DEFAULTGAP;
     new->symbols.missing    = DEFAULTMISSING;
+    new->nthreads           = 1; // There is always at least one thread in use
     
     return new;
 }
