@@ -38,9 +38,13 @@ int         mpl_copy_raw_matrix(const char* rawmatrix, Morphyp handl);
 int         mpl_check_nexus_matrix_dimensions(char *input_matrix, int input_num_taxa, int input_num_chars);
 char*       mpl_get_preprocessed_matrix(Morphyp handl);
 int         mpl_write_input_rawchars_to_cells(Morphyp handl);
+int         mpl_create_state_dictionary(Morphyp handl);
+int         mpl_convert_cells(Morphyp handl);
 int         mpl_convert_rawdata(Morphyp handl);
 MPLmatrix*  mpl_new_mpl_matrix(const int ntaxa, const int nchar, const int nstates);
 int         mpl_delete_mpl_matrix(MPLmatrix* m);
 MPLmatrix*  mpl_get_mpl_matrix(Morphyp m);
 int         mpl_init_charac_info(Morphyp handl);
+void        mpl_delete_charac_info(Morphyp handl);
+
 #endif /* statedata_h */

@@ -191,7 +191,7 @@ int mpl_NA_fitch_second_downpass
     
     for (i = 0; i < nchars; ++i) {
         
-        temp = 0;
+//        temp = 0;
         
         j = indices[i];
         
@@ -217,7 +217,6 @@ int mpl_NA_fitch_second_downpass
     
         assert(npre[j]);
     }
-    
     
     return steps;
 }
@@ -346,6 +345,7 @@ int mpl_fitch_NA_tip_update
         assert(tifinal[j]);
         assert(tprelim[j]);
     }
+    
     return 0;
 }
 

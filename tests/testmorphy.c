@@ -37,6 +37,7 @@ int test_count_gaps_basic(void)
         ++failn;
         pfail;
     }
+    mpl_delete_Morphy(m1);
     
     return failn;
 
@@ -112,8 +113,9 @@ int test_data_partitioning_simple(void)
     Morphy m1 = mpl_new_Morphy();
     mpl_init_Morphy(ntax, nchar, m1);
     mpl_attach_rawdata(rawmatrix, m1);
-    mpl_setup_partitions((Morphyp)m1);
-//    
+    mpl_apply_tipdata(m1);
+//    mpl_setup_partitions((Morphyp)m1);
+//
 //    Morphyp m = (Morphyp)m1;
     int nparts = mpl_get_numparts((Morphyp)m1);
     

@@ -31,7 +31,9 @@ int mpl_delete_Morphy(Morphy m)
     // TODO: All Morphy destructors
     mpl_delete_rawdata(m);
     mpl_destroy_symbolset(m1);
+    mpl_delete_charac_info(m1);
 //    mpl_delete_mpl_matrix(m1->inmatrix);
+    mpl_delete_all_partitions(m1);
     mpl_destroy_statesets(m1);
     free(m1);
     
@@ -243,6 +245,10 @@ int mpl_apply_tipdata(Morphy m)
     
     Morphyp mi = (Morphyp)m;
 
+    // Create dictionary and convert
+    mpl_create_state_dictionary(mi);
+    mpl_convert_cells(mi);
+    
     // TODO: Check for existing partitions;
     // Call here
     

@@ -55,6 +55,7 @@ int test_simple_chtype_setting(void)
         ppass;
     }
     
+    mpl_delete_Morphy(m);
     return failn;
 }
 

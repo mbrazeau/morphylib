@@ -50,6 +50,7 @@ int             mpl_setup_partitions(Morphyp handle);
 int             mpl_get_numparts(Morphyp handl);
 MPLndsets*      mpl_alloc_stateset(int numchars);
 void            mpl_free_stateset(MPLndsets* statesets);
+int             mpl_delete_all_partitions(Morphyp handl);
 int             mpl_setup_statesets(Morphyp handl);
 int             mpl_destroy_statesets(Morphyp handl);
 int             mpl_copy_data_into_tips(Morphyp handl);

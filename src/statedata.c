@@ -217,7 +217,7 @@ MPLstate mpl_convert_char_to_MPLstate(const char* celldata, Morphyp handl)
     return result;
 }
 
-
+// TODO: Call this function during the 'apply data' routine.
 int mpl_convert_cells(Morphyp handl)
 {
     
@@ -228,10 +228,7 @@ int mpl_convert_cells(Morphyp handl)
     MPLmatrix *inmatrix = &handl->inmatrix;
     MPLcharinfo* chinfo = handl->charinfo;
     MPLcell *cell;
-    
-    mpl_write_input_rawchars_to_cells(handl);
-    mpl_create_state_dictionary(handl);
-    
+   
     if (handl->gaphandl == GAP_INAPPLIC) {
         mpl_count_gaps_in_columns(handl);
     }
@@ -274,8 +271,23 @@ void mpl_destroy_symbolset(Morphyp m)
 {
     assert(m);
     if (m->symbols.statesymbols) {
-        free(m->symbols.statesymbols);
-        m->symbols.statesymbols = NULL;
+        if (m->symbols.statesymbols == m->symbols.symbolsinmatrix) {
+            free(m->symbols.statesymbols);
+            m->symbols.statesymbols = NULL;
+            m->symbols.symbolsinmatrix = NULL;
+        }
+        else {
+            free(m->symbols.statesymbols);
+            m->symbols.statesymbols = NULL;
+            if (m->symbols.symbolsinmatrix) {
+                free(m->symbols.symbolsinmatrix);
+                m->symbols.symbolsinmatrix = NULL;
+            }
+        }
+    }
+    if (m->symbols.packed) {
+        free(m->symbols.packed);
+        m->symbols.packed = NULL;
     }
 }
 
@@ -624,6 +636,7 @@ void mpl_use_symbols_from_matrix(Morphyp handl)
 
 int mpl_write_input_rawchars_to_cells(Morphyp handl)
 {
+    assert(handl);
     int i = 0;
     int j = 0;
 //    int rows = mpl_get_numtaxa((Morphyp)handl);
@@ -670,12 +683,12 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
         ++prpdata;
     };
     
-    prpdata = mpl_get_preprocessed_matrix(handl);
+    //prpdata = mpl_get_preprocessed_matrix(handl);
     
     return ERR_NO_ERROR;
 }
 
-
+// TODO: Rename this.
 int mpl_convert_rawdata(Morphyp handl)
 {
     int ret = ERR_NO_ERROR;
@@ -700,8 +713,7 @@ int mpl_convert_rawdata(Morphyp handl)
     mpl_init_inmatrix(handl);
     
     // Now safe to write characters into cells.
-    // Create dictionary and convert
-    mpl_convert_cells(handl);
+    mpl_write_input_rawchars_to_cells(handl);
     
     return ret;
 }
@@ -729,4 +741,13 @@ int mpl_init_charac_info(Morphyp handl)
     }
     
     return ERR_NO_ERROR;
+}
+
+void mpl_delete_charac_info(Morphyp handl)
+{
+    assert(handl);
+    if (!handl->charinfo) {
+        return;
+    }
+    free(handl->charinfo);
 }

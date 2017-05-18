@@ -43,7 +43,7 @@ int main (void)
     // fitch.c tests
     fails += test_small_fitch();
     fails += test_small_fitch_na();
-
+    fails += test_small_fitch_withmissing();
     
     printf("\n\nTest summary:\n\n");
     if (fails) {

@@ -168,6 +168,7 @@ int test_count_applic_inapplic(void)
 //	mpl_set_num_charac(nchar, m1);
 	mpl_init_Morphy(ntax, nchar, m1);	
 	mpl_attach_rawdata(rawmatrix, m1);
+    mpl_apply_tipdata(m1);
 
 	mpl_delete_Morphy(m1);
     
@@ -240,7 +241,7 @@ int test_load_symbols(void)
 	else {
         ppass;
 	}
-    
+    mpl_delete_Morphy(m2);
     return failn;
 }
 
@@ -301,6 +302,8 @@ int test_bad_load_symbols(void)
 	else {
         ppass;
 	}
+    
+    mpl_delete_Morphy(m2);
     return failn;
 }
 

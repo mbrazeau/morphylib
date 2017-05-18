@@ -11,5 +11,6 @@
 
 int test_small_fitch(void);
 int test_small_fitch_na(void);
+int test_small_fitch_withmissing(void);
 
 #endif /* testfitch_h */

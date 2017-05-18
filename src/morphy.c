@@ -196,11 +196,13 @@ int mpl_assign_partition_fxns(MPLpartition* part)
 //    MPLchtype chtype = part->chtype;
 //    assert(chtype);
     
-    void (*pars_assign)(MPLpartition*);
+    void (*pars_assign)(MPLpartition*) = NULL;
     
     err = mpl_fetch_parsim_fxn_setter(&pars_assign, part->chtype);
     
-    pars_assign(part);
+    if (!err && pars_assign) {
+        pars_assign(part);
+    }
     
     return err;
 }
@@ -276,6 +278,32 @@ int mpl_delete_partition(MPLpartition* part)
     }
     
     return err;
+}
+
+int mpl_delete_all_partitions(Morphyp handl)
+{
+    assert(handl);
+    int i = 0;
+    
+    if (handl->partstack) {
+        
+        MPLpartition* p = handl->partstack;
+        MPLpartition* q = NULL;
+        while (p) {
+            q = p->next;
+            mpl_delete_partition(p);
+            p = q;
+        }
+        
+        for (i = 0; i < handl->numparts; ++i) {
+            handl->partitions[i] = NULL;
+        }
+        free(handl->partitions);
+        handl->partitions = NULL;
+        
+        return ERR_NO_ERROR;
+    }
+    return ERR_UNEXP_NULLPTR;
 }
 
 
@@ -421,6 +449,10 @@ int mpl_compare_partitions(const void* ptr1, const void* ptr2)
 
 int mpl_put_partitions_in_handle(MPLpartition* first, Morphyp handl)
 {
+    assert(handl);
+    if (!handl->numparts) {
+        return ERR_NO_DATA;
+    }
     handl->partitions = (MPLpartition**)calloc(handl->numparts,
                                                 sizeof(MPLpartition*));
     if (!handl->partitions) {
@@ -516,46 +548,55 @@ MPLndsets* mpl_alloc_stateset(int numchars)
     new->NApass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
     if (!new->NApass1) {
         mpl_free_stateset(new);
+        return NULL;
     }
     
     new->NApass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
     if (!new->NApass2) {
         mpl_free_stateset(new);
+        return NULL;
     }
     
     new->prelimset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
     if (!new->prelimset) {
         mpl_free_stateset(new);
+        return NULL;
     }
     
     new->finalset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
     if (!new->finalset) {
         mpl_free_stateset(new);
+        return NULL;
     }
     
     new->subtree_actives = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
     if (!new->subtree_actives) {
         mpl_free_stateset(new);
+        return NULL;
     }
     
     new->subtree_NApass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
     if (!new->subtree_NApass1) {
         mpl_free_stateset(new);
+        return NULL;
     }
     
     new->subtree_NApass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
     if (!new->subtree_NApass2) {
         mpl_free_stateset(new);
+        return NULL;
     }
     
     new->subtree_prelimset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
     if (!new->subtree_prelimset) {
         mpl_free_stateset(new);
+        return NULL;
     }
     
     new->subtree_finalset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
     if (!new->subtree_finalset) {
         mpl_free_stateset(new);
+        return NULL;
     }
     
     return new;
@@ -564,6 +605,9 @@ MPLndsets* mpl_alloc_stateset(int numchars)
 
 void mpl_free_stateset(MPLndsets* statesets)
 {
+    if (!statesets) {
+        return;
+    }
     if (statesets->NApass1) {
         free(statesets->NApass1);
         statesets->NApass1 = NULL;
@@ -628,7 +672,7 @@ int mpl_setup_statesets(Morphyp handl)
         }
     }
     
-    return ERR_NO_DATA; // TODO: Replace
+    return err; 
 }
 
 
@@ -650,7 +694,7 @@ int mpl_destroy_statesets(Morphyp handl)
         handl->statesets = NULL;
     }
     
-    return ERR_NO_ERROR; // TODO: Replace
+    return ERR_NO_ERROR;
 }
 
 
