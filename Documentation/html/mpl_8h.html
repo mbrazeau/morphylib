@@ -151,11 +151,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_set_charac_weight<
 <tr class="memitem:a85c57f8bd72df7991d9a6acf811332c9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpl_8h.html#a85c57f8bd72df7991d9a6acf811332c9">mpl_set_parsim_t</a> (const int charID, const MPLchtype chtype, Morphy m)</td></tr>
 <tr class="memdesc:a85c57f8bd72df7991d9a6acf811332c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a character's parsimony function type.  <a href="#a85c57f8bd72df7991d9a6acf811332c9">More...</a><br /></td></tr>
 <tr class="separator:a85c57f8bd72df7991d9a6acf811332c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb8043dd4239f82aec52c1512b62366e"><td class="memItemLeft" align="right" valign="top"><a id="adb8043dd4239f82aec52c1512b62366e"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_set_gaphandl</b> (const gap_t gaptype, Morphy m)</td></tr>
+<tr class="memitem:adb8043dd4239f82aec52c1512b62366e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpl_8h.html#adb8043dd4239f82aec52c1512b62366e">mpl_set_gaphandl</a> (const gap_t gaptype, Morphy m)</td></tr>
+<tr class="memdesc:adb8043dd4239f82aec52c1512b62366e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells MorphyLib how to treat the gap symbol.  <a href="#adb8043dd4239f82aec52c1512b62366e">More...</a><br /></td></tr>
 <tr class="separator:adb8043dd4239f82aec52c1512b62366e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e7096c2c0f83374bdd588efc2dba5a8"><td class="memItemLeft" align="right" valign="top"><a id="a7e7096c2c0f83374bdd588efc2dba5a8"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_query_gaphandl</b> (Morphy m)</td></tr>
+<tr class="memitem:a7e7096c2c0f83374bdd588efc2dba5a8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpl_8h.html#a7e7096c2c0f83374bdd588efc2dba5a8">mpl_query_gaphandl</a> (Morphy m)</td></tr>
+<tr class="memdesc:a7e7096c2c0f83374bdd588efc2dba5a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the type of gap handling method currently in effect.  <a href="#a7e7096c2c0f83374bdd588efc2dba5a8">More...</a><br /></td></tr>
 <tr class="separator:a7e7096c2c0f83374bdd588efc2dba5a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef08c9fefa44b7774de8eb84c8434fa1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpl_8h.html#aef08c9fefa44b7774de8eb84c8434fa1">mpl_first_down_recon</a> (const int node_id, const int left_id, const int right_id, Morphy m)</td></tr>
 <tr class="memdesc:aef08c9fefa44b7774de8eb84c8434fa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstructs the first (downpass) nodal reconstructions.  <a href="#aef08c9fefa44b7774de8eb84c8434fa1">More...</a><br /></td></tr>
@@ -654,6 +654,34 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_get_stateset</b> (
 
 </div>
 </div>
+<a id="a7e7096c2c0f83374bdd588efc2dba5a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e7096c2c0f83374bdd588efc2dba5a8">&#9670;&nbsp;</a></span>mpl_query_gaphandl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int mpl_query_gaphandl </td>
+          <td>(</td>
+          <td class="paramtype">Morphy&#160;</td>
+          <td class="paramname"><em>m</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the type of gap handling method currently in effect. </p>
+<p>Returns the type of gap handling method currently in effect. The methods are defined in the <a class="el" href="morphydefs_8h_source.html">morphydefs.h</a> file.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>An instance of the Morphy object.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A Morphy error code. </dd></dl>
+
+</div>
+</div>
 <a id="a8bae5d3fec1ca60a94e849dc8e3c1297"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8bae5d3fec1ca60a94e849dc8e3c1297">&#9670;&nbsp;</a></span>mpl_second_down_recon()</h2>
 
@@ -766,6 +794,45 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_get_stateset</b> (
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The integral parsimony length (for now) </dd></dl>
+
+</div>
+</div>
+<a id="adb8043dd4239f82aec52c1512b62366e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb8043dd4239f82aec52c1512b62366e">&#9670;&nbsp;</a></span>mpl_set_gaphandl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int mpl_set_gaphandl </td>
+          <td>(</td>
+          <td class="paramtype">const gap_t&#160;</td>
+          <td class="paramname"><em>gaptype</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Morphy&#160;</td>
+          <td class="paramname"><em>m</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tells MorphyLib how to treat the gap symbol. </p>
+<p>The caller can specify the type of gap handling to use before the tipdata are applied. The options are documented in the <a class="el" href="morphydefs_8h_source.html">morphydefs.h</a> header file but include at least GAP_INAPPLIC, GAP_MISSING, and GAP_NEWSTATE to specify inapplicable, missing, or new state values respectively. These values are applied to all characters for which they are appropriate.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gaptype</td><td>The type of gap treatment to be applied (documented in <a class="el" href="morphydefs_8h_source.html">morphydefs.h</a>).</td></tr>
+    <tr><td class="paramname">m</td><td>An instance of the Morphy object.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A Morphy error code. </dd></dl>
 
 </div>
 </div>
