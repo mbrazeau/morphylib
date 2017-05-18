@@ -17,7 +17,7 @@ Additionally, a Python file is included and maintained which supplies all the bi
 
 **Using MorphyLib**
 
-The API is documented in the `mpl.h` file. 
+The API is documented in the [`mpl.h`](https://github.com/mbrazeau/MorphyLib/blob/master/Documentation/html/mpl_8h.html) file. 
 
 The caller creates an instance of the Morphy object through the `mpl_new_Morphy` function. No direct access to the members of this structure are required, and all interaction is through functions declared in `mpl.h`.
 
