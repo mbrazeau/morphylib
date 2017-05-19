@@ -439,7 +439,7 @@ mpl_second_up_recon <- function(node_id, left_id, right_id, anc_id, morphyobj)
 
 #' @title Initial update of tip values following uppass reconstruction.
 #'
-#' @description Ambiguous terminal state sets need to be resolved after the uppass
+#' @description Ambiguous terminal state sets need to be resolved after the first uppass
 #' based on descendant state values in order for local reoptimisation procedures 
 #' to be accurate and for inapplicable step counting to proceed accurately. This
 #' function calls updaters for the records of states active on the subtrees, 
