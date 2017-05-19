@@ -240,12 +240,12 @@ SEXP _R_wrap_mpl_update_tip(SEXP tip_id, SEXP anc_id, SEXP MorphyHandl)
     return Rret;
 }
 
-SEXP _R_wrap_mpl_update_lower_root(SEXP tip_id, SEXP anc_id, SEXP MorphyHandl)
+SEXP _R_wrap_mpl_update_lower_root(SEXP lower_id, SEXP upper_id, SEXP MorphyHandl)
 {
     SEXP Rret = PROTECT(allocVector(INTSXP, 1));
 
     INTEGER(Rret)[0] = 
-    mpl_update_lower_root(INTEGER(tip_id)[0], INTEGER(anc_id)[0],
+    mpl_update_lower_root(INTEGER(lower_id)[0], INTEGER(upper_id)[0],
                         R_ExternalPtrAddr(MorphyHandl));
     UNPROTECT(1);
     return Rret;
