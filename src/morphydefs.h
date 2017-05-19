@@ -79,7 +79,7 @@ typedef enum {
     
     GAP_MAX,
     
-} gap_t;
+} MPLgap_t;
 
 typedef struct {
     MPLstate    asint;
@@ -175,7 +175,7 @@ typedef struct Morphy_t {
     MPLpartition*   partstack;  // A place for unused partitions
     MPLpartition**  partitions; // The array of partitions
     MPLsymbols      symbols;    // The symbols used in the dataset
-    gap_t           gaphandl;   // The method of gap treatment
+    MPLgap_t           gaphandl;   // The method of gap treatment
     union {
         int         asint;
         Mflt        asfloat;

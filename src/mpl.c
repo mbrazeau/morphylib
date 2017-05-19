@@ -318,7 +318,7 @@ int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
 
 
 // TODO: Document gap_t
-int mpl_set_gaphandl(const gap_t gaptype, Morphy m)
+int mpl_set_gaphandl(const MPLgap_t gaptype, Morphy m)
 {
     if (!m) {
         return ERR_BAD_PARAM;

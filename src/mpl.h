@@ -354,7 +354,7 @@ int     mpl_set_parsim_t
 */
 int     mpl_set_gaphandl
 
-        (const gap_t gaptype,
+        (const MPLgap_t gaptype,
          Morphy      m);
 
 /*!

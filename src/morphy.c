@@ -371,7 +371,7 @@ int mpl_count_gaps_in_columns(Morphyp handl)
 
 
 int mpl_compare_partition_with_char_info
-(const MPLcharinfo *chinfo, const MPLpartition* part, const gap_t gaphandl)
+(const MPLcharinfo *chinfo, const MPLpartition* part, const MPLgap_t gaphandl)
 {
     int ret = 0;
     
@@ -408,7 +408,7 @@ int mpl_compare_partition_with_char_info
  information.
  */
 MPLpartition* mpl_search_partitions
-(MPLcharinfo *chinfo, MPLpartition* part, gap_t gaphandl)
+(MPLcharinfo *chinfo, MPLpartition* part, MPLgap_t gaphandl)
 {
     assert(chinfo);
     MPLpartition* p = part;

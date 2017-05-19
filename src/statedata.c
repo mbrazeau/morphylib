@@ -599,7 +599,7 @@ MPLmatrix* mpl_get_mpl_matrix(Morphyp m)
 
 int mpl_set_gap_push(Morphyp handl)
 {
-    gap_t gt = mpl_get_gaphandl(handl);
+    MPLgap_t gt = mpl_get_gaphandl(handl);
     
     if (gt == GAP_INAPPLIC || gt == GAP_NEWSTATE) {
         return 1;
@@ -725,7 +725,7 @@ char *mpl_translate_state2char(MPLstate cstates, Morphyp handl)
     int shift = 0;
     int gapshift = 0;
    
-    gap_t gaphandl = mpl_query_gaphandl((Morphyp)handl);
+    MPLgap_t gaphandl = mpl_query_gaphandl((Morphyp)handl);
     if (gaphandl == GAP_INAPPLIC || gaphandl == GAP_NEWSTATE) {
         gapshift = 1;
     }
