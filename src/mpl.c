@@ -553,7 +553,11 @@ int mpl_get_packed_states
 char* mpl_get_stateset
 (const int nodeID, const int character, int passnum, Morphy m)
 {
+    // TODO: This leaks memory, as it leaves the caller responsible for the
+    // memory allocated by this function. Store the strings inside the nodal set
+    // structures.
     MPLstate result = mpl_get_packed_states(nodeID, character, passnum, m);
     char* ret = mpl_translate_state2char(result, (Morphyp)m);
+    
     return ret;
 }

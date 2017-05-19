@@ -645,6 +645,26 @@ void mpl_free_stateset(MPLndsets* statesets)
         free(statesets->subtree_uppass2);
         statesets->subtree_uppass2 = NULL;
     }
+    if (statesets->downp1str) {
+        // TODO: loop & free allocated strings
+        free(statesets->downp1str);
+        statesets->downp1str = NULL;
+    }
+    if (statesets->upp1str) {
+        // TODO: loop & free allocated strings
+        free(statesets->upp1str);
+        statesets->upp1str = NULL;
+    }
+    if (statesets->downp2str) {
+        // TODO: loop & free allocated strings
+        free(statesets->downp2str);
+        statesets->downp2str = NULL;
+    }
+    if (statesets->upp2str) {
+        // TODO: loop & free allocated strings
+        free(statesets->upp2str);
+        statesets->upp2str = NULL;
+    }
     
     free(statesets);
 }
