@@ -218,6 +218,7 @@ int test_small_fitch_withmissing(void)
 int test_state_retrieval(void)
 {
     theader("A simple test of fitch counting with ?");
+    
     int failn = 0;
     int ntax	= 12;
     int nchar	= 1;
@@ -226,6 +227,7 @@ int test_state_retrieval(void)
 //    "1100----1100;";
     
     Morphy m1 = mpl_new_Morphy();
+    
     mpl_init_Morphy(ntax, nchar, m1);
 //        mpl_set_gaphandl(GAP_MISSING, m1);
     mpl_attach_rawdata(rawmatrix, m1);
