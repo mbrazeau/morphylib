@@ -62,8 +62,6 @@ SEXP _R_wrap_mpl_attach_symbols(SEXP Rsymbols, SEXP MorphyHandl)
 {
     SEXP Rret = PROTECT(allocVector(INTSXP, 1));
 
-    UNPROTECT(1);
-
     int Mret = 0;
     const char *Msymbols = CHAR(asChar(Rsymbols));
 
