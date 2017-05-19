@@ -9,7 +9,7 @@
 #include "../src/mpl.h"
 #include "../src/fitch.h"
 #include "testfitch.h"
-
+#include <string.h>
 
 int test_small_fitch(void)
 {
@@ -302,7 +302,14 @@ int test_state_retrieval(void)
                 printf(". ");
             }
             else {
-                printf("%s  ", result);
+                int pad = 0;
+                int paddiff = 6;
+                pad = paddiff - (int)strlen(result);
+                int x = 0;
+                for (x = 0; x < pad && pad > 0; ++x) {
+                    printf(" ");
+                }
+                printf("%s ", result);
             }
         }
         printf("\n");
