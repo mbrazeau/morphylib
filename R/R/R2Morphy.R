@@ -38,8 +38,9 @@ MorphyParsimony <- function (tree, data) {
     dim.contrast <- dim(contrast)
     nrow.contrast <- dim.contrast[1]
     contrast <- matrix(as.logical(contrast), nrow.contrast, dim.contrast[2])
-    levels <- attr(data, 'levels')
-    matrix_as_string <- paste0(c(vapply(tip.names, function (name) paste0(vapply(as.integer(data[[name]]), function (x) {
+    levels <- at$levels
+    matrix_as_string <- paste0(c(vapply(tip.names, function (name) paste0(vapply(
+      rep(as.integer(data[[name]]), weight), function (x) {
         if (x == nrow.contrast) return('?')
         tokens <- levels[contrast[x ,]]
         if (length(tokens) > 1) return (paste0(c('{', tokens, '}'), collapse=''))
