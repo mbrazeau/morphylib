@@ -599,7 +599,7 @@ int     mpl_get_insertcost
         (const int  srcID,
          const int  tgt1ID,
          const int  tgt2ID,
-         bool       max,
+         const bool max,
          int        cutoff,
          Morphy     m);
 
@@ -608,14 +608,15 @@ int     mpl_get_packed_states
 
         (const int  nodeID,
          const int  character,
-         int        passnum,
+         const int  passnum,
          Morphy     m);
 
 
-char*   mpl_get_stateset
+const char*   mpl_get_stateset
+    
         (const int  nodeID,
          const int  character,
-         int        passnum,
+         const int  passnum,
          Morphy     m);
 
 #ifdef __cplusplus

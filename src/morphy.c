@@ -749,7 +749,7 @@ int mpl_update_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)
     for (i = 0; i < nchar; ++i) {
         j = indices[i];
         lower->downpass1[j] = upper->downpass1[j];
-        lower->uppass2[j]  = upper->downpass1[j];
+        lower->uppass1[j]  = upper->downpass1[j];
     }
     
     return 0;

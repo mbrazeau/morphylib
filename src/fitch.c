@@ -68,7 +68,8 @@ int mpl_fitch_uppass
                 nfin[j] = npre[j] | anc[j];
             }
         }
-        
+       
+        assert(nfin[j]);
     }
     
     return 0;
@@ -297,8 +298,8 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
     int nchars      = part->ncharsinpart;
     // TODO: Check these!!!!!!!
     MPLstate* tprelim = tset->downpass1;
-    MPLstate* tfinal  = tset->downpass2;
-    MPLstate* astates = ancset->uppass2;
+    MPLstate* tfinal  = tset->uppass1;
+    MPLstate* astates = ancset->uppass1;
     
     for (i = 0; i < nchars; ++i) {
         j = indices[i];

@@ -444,7 +444,9 @@ int mpl_second_up_recon
     
     for (i = 0; i < numparts; ++i) {
         upfxn = handl->partitions[i]->inappupfxn;
-        res += upfxn(lstates, rstates, nstates, astates, handl->partitions[i]);
+        if (upfxn) {
+            res += upfxn(lstates, rstates, nstates, astates, handl->partitions[i]);
+        }
     }
     
     return res; //
@@ -490,7 +492,9 @@ int mpl_finalize_tip(const int tip_id, const int anc_id, Morphy m)
     
     for (i = 0; i < numparts; ++i) {
         tipfxn = handl->partitions[i]->tipfinalize;
-        tipfxn(tipset, ancset, handl->partitions[i]);
+        if (tipfxn) {
+            tipfxn(tipset, ancset, handl->partitions[i]);
+        }
     }
     
     
@@ -526,7 +530,7 @@ int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m)
 //int     mpl_get_insertcost_min(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //
 int mpl_get_packed_states
-(const int nodeID, const int character, int passnum, Morphy m)
+(const int nodeID, const int character, const int passnum, const Morphy m)
 {
     if (!m) {
         return ERR_UNEXP_NULLPTR;
@@ -550,8 +554,8 @@ int mpl_get_packed_states
     return ERR_BAD_PARAM;
 }
 
-char* mpl_get_stateset
-(const int nodeID, const int character, int passnum, Morphy m)
+const char* mpl_get_stateset
+(const int nodeID, const int character, const int passnum, Morphy m)
 {
     // TODO: This leaks memory, as it leaves the caller responsible for the
     // memory allocated by this function. Store the strings inside the nodal set
