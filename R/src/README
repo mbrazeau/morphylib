@@ -6,12 +6,11 @@ directory).
 You should have a resultant file called 'libmorphy_<systemdetails>.a'. The
 .a file is just an archive of the loaded object files.
 
-Then you run:
+Then you navigate to R/src/ and run:
 
-`R CMD SHLIB -o RMorphyex.so RMorphyex.c RMorphyUtils.c /Path/To/lib/libmorphy_<systemdetails>.a`
+`R CMD SHLIB -o RMorphyex.so RMorphyex.c RMorphyUtils.c ../../src/*.c`
 
 That should build the shared library that R will be happy with.
 
 The R wrappers for the C wrappers can then be found in Morphyex.R
-
 
