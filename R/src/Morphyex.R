@@ -16,7 +16,9 @@
 # object that was initialised in R through the functions below.
 #
 
-dyn.load("RMorphyex.so")
+#dyn.load("RMorphyex.so") # MS: Commented out, because file might be ".dll" if on Windows, and 
+                          # path might be incorrect if this script is SOURCE'd from a different
+                          # working directory
 
 #' @title Creates a new instance of a Morphy object
 #'
@@ -133,7 +135,7 @@ mpl_get_num_charac <- function(morphyobj)
 #' their ASCII codes (i.e. "+0123...ABCD...abcd..."). Loading a user-specified
 #' symbols list will override this ordering. Symbols loaded in either the list or
 #' the matrix must be valid Morphy character state symbols as defined in the 
-#' statedata.h header file.
+#' statedata.h header file.  The list must end with a semicolon.
 #'
 #' @param symbols A C-style (i.e. NULL-terminated) string of valid state symbols.
 #' @param morphyobj An instance of the Morphy object.
@@ -207,7 +209,7 @@ mpl_get_symbols <- function(morphyobj)
 #' cause it to be excluded from any further calculations.
 #'
 #' @param charID The index of the character (transformation series) as defined
-#' in the input matrix.
+#' in the input matrix.  The first character is numbered 0 (zero).
 #' @param chtype The parsimony function type as defined in morphydefs.h
 #' @param morphyobj An instance of the Morphy object.
 #' 
