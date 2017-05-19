@@ -1,5 +1,6 @@
 library('phangorn')
-dyn.load('../src/RMorphy.dll')  
+dyn.load('../src/RMorphy.dll')
+
 
 tree <- read.tree(text="(((a, b), c), (d, (e, f)));")
 matrix_as_grid <- t(matrix(c('0', '0', '1', '1', '0', '0',
@@ -10,14 +11,33 @@ matrix_as_grid <- t(matrix(c('0', '0', '1', '1', '0', '0',
 rownames(matrix_as_grid) <- tree$tip.label
 source('R2Morphy.R')
 MorphyParsimony(tree, matrix_as_grid)
-
 # devtools::install_github('ms609/inapplicable')
+
 library(inapplicable)
 data(SigSut)
-phy <- SigSut.phy
-tip.names <- names(phy)[-1]
+data <- SigSut.phy
+tip.names <- names(data)[-1]
 tree <- rtree(length(tip.names), tip.label=tip.names, br=NULL)
-MorphyParsimony(tree, phy) 
+
+## It would be nice to just load library(inapplicable) but I can't work out how best to integrate
+## MorphyLib into the package.
+
+source('../../../inapplicable/R/fitch.R') 
+source('../../../inapplicable/R/phylo.R')
+source('../../../inapplicable/R/tree_rearrange.R')
+source('../../../inapplicable/R/tree_search.R')
+MorphyParsimony(tree, data)
+plot(SigSut.parstree); dev.new()
+plot(best <- tree)
+plot(Root(best, 'Lingula'))
+plot(best <- TreeSearch(best, data, method='TBR', maxiter=40000, maxhits=50, trace=3))
+plot(best <- TreeSearch(best, data, method='SPR', maxiter=40000, maxhits=50, trace=3))
+plot(best <- TreeSearch(best, data, method='NNI', maxiter=40000, maxhits=50, trace=3))
+plot(best <- TreeSearch(best, data, method='TBR', maxiter=40000, maxhits=10, trace=1)) # Repeat until score stabilises
+## Pratchet and Sectorial search just need a little tweaking before they are re-implemented.
+
+
+
 
 
 dyn.unload('../src/RMorphy.dll')  
