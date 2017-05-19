@@ -121,7 +121,7 @@ int mpl_set_num_internal_nodes(const int nnodes, Morphy m)
         return ERR_NO_DIMENSIONS;
     }
     
-    ((Morphyp)m)->numnodes += nnodes;
+    ((Morphyp)m)->numnodes = nnodes + ntax;
     
     return ERR_NO_ERROR;
 }
