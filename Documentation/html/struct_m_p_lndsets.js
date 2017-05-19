@@ -1,12 +1,12 @@
 var struct_m_p_lndsets =
 [
-    [ "finalset", "struct_m_p_lndsets.html#ae7dae560d63b3b449daa4d81767332af", null ],
-    [ "NApass1", "struct_m_p_lndsets.html#a81dfa297aea0b326a74c2a7cd44ec37d", null ],
-    [ "NApass2", "struct_m_p_lndsets.html#a5e2912971665b2f5c30c4cae69e212c7", null ],
-    [ "prelimset", "struct_m_p_lndsets.html#a336e6f1b14e9b6e81ee9bc43db7a0b5e", null ],
+    [ "downpass1", "struct_m_p_lndsets.html#a636d17296c700fa0d53d24613e0a82ed", null ],
+    [ "downpass2", "struct_m_p_lndsets.html#a100330eb682b74ef3ad024d93ebbc948", null ],
     [ "subtree_actives", "struct_m_p_lndsets.html#a192284dec75366a5c10b6b883ac4c9cd", null ],
-    [ "subtree_finalset", "struct_m_p_lndsets.html#ab91859a5d9c2b64a97df89ade1a24534", null ],
-    [ "subtree_NApass1", "struct_m_p_lndsets.html#ac840b1f619beeb7b19c084cc41449d09", null ],
-    [ "subtree_NApass2", "struct_m_p_lndsets.html#ac10619ffe6a53f100714f88f5a93eafc", null ],
-    [ "subtree_prelimset", "struct_m_p_lndsets.html#a4fd6ae3a1a59d4def8a0722e836bb998", null ]
+    [ "subtree_downpass1", "struct_m_p_lndsets.html#a7257da9d516c7a06eb39b68dfdae52af", null ],
+    [ "subtree_downpass2", "struct_m_p_lndsets.html#a048b439d875a268630544f47fb56bfee", null ],
+    [ "subtree_uppass1", "struct_m_p_lndsets.html#a198fa8c2af3180ecaa39e99f962e6f8e", null ],
+    [ "subtree_uppass2", "struct_m_p_lndsets.html#a0a91c94228e2c149127450fd703db17c", null ],
+    [ "uppass1", "struct_m_p_lndsets.html#ae2bf3b44bb5e66bd360f38699269cda7", null ],
+    [ "uppass2", "struct_m_p_lndsets.html#a377c19e41ccdaec0af1b022aaabe1d2f", null ]
 ];

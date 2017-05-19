@@ -7,6 +7,7 @@ var struct_morphy__t =
     [ "gaphandl", "struct_morphy__t.html#a8da0fc5753482d85fa2e88ef56711b10", null ],
     [ "inmatrix", "struct_morphy__t.html#a3187fdd831106de4c7cdf5a4e754c44b", null ],
     [ "nodesequence", "struct_morphy__t.html#a1b9959cab8107070cad8c09c4e143436", null ],
+    [ "nthreads", "struct_morphy__t.html#a2b6a46c4274b223ea03fb4a7b80f4a5a", null ],
     [ "numcharacters", "struct_morphy__t.html#abbb250b4fcf8122f23db8d5baaef31cc", null ],
     [ "numnodes", "struct_morphy__t.html#a88002fc5d94ea447f3bb6d6d20141fe2", null ],
     [ "numparts", "struct_morphy__t.html#afb8f2f33b7c61d7ceb541cd3b3d61a51", null ],

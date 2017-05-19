@@ -271,13 +271,11 @@ int test_state_retrieval(void)
         (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
     }
     
-    // TODO: Final tip calculations
-    //    // Optional for basic length count, but probably necessary for
-    //    // indirect optimisation.
-    //    for (i = 0; i < ntax; ++i) {
-    //        mpl_finalize_tip(i, tipancs[i], m1);
-    //        // Update tips first time
-    //    }
+    for (i = 0; i < ntax; ++i) {
+        mpl_finalize_tip(i, tipancs[i], m1);
+        // Update tips first time
+    }
+    
     char *result = NULL;
     
     for (i = 1; i < 5; ++ i) {

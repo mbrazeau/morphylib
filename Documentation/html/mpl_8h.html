@@ -172,8 +172,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_set_charac_weight<
 <tr class="memitem:ae2ac2fcc04ca401d71943f7027b10ca8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpl_8h.html#ae2ac2fcc04ca401d71943f7027b10ca8">mpl_update_tip</a> (const int tip_id, const int anc_id, Morphy m)</td></tr>
 <tr class="memdesc:ae2ac2fcc04ca401d71943f7027b10ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial update of tip values following uppass reconstruction.  <a href="#ae2ac2fcc04ca401d71943f7027b10ca8">More...</a><br /></td></tr>
 <tr class="separator:ae2ac2fcc04ca401d71943f7027b10ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb23fc933cb5c48a6dcc1ae4ca398c6a"><td class="memItemLeft" align="right" valign="top"><a id="afb23fc933cb5c48a6dcc1ae4ca398c6a"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_finalize_tip</b> (const int tip_id, const int anc_id, Morphy m)</td></tr>
+<tr class="memitem:afb23fc933cb5c48a6dcc1ae4ca398c6a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpl_8h.html#afb23fc933cb5c48a6dcc1ae4ca398c6a">mpl_finalize_tip</a> (const int tip_id, const int anc_id, Morphy m)</td></tr>
+<tr class="memdesc:afb23fc933cb5c48a6dcc1ae4ca398c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalizes ambiguous or missing values in the tips.  <a href="#afb23fc933cb5c48a6dcc1ae4ca398c6a">More...</a><br /></td></tr>
 <tr class="separator:afb23fc933cb5c48a6dcc1ae4ca398c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b74263442cdbe08d9b11c72c1082177"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="mpl_8h.html#a0b74263442cdbe08d9b11c72c1082177">mpl_update_lower_root</a> (const int l_root_id, const int root_id, Morphy m)</td></tr>
 <tr class="memdesc:a0b74263442cdbe08d9b11c72c1082177"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the nodal sets for a lower ('dummy') root node.  <a href="#a0b74263442cdbe08d9b11c72c1082177">More...</a><br /></td></tr>
@@ -184,9 +184,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_get_insertcost</b>
 <tr class="memitem:aad9aecd2c57c4852ce3066b661a8a305"><td class="memItemLeft" align="right" valign="top"><a id="aad9aecd2c57c4852ce3066b661a8a305"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_get_packed_states</b> (const int nodeID, const int character, int passnum, Morphy m)</td></tr>
 <tr class="separator:aad9aecd2c57c4852ce3066b661a8a305"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a286851ea0d19953597d206f3e6083916"><td class="memItemLeft" align="right" valign="top"><a id="a286851ea0d19953597d206f3e6083916"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_get_stateset</b> (char *res, const int nodeID, const int character, int passnum, Morphy m)</td></tr>
-<tr class="separator:a286851ea0d19953597d206f3e6083916"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5347dd33624d8c9de1d589fd2357999f"><td class="memItemLeft" align="right" valign="top"><a id="a5347dd33624d8c9de1d589fd2357999f"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_get_stateset</b> (const int nodeID, const int character, int passnum, Morphy m)</td></tr>
+<tr class="separator:a5347dd33624d8c9de1d589fd2357999f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Defines the Morphy Phylogenetic Library API: a library for phylogenetic computation accommodating morphological character hierarchies. </p>
@@ -356,6 +356,53 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_get_stateset</b> (
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Morphy error code. </dd></dl>
+
+</div>
+</div>
+<a id="afb23fc933cb5c48a6dcc1ae4ca398c6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb23fc933cb5c48a6dcc1ae4ca398c6a">&#9670;&nbsp;</a></span>mpl_finalize_tip()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int mpl_finalize_tip </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>tip_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>anc_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Morphy&#160;</td>
+          <td class="paramname"><em>m</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finalizes ambiguous or missing values in the tips. </p>
+<p>Ambiguous terminal state sets need to be resolved after the uppass based on descendant state values in order for local reoptimisation procedures to be accurate and for inapplicable step counting to proceed accurately. This function calls updaters for the records of states active on the subtrees, thereby allowing local reoptimization functions to accurately predict length increases when a subtree is added near a tip.</p>
+<p>Because this function needs to be fairly high-performance, it does not do much checking for parameter validity, thus unsafe usage of this function might not be caught. It is up to calling functions to ensure that the appropriate parameters have been set before use.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tip_id</td><td>The index of the tip being updated.</td></tr>
+    <tr><td class="paramname">anc_id</td><td>The index of the tip's immediate ancestor.</td></tr>
+    <tr><td class="paramname">m</td><td>An instance of the Morphy object.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A null value (for now). </dd></dl>
 
 </div>
 </div>
@@ -999,7 +1046,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>mpl_get_stateset</b> (
 </div><div class="memdoc">
 
 <p>Initial update of tip values following uppass reconstruction. </p>
-<p>Ambiguous terminal state sets need to be resolved after the uppass based on descendant state values in order for local reoptimisation procedures to be accurate and for inapplicable step counting to proceed accurately. This function calls updaters for the records of states active on the subtrees, thereby allowing the second downpass to accurately reconstruct subtree state activity.</p>
+<p>Polymorphic terminal state sets need to be resolved after the uppass based on descendant state values in order for local reoptimisation procedures to be accurate and for inapplicable step counting to proceed accurately. This function calls updaters for the records of states active on the subtrees, thereby allowing the second downpass to accurately reconstruct subtree state activity. Missing values are left as-is in characters with inapplicability, otherwise, final ancestral state reconstructions may be inaccurate.</p>
 <p>Because this function needs to be fairly high-performance, it does not do much checking for parameter validity, thus unsafe usage of this function might not be caught. It is up to calling functions to ensure that the appropriate parameters have been set before use.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

@@ -510,12 +510,14 @@ int     mpl_second_up_recon
  
  @brief Initial update of tip values following uppass reconstruction
  
- @discussion Ambiguous terminal state sets need to be resolved after the uppass
- based on descendant state values in order for local reoptimisation procedures 
- to be accurate and for inapplicable step counting to proceed accurately. This
- function calls updaters for the records of states active on the subtrees, 
- thereby allowing the second downpass to accurately reconstruct subtree state
- activity.
+ @discussion Polymorphic terminal state sets need to be resolved after the 
+ uppass based on descendant state values in order for local reoptimisation 
+ procedures to be accurate and for inapplicable step counting to proceed 
+ accurately. This function calls updaters for the records of states active on 
+ the subtrees, thereby allowing the second downpass to accurately reconstruct 
+ subtree state activity. Missing values are left as-is in characters with 
+ inapplicability, otherwise, final ancestral state reconstructions may be 
+ inaccurate.
  
  Because this function needs to be fairly high-performance, it does not do much
  checking for parameter validity, thus unsafe usage of this function might not
@@ -536,7 +538,30 @@ int     mpl_update_tip
          const int anc_id,
          Morphy m);
 
-
+/*!
+ 
+ @brief Finalizes ambiguous or missing values in the tips. 
+ 
+ @discussion Ambiguous terminal state sets need to be resolved after the uppass
+ based on descendant state values in order for local reoptimisation procedures 
+ to be accurate and for inapplicable step counting to proceed accurately. This
+ function calls updaters for the records of states active on the subtrees, 
+ thereby allowing local reoptimization functions to accurately predict length
+ increases when a subtree is added near a tip.
+ 
+ Because this function needs to be fairly high-performance, it does not do much
+ checking for parameter validity, thus unsafe usage of this function might not
+ be caught. It is up to calling functions to ensure that the appropriate
+ parameters have been set before use.
+ 
+ @param tip_id The index of the tip being updated.
+ 
+ @param anc_id The index of the tip's immediate ancestor.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return A null value (for now).
+ */
 int     mpl_finalize_tip
 
         (const int tip_id,

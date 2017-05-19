@@ -5,6 +5,7 @@ var searchData=
   ['mpl_5fattach_5fsymbols',['mpl_attach_symbols',['../mpl_8h.html#a939ba16fd369ef29b542dd1ed3276659',1,'mpl.c']]],
   ['mpl_5fdelete_5fmorphy',['mpl_delete_Morphy',['../mpl_8h.html#ae0986d57153e9c860d5d3aee7d3f04d1',1,'mpl.c']]],
   ['mpl_5fdelete_5frawdata',['mpl_delete_rawdata',['../mpl_8h.html#a71609f95372f73398de955bc9b95bbf1',1,'mpl.c']]],
+  ['mpl_5ffinalize_5ftip',['mpl_finalize_tip',['../mpl_8h.html#afb23fc933cb5c48a6dcc1ae4ca398c6a',1,'mpl.c']]],
   ['mpl_5ffirst_5fdown_5frecon',['mpl_first_down_recon',['../mpl_8h.html#aef08c9fefa44b7774de8eb84c8434fa1',1,'mpl.c']]],
   ['mpl_5ffirst_5fup_5frecon',['mpl_first_up_recon',['../mpl_8h.html#a64671d77342cfbea87f0939f202edd02',1,'mpl.c']]],
   ['mpl_5fget_5fnum_5fcharac',['mpl_get_num_charac',['../mpl_8h.html#ae7925e7a4688aafb2e611a41473c1ce8',1,'mpl.c']]],

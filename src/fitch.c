@@ -358,5 +358,29 @@ int mpl_fitch_NA_tip_update
 int mpl_fitch_NA_tip_finalize
 (MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
 {
-    return -1;
+    int i     = 0;
+    int j     = 0;
+    int* indices    = part->charindices;
+    int nchars      = part->ncharsinpart;
+    MPLstate* tpass1    = tset->downpass1;
+    MPLstate* tfinal    = tset->uppass2;
+    MPLstate* astates   = ancset->uppass2;
+    MPLstate* stacts    = tset->subtree_actives;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (tpass1[j] & astates[j]) {
+            tfinal[j] = tpass1[j] & astates[j];
+        }
+        else {
+            tfinal[j] = tpass1[j];
+        }
+        
+        stacts[j] = tfinal[j] & ISAPPLIC;
+        assert(tfinal[j]);
+    }
+    
+    return 0;
 }
