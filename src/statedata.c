@@ -718,6 +718,44 @@ int mpl_convert_rawdata(Morphyp handl)
     return ret;
 }
 
+// TODO: This probably needs to be more memory-safe
+char *mpl_translate_state2char(MPLstate cstates, Morphyp handl)
+{
+    int i = 0;
+    int shift = 0;
+    int gapshift = 0;
+   
+    gap_t gaphandl = mpl_query_gaphandl((Morphyp)handl);
+    if (gaphandl == GAP_INAPPLIC || gaphandl == GAP_NEWSTATE) {
+        gapshift = 1;
+    }
+    char *res = calloc(MAXSTATES+1, sizeof(char));
+    if (!res) {
+        return NULL;
+    }
+    char* symbols = mpl_get_symbols((Morphy)handl);
+    
+    if (cstates != MISSING) {
+        while (cstates) {
+            if (1 & cstates) {
+                if (shift == 0 && gapshift) {
+                    res[i] = mpl_get_gap_symbol(handl);
+                }
+                else {
+                    res[i] = symbols[shift - gapshift];
+                }
+                ++i;
+            }
+            cstates = cstates >> 1;
+            ++shift;
+        } 
+    }
+    else {
+        res[0] = '?';
+    }
+    
+    return res;
+}
 
 int mpl_init_charac_info(Morphyp handl)
 {

@@ -20,9 +20,9 @@ int mpl_fitch_downpass
     int steps = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->prelimset;
-    MPLstate* right = rset->prelimset;
-    MPLstate* n     = nset->prelimset;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* n     = nset->downpass1;
     
     for (i = 0; i < nchars; ++i) {
         j = indices[i];
@@ -47,11 +47,11 @@ int mpl_fitch_uppass
     int j     = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->prelimset;
-    MPLstate* right = rset->prelimset;
-    MPLstate* npre  = nset->prelimset;
-    MPLstate* nfin  = nset->finalset;
-    MPLstate* anc   = ancset->finalset;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* npre  = nset->downpass1;
+    MPLstate* nfin  = nset->uppass1;
+    MPLstate* anc   = ancset->uppass1;
     
     for (i = 0; i < nchars; ++i) {
         
@@ -83,9 +83,9 @@ int mpl_NA_fitch_first_downpass
     int j     = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->NApass1;
-    MPLstate* right = rset->NApass1;
-    MPLstate* n     = nset->NApass1;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* n     = nset->downpass1;
     MPLstate* stacts  = nset->subtree_actives;
     MPLstate* lacts   = lset->subtree_actives;
     MPLstate* racts   = rset->subtree_actives;
@@ -96,6 +96,7 @@ int mpl_NA_fitch_first_downpass
         
         if ((temp = (left[j] & right[j]))) {
             n[j] = temp;
+            
             if (temp == NA) {
                 if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
                     n[j] = (left[j] | right[j]);
@@ -127,11 +128,11 @@ int mpl_NA_fitch_first_uppass
     int j     = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->NApass1;
-    MPLstate* right = rset->NApass1;
-    MPLstate* npre  = nset->NApass1;
-    MPLstate* nifin = nset->NApass2;
-    MPLstate* anc   = ancset->NApass2;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* npre  = nset->downpass1;
+    MPLstate* nifin = nset->uppass1;
+    MPLstate* anc   = ancset->uppass1;
     
     for (i = 0; i < nchars; ++i) {
         
@@ -180,10 +181,10 @@ int mpl_NA_fitch_second_downpass
     int steps = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->prelimset;
-    MPLstate* right = rset->prelimset;
-    MPLstate* nifin = nset->NApass1;
-    MPLstate* npre    = nset->prelimset;
+    MPLstate* left  = lset->uppass1;
+    MPLstate* right = rset->uppass1;
+    MPLstate* nifin = nset->uppass1;
+    MPLstate* npre    = nset->downpass2;
     MPLstate* stacts  = nset->subtree_actives;
     MPLstate* lacts   = lset->subtree_actives;
     MPLstate* racts   = rset->subtree_actives;
@@ -197,7 +198,11 @@ int mpl_NA_fitch_second_downpass
         
         if (nifin[j] & ISAPPLIC) {
             if ((temp = (left[j] & right[j]))) {
-                npre[j] = temp & ISAPPLIC;
+                if (temp & ISAPPLIC) {
+                    npre[j] = temp & ISAPPLIC;
+                } else {
+                    npre[j] = temp;
+                }
             }
             else {
                 npre[j] = (left[j] | right[j]) & ISAPPLIC;
@@ -231,11 +236,11 @@ int mpl_NA_fitch_second_uppass
     int steps = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->prelimset;
-    MPLstate* right = rset->prelimset;
-    MPLstate* npre  = nset->prelimset;
-    MPLstate* nfin  = nset->finalset;
-    MPLstate* anc   = ancset->finalset;
+    MPLstate* left  = lset->downpass2;
+    MPLstate* right = rset->downpass2;
+    MPLstate* npre  = nset->downpass2;
+    MPLstate* nfin  = nset->uppass2;
+    MPLstate* anc   = ancset->uppass2;
     MPLstate* lacts = lset->subtree_actives;
     MPLstate* racts = rset->subtree_actives;
     
@@ -290,9 +295,10 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
     int j     = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* tprelim = tset->prelimset;
-    MPLstate* tfinal  = tset->finalset;
-    MPLstate* astates = ancset->finalset;
+    // TODO: Check these!!!!!!!
+    MPLstate* tprelim = tset->downpass1;
+    MPLstate* tfinal  = tset->downpass2;
+    MPLstate* astates = ancset->uppass2;
     
     for (i = 0; i < nchars; ++i) {
         j = indices[i];
@@ -314,11 +320,11 @@ int mpl_fitch_NA_tip_update
     int j     = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* tpass1    = tset->NApass1;
-    MPLstate* tprelim   = tset->prelimset;
-    MPLstate* tifinal   = tset->NApass2;
-//    MPLstate* tfinal    = tset->finalset;
-    MPLstate* astates   = ancset->NApass2;
+    MPLstate* tpass1    = tset->downpass1;
+    MPLstate* tpass2   = tset->uppass1;
+    MPLstate* tpass3   = tset->downpass2;
+//    MPLstate* tifinal   = tset->uppass2;
+    MPLstate* astates   = ancset->uppass1;
     MPLstate* stacts    = tset->subtree_actives;
     
     for (i = 0; i < nchars; ++i) {
@@ -332,18 +338,18 @@ int mpl_fitch_NA_tip_update
             stacts[j] |= tpass1[j] & ISAPPLIC;
         }
 
-        tifinal[j] = tpass1[j];
-
-        if (tifinal[j] & astates[j]) {
+        tpass2[j] = tpass1[j];
+        
+        if (tpass2[j] & astates[j]) {
             if (astates[j] & ISAPPLIC) {
-                tifinal[j] &= ISAPPLIC;
+                tpass2[j] &= ISAPPLIC;
             }
         }
         
-        tprelim[j] = tifinal[j];
+        tpass3[j] = tpass2[j];
         
-        assert(tifinal[j]);
-        assert(tprelim[j]);
+        assert(tpass3[j]);
+        assert(tpass2[j]);
     }
     
     return 0;

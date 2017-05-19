@@ -11,6 +11,8 @@
 
 int test_simple_chtype_setting(void);
 int test_delete_Morphy_no_input(void);
-int test_deletion_success(void);
+int test_deletiono_success(void);
+
+int test_state_retrieval(void);
 
 #endif /* testmpl_h */

@@ -110,16 +110,16 @@
 		5117C82D1EC1A709007AE2F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				5117C8191EC1A613007AE2F2 /* fitch.c */,
+				5117C8201EC1A613007AE2F2 /* mplerror.h */,
+				5117C81D1EC1A613007AE2F2 /* morphydefs.h */,
 				5117C81A1EC1A613007AE2F2 /* fitch.h */,
+				5117C8191EC1A613007AE2F2 /* fitch.c */,
 				5117C81C1EC1A613007AE2F2 /* morphy.h */,
 				5117C81B1EC1A613007AE2F2 /* morphy.c */,
-				5117C81D1EC1A613007AE2F2 /* morphydefs.h */,
-				5117C81E1EC1A613007AE2F2 /* mpl.c */,
 				5117C81F1EC1A613007AE2F2 /* mpl.h */,
-				5117C8201EC1A613007AE2F2 /* mplerror.h */,
-				5117C8211EC1A613007AE2F2 /* statedata.c */,
+				5117C81E1EC1A613007AE2F2 /* mpl.c */,
 				5117C8221EC1A613007AE2F2 /* statedata.h */,
+				5117C8211EC1A613007AE2F2 /* statedata.c */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -511,6 +511,7 @@
 				5115BC7D1ECCA7CD00014306 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5117C8371EC1B722007AE2F2 /* Build configuration list for PBXNativeTarget "morphytest" */ = {
 			isa = XCConfigurationList;

@@ -239,7 +239,7 @@ int test_basic_tip_apply(void)
         printf("\t");
         for (j = 0; j < nchar; ++j) {
             
-            MPLstate res = mi->statesets[i]->prelimset[j];
+            MPLstate res = mi->statesets[i]->downpass1[j];
             if (res == (~0)) {
                 printf("%c\t", '?');
             }

@@ -546,26 +546,26 @@ MPLndsets* mpl_alloc_stateset(int numchars)
         return NULL;
     }
     
-    new->NApass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
-    if (!new->NApass1) {
+    new->downpass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->downpass1) {
         mpl_free_stateset(new);
         return NULL;
     }
     
-    new->NApass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
-    if (!new->NApass2) {
+    new->uppass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->uppass1) {
         mpl_free_stateset(new);
         return NULL;
     }
     
-    new->prelimset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
-    if (!new->prelimset) {
+    new->downpass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->downpass1) {
         mpl_free_stateset(new);
         return NULL;
     }
     
-    new->finalset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
-    if (!new->finalset) {
+    new->uppass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->uppass2) {
         mpl_free_stateset(new);
         return NULL;
     }
@@ -576,26 +576,26 @@ MPLndsets* mpl_alloc_stateset(int numchars)
         return NULL;
     }
     
-    new->subtree_NApass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
-    if (!new->subtree_NApass1) {
+    new->subtree_downpass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->subtree_downpass1) {
         mpl_free_stateset(new);
         return NULL;
     }
     
-    new->subtree_NApass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
-    if (!new->subtree_NApass2) {
+    new->subtree_uppass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->subtree_uppass1) {
         mpl_free_stateset(new);
         return NULL;
     }
     
-    new->subtree_prelimset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
-    if (!new->subtree_prelimset) {
+    new->subtree_downpass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->subtree_downpass1) {
         mpl_free_stateset(new);
         return NULL;
     }
     
-    new->subtree_finalset = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
-    if (!new->subtree_finalset) {
+    new->subtree_uppass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    if (!new->subtree_uppass2) {
         mpl_free_stateset(new);
         return NULL;
     }
@@ -609,41 +609,41 @@ void mpl_free_stateset(MPLndsets* statesets)
     if (!statesets) {
         return;
     }
-    if (statesets->NApass1) {
-        free(statesets->NApass1);
-        statesets->NApass1 = NULL;
+    if (statesets->downpass1) {
+        free(statesets->downpass1);
+        statesets->downpass1 = NULL;
     }
-    if (statesets->NApass2) {
-        free(statesets->NApass2);
-        statesets->NApass2 = NULL;
+    if (statesets->uppass1) {
+        free(statesets->uppass1);
+        statesets->uppass1 = NULL;
     }
-    if (statesets->prelimset) {
-        free(statesets->prelimset);
-        statesets->prelimset = NULL;
+    if (statesets->downpass1) {
+        free(statesets->downpass1);
+        statesets->downpass1 = NULL;
     }
-    if (statesets->finalset) {
-        free(statesets->finalset);
-        statesets->finalset = NULL;
+    if (statesets->uppass2) {
+        free(statesets->uppass2);
+        statesets->uppass2 = NULL;
     }
     if (statesets->subtree_actives) {
         free(statesets->subtree_actives);
         statesets->subtree_actives = NULL;
     }
-    if (statesets->subtree_NApass1) {
-        free(statesets->subtree_NApass1);
-        statesets->subtree_NApass1 = NULL;
+    if (statesets->subtree_downpass1) {
+        free(statesets->subtree_downpass1);
+        statesets->subtree_downpass1 = NULL;
     }
-    if (statesets->subtree_NApass2) {
-        free(statesets->subtree_NApass2);
-        statesets->subtree_NApass2 = NULL;
+    if (statesets->subtree_uppass1) {
+        free(statesets->subtree_uppass1);
+        statesets->subtree_uppass1 = NULL;
     }
-    if (statesets->subtree_prelimset) {
-        free(statesets->subtree_prelimset);
-        statesets->subtree_prelimset = NULL;
+    if (statesets->subtree_downpass1) {
+        free(statesets->subtree_downpass1);
+        statesets->subtree_downpass1 = NULL;
     }
-    if (statesets->subtree_finalset) {
-        free(statesets->subtree_finalset);
-        statesets->subtree_finalset = NULL;
+    if (statesets->subtree_uppass2) {
+        free(statesets->subtree_uppass2);
+        statesets->subtree_uppass2 = NULL;
     }
     
     free(statesets);
@@ -709,9 +709,9 @@ int mpl_copy_data_into_tips(Morphyp handl)
     
     for (i = 0; i < ntax; ++i) {
         for (j = 0; j < nchar; ++j) {
-            nsets[i]->prelimset[j] =
+            nsets[i]->downpass1[j] =
             handl->inmatrix.cells[i * nchar + j].asint;
-            nsets[i]->NApass1[j] = nsets[i]->prelimset[j];
+            nsets[i]->downpass2[j] = nsets[i]->downpass1[j];
         }
     }
     
@@ -728,8 +728,8 @@ int mpl_update_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)
 
     for (i = 0; i < nchar; ++i) {
         j = indices[i];
-        lower->prelimset[j] = upper->prelimset[j];
-        lower->finalset[j]  = upper->prelimset[j];
+        lower->downpass1[j] = upper->downpass1[j];
+        lower->uppass2[j]  = upper->downpass1[j];
     }
     
     return 0;
@@ -746,18 +746,18 @@ int mpl_update_NA_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)
     for (i = 0; i < nchar; ++i) {
         j = indices[i];
         
-        if (lower->prelimset[j] & ISAPPLIC) {
-            lower->prelimset[j] = upper->prelimset[j] & ISAPPLIC;
+        if (upper->downpass1[j] & ISAPPLIC) {
+            lower->downpass1[j] = upper->downpass1[j] & ISAPPLIC;
         }
         else {
-            lower->prelimset[j] = NA;
+            lower->downpass1[j] = NA;
         }
         
         // Some of these assignments are a bit overkill, but they should
         // be fairly safe in case of changes in how the nodal functions work.
-        lower->finalset[j]  = lower->prelimset[j];
-        lower->NApass1[j]   = lower->prelimset[j];
-        lower->NApass2[j]   = lower->prelimset[j];
+        lower->uppass2[j]  = lower->downpass1[j];
+        lower->downpass1[j]   = lower->downpass1[j];
+        lower->uppass1[j]   = lower->downpass1[j];
     }
     
     return 0;

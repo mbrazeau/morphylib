@@ -128,15 +128,15 @@ typedef struct partition_s {
 
 typedef struct MPLndsets {
     
-    MPLstate*   NApass1;
-    MPLstate*   NApass2;
-    MPLstate*   prelimset;
-    MPLstate*   finalset;
+    MPLstate*   downpass1;
+    MPLstate*   uppass1;
+    MPLstate*   downpass2;
+    MPLstate*   uppass2;
     MPLstate*   subtree_actives;
-    MPLstate*   subtree_NApass1;
-    MPLstate*   subtree_NApass2;
-    MPLstate*   subtree_prelimset;
-    MPLstate*   subtree_finalset;
+    MPLstate*   subtree_downpass1;
+    MPLstate*   subtree_uppass1;
+    MPLstate*   subtree_downpass2;
+    MPLstate*   subtree_uppass2;
     
 } MPLndsets;
     

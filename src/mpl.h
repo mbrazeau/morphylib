@@ -587,10 +587,8 @@ int     mpl_get_packed_states
          Morphy     m);
 
 
-int     mpl_get_stateset
-
-        (char*      res,
-         const int  nodeID,
+char*   mpl_get_stateset
+        (const int  nodeID,
          const int  character,
          int        passnum,
          Morphy     m);

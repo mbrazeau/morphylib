@@ -45,6 +45,8 @@ int main (void)
     fails += test_small_fitch_na();
     fails += test_small_fitch_withmissing();
     
+    test_state_retrieval();
+    
     printf("\n\nTest summary:\n\n");
     if (fails) {
         psumf(fails);

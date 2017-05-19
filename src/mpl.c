@@ -523,5 +523,35 @@ int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m)
 //int     mpl_get_insertcost_max(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //int     mpl_get_insertcost_min(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //
-//int     mpl_get_packed_states(const int nodeID, const int character, int passnum, Morphy m);
-//char*   mpl_get_stateset(const int nodeID, const int character, int passnum, Morphy m);
+int mpl_get_packed_states
+(const int nodeID, const int character, int passnum, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp mi = (Morphyp)m;
+    
+    if (passnum == 1) {
+        return (int)mi->statesets[nodeID]->downpass1[character];
+    }
+    else if (passnum == 2) {
+        return (int)mi->statesets[nodeID]->uppass1[character];
+    }
+    else if (passnum == 3) {
+        return (int)mi->statesets[nodeID]->downpass2[character];
+    }
+    else if (passnum == 4) {
+        return (int)mi->statesets[nodeID]->uppass2[character];
+    }
+    
+    return ERR_BAD_PARAM;
+}
+
+char* mpl_get_stateset
+(const int nodeID, const int character, int passnum, Morphy m)
+{
+    MPLstate result = mpl_get_packed_states(nodeID, character, passnum, m);
+    char* ret = mpl_translate_state2char(result, (Morphyp)m);
+    return ret;
+}
