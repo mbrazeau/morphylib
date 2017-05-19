@@ -1,17 +1,18 @@
 library('phangorn')
-tree <- read.tree(text="(((a, b), c), (d, (e, f)));")
-plot(tree); nodelabels(6:10); tiplabels(0:5);
+dyn.load("../src/RMorphyEx.dll")
+source("../src/Morphyex.R")
 
-tax.names <- letters[1:6]
-n.tip <- length(tax.names)
-n.char <- 4
-weight <- c(1,2,3,4)
+tree <- read.tree(text="(((a, b), c), (d, (e, f)));")
 matrix_as_grid <- t(matrix(c('0', '0', '1', '1', '0', '0',
                              '0', '0', '-', '-', '-', '1',
-                             '0', '+', '?', '-', '1', '0', 
+                             #'0', '+', '?', '-', '1', '1', 
+                             '0', '+', '?', '-', '1', '{01}', 
                              '0', '1', '-', '-', '-', '0'), nrow=4, ncol=6, byrow=T))
-                    
-matrix_as_string <- paste(c(matrix_as_grid, ';'), collapse='')
+rownames(matrix_as_grid) <- tree$tip.label
+n.tip <- 6
+n.char <- 4
+matrix_as_string <- paste0(c(matrix_as_grid, ';'), collapse='')
+
 edge <- tree$edge
 parent <- edge[, 1]
 child  <- edge[, 2]
@@ -38,26 +39,13 @@ odds <- as.logical(seq_along(descendants) %% 2)
 right_ids[root.node:max.node] <- descendants[odds]
  left_ids[root.node:max.node] <- descendants[!odds]
 
- 
-dyn.load('../src/RMorphy.dll')
-CallMorphy <- function (n_char, n_taxa, desc, ancs, rawmatrix) {
-  .Call('RMorphy', as.integer(n_char), as.integer(n_taxa), as.integer(desc - 1L),
-                  as.integer(ancs - 1L), as.character(rawmatrix))
-}
-CallMorphy(n.char, n.tip, descendants, ancestors, matrix_as_string)
-dyn.unload('../src/RMorphy.dll')  
- 
- 
- 
- 
- 
-dyn.load("../src/RMorphyEx.dll")
-source("../src/Morphyex.R")
+
 morphy <- mpl_new_Morphy()
 if (mpl_init_Morphy(n.tip, n.char, morphy)) stop("Error in mpl_init_Morphy")
 if (mpl_get_numtaxa(morphy) != n.tip) warning("Taxon count mismatch with mpl_get_numtaxa")
 if (mpl_get_num_charac(morphy) != n.char) warning("Character count mismatch in mpl_get_num_charac")
-if (msg <- mpl_attach_rawdata(as.character(matrix_as_string), morphy)) stop("mpl_attach_rawdata Couldn't attach symbols: error", msg)
+#if (msg <- mpl_attach_symbols(matrix_as_string, morphy)) stop("mpl_attach_symbols Couldn't attach symbols: error", msg)
+if (msg <- mpl_attach_rawdata(matrix_as_string, morphy)) stop("mpl_attach_rawdata Couldn't attach symbols: error", msg)
 for (i in (1:n.char) - 1) if (msg <- mpl_set_parsim_t(i, tname=as.character("FITCH"), morphy)) stop("mpl_set_parsim_t error with char", i, msg)
 if (mpl_get_symbols(morphy) != '+01') stop ("Symbols mismatch in mpl_get_symbols")
 
@@ -72,6 +60,7 @@ for (node in postorder) {
 }
 score
 if (mpl_update_lower_root(dummy.root.node - 1L, root.node - 1L, morphy)) stop ("mpl_update_lower_root Error")
+if (mpl_update_lower_root(root.node - 1L, root.node - 1L, morphy)) stop ("mpl_update_lower_root Error")
 for (node in preorder[-1]) {
   #cat("Node:", node, "left:", left_ids[node], " right:", right_ids[node], "anc:", ancestors[node], "\n")
   score <- score + mpl_first_up_recon(node - 1L,  left_ids[node] - 1L, right_ids[node] - 1L, ancestors[node] - 1L, morphy) 

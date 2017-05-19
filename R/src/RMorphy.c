@@ -83,7 +83,7 @@ SEXP RMorphy(SEXP r_n_char, SEXP r_n_taxa, SEXP r_descendants, SEXP r_ancestors,
   // If i == 6 (root node), descendants will be in positions [0, 1].  i - n_taxa = 0
   // If i == 11, descendants will be in positions [8, 9]. i - n_taxa = 4
   
-    Rprintf("   - Reconstructiing  node %i < %i,%i.\n", i, descendants[(i - n_taxa) * 2], descendants[((i - n_taxa) * 2) + 1]);
+    Rprintf("   - Reconstructing  node %i < %i,%i.\n", i, descendants[(i - n_taxa) * 2], descendants[((i - n_taxa) * 2) + 1]);
     *pscore_temp += mpl_first_down_recon(i,  descendants[(i - n_taxa) * 2], descendants[((i - n_taxa) * 2) + 1], handl);
   }
   mpl_update_lower_root(max_node, root_node, handl);
