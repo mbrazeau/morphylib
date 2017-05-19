@@ -22,3 +22,19 @@ MPLchtype _R_mpl_str2chtype(const char *chtypename)
 
 	return MAX_CTYPE;
 }
+
+MPLgap_t _R_mpl_str2gaptype(const char *chtypename)
+{
+
+	if(!strcasecmp(chtypename, "inapplicable")){
+		return GAP_INAPPLIC;
+	}
+	else if(!strcasecmp(chtypename, "missing")){
+		return GAP_MISSING;
+	}
+	else if(!strcasecmp(chtypename, "newstate")){
+		return GAP_NEWSTATE;
+	}
+
+	return GAP_MAX;
+}

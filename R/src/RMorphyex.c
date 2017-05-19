@@ -133,6 +133,23 @@ SEXP _R_wrap_mpl_set_parsim_t(SEXP RcharID, SEXP Rchtype, SEXP MorphyHandl)
     return Rret;
 }
 
+SEXP _R_wrap_mpl_set_gaphandl(SEXP Rgaptype, SEXP MorphyHandl)
+{
+	SEXP Rret = PROTECT(allocVector(INTSXP, 1));
+	MPLgap_t gaptype;
+	int Mret = 0;
+
+	const char* gaptypename = CHAR(asChar(Rgaptype));
+	
+	gaptype = _R_mpl_str2gaptype(gaptypename);
+	Mret = mpl_set_gaphandl(gaptype, R_ExternalPtrAddr(MorphyHandl));
+
+	INTEGER(Rret)[0] = Mret;
+
+	UNPROTECT(1);
+	return Rret;
+}
+
 SEXP _R_wrap_mpl_set_num_internal_nodes(SEXP Rnnodes, SEXP MorphyHandl)
 {
     SEXP Rret = PROTECT(allocVector(INTSXP, 1));
