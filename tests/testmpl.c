@@ -18,7 +18,7 @@ int test_simple_chtype_setting(void)
     /* The code of your test */
     Morphy m = mpl_new_Morphy();
     mpl_init_Morphy(5, 10, m);
-    err = mpl_set_parsim_t(0, WAGNER_T, m);
+    err = mpl_set_parsim_t(0, DOLLO_T, m);
     
     if (err != ERR_CASE_NOT_IMPL) {
         ++failn;

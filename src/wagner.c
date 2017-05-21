@@ -24,7 +24,9 @@ int mpl_wagner_downpass
     MPLstate* n     = nset->downpass1;
     
     for (i = 0; i < nchars; ++i) {
+        
         j = indices[i];
+        
         if (left[j] & right[j]) {
             n[j] = left[j] & right[j];
         }
@@ -33,17 +35,21 @@ int mpl_wagner_downpass
             MPLstate min = 0;
             MPLstate max = 0;
             if (left[j] > right[j]) {
-                max = left[j]; min = right[j];
+                max = left[j];
+                min = right[j];
             }
             else {
-                max = left[j]; min = right[j];
+                min = left[j];
+                max = right[j];
             }
-            n[j] = (max-min) | min;
-            temp = n[j];
-            for (steps = 0; temp; ++steps) {
-                temp &= temp - 1;
+            
+            temp = max & ~(max-1);
+            n[j] = temp;
+            while (!(n[j] & min)) {
+                ++steps;
+                n[j] |= temp >> steps;
             }
-            // TODO: Multiply by weights
+            // TODO: Multiply by weights BEFORE next j
         }
     }
     
@@ -58,8 +64,8 @@ int mpl_wagner_uppass
     int j     = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->downpass1;
-    MPLstate* right = rset->downpass1;
+//    MPLstate* left  = lset->downpass1;
+//    MPLstate* right = rset->downpass1;
     MPLstate* npre  = nset->downpass1;
     MPLstate* nfin  = nset->uppass1;
     MPLstate* anc   = ancset->uppass1;
@@ -72,12 +78,12 @@ int mpl_wagner_uppass
             nfin[j] = anc[j] & npre[j];
         }
         else {
-            if (left[j] & right[j]) {
-                nfin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
-            }
-            else {
-                nfin[j] = npre[j] | anc[j];
-            }
+//            if (left[j] & right[j]) {
+//                nfin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
+//            }
+//            else {
+//                nfin[j] = npre[j] | anc[j];
+//            }
         }
        
         assert(nfin[j]);

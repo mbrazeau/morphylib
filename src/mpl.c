@@ -46,8 +46,7 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     if (!m) {
         return ERR_UNEXP_NULLPTR;
     }
-    // TODO: Checking against resets: if this call resets exising dimensions,
-    // then the whole object should get destroyed and reinitialised.
+    
     if (!ntax || !nchar) {
         return ERR_NO_DIMENSIONS;
     }
@@ -56,13 +55,13 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     Morphyp mi = (Morphyp)m;
     
     if (ntax != mpl_get_numtaxa(m)) {
-        if (mi->char_t_matrix) {
+        if (mpl_check_data_loaded(mi)) {
             return ERR_EX_DATA_CONF;
         }
     }
     
     if (nchar != mpl_get_num_charac(m)) {
-        if (mi->char_t_matrix) {
+        if (mpl_check_data_loaded(mi)) {
             return ERR_EX_DATA_CONF;
         }
     }
@@ -126,6 +125,7 @@ int mpl_set_num_internal_nodes(const int nnodes, Morphy m)
     return ERR_NO_ERROR;
 }
 
+
 int mpl_get_num_internal_nodes(Morphy m)
 {
     if (!m) {
@@ -135,7 +135,7 @@ int mpl_get_num_internal_nodes(Morphy m)
     return (((Morphyp)m)->numnodes - mpl_get_numtaxa(m));
 }
 
-
+// Requires new matrix in order to re-set (disallows conflict)
 int mpl_attach_symbols(const char *symbols, Morphy m)
 {
     if (!symbols || !m) {
@@ -200,6 +200,9 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
     }
     
     Morphyp m1 = (Morphyp)m;
+    if (mpl_check_data_loaded(m1)) {
+        return ERR_EX_DATA_CONF;
+    }
     mpl_copy_raw_matrix(rawmatrix, m1);
     
     // Check validity of preprocessed matrix

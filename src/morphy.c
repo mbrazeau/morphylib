@@ -202,6 +202,7 @@ int mpl_fetch_parsim_fxn_setter
             if (pars_assign) {
                 *pars_assign = mpl_assign_fitch_fxns;
             }
+            break;
         case WAGNER_T:
             if (pars_assign) {
                 *pars_assign = mpl_assign_wagner_fxns;

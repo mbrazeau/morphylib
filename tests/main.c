@@ -12,6 +12,7 @@
 #include "testmorphy.h"
 #include "testmpl.h"
 #include "testfitch.h"
+#include "testwagner.h"
 
 int main (void)
 {
@@ -46,6 +47,7 @@ int main (void)
     fails += test_small_fitch_withmissing();
     
     test_state_retrieval();
+    fails += test_small_wagner();
     
     printf("\n\nTest summary:\n\n");
     if (fails) {
