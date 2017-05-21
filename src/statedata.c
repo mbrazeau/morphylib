@@ -689,7 +689,7 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
 }
 
 // TODO: Rename this.
-int mpl_convert_rawdata(Morphyp handl)
+int mpl_preproc_rawdata(Morphyp handl)
 {
     int ret = ERR_NO_ERROR;
     

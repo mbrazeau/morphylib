@@ -10,6 +10,7 @@
 #include "morphy.h"
 #include "statedata.h"
 #include "fitch.h"
+#include "wagner.h"
 #include "mpl.h"
 
 void *mpl_alloc(size_t size, int setval)
@@ -167,6 +168,29 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
     }
 }
 
+void mpl_assign_wagner_fxns(MPLpartition* part)
+{
+    assert(part);
+    
+    if (part->isNAtype) {
+        part->inappdownfxn  = NULL;
+        part->inappupfxn    = NULL;
+        part->prelimfxn     = NULL;//mpl_NA_fitch_second_downpass;
+        part->finalfxn      = NULL;
+        part->tipupdate     = NULL;
+        part->tipfinalize   = NULL;
+    }
+    else {
+        part->prelimfxn     = mpl_wagner_downpass;
+        part->finalfxn      = mpl_wagner_uppass;
+        part->tipupdate     = mpl_wagner_tip_update;
+        part->tipfinalize   = NULL;
+        part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
+        part->inappupfxn    = NULL;
+    }
+}
+
+
 
 int mpl_fetch_parsim_fxn_setter
 (void(**pars_assign)(MPLpartition*), MPLchtype chtype)
@@ -273,6 +297,14 @@ int mpl_delete_partition(MPLpartition* part)
             part->charindices   = NULL;
             part->maxnchars     = 0;
             part->ncharsinpart  = 0;
+            part->chtype        = NONE_T;
+            part->tipupdate     = NULL;
+            part->tipfinalize   = NULL;
+            part->inappdownfxn  = NULL;
+            part->inappupfxn    = NULL;
+            part->prelimfxn     = NULL;
+            part->finalfxn      = NULL;
+            part->next          = NULL;
         }
         free(part);
         err = ERR_NO_ERROR;
@@ -286,7 +318,7 @@ int mpl_delete_all_partitions(Morphyp handl)
     assert(handl);
     int i = 0;
     
-    if (handl->partstack) {
+    if (handl->numparts) {
         
         MPLpartition* p = handl->partstack;
         MPLpartition* q = NULL;

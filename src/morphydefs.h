@@ -35,6 +35,9 @@ typedef unsigned int MPLstate;
 #define NACUTOFF        2   // The max number of NA tokens that can be ignored
                             // in a column
 #define MPLCHARMAX      INT_MAX
+#define USRWTMIN        0.00001 /*! Minimum fractional weight a caller can ask 
+                                    for when setting weights. Anything less than 
+                                    this will be considered 0. */
     
 typedef struct MPLndsets MPLndsets;
 typedef struct partition_s MPLpartition;
@@ -171,6 +174,7 @@ typedef struct Morphy_t {
     int             numtaxa;    // The number of terminal taxa
     int             numcharacters;  // The number of characters (transformation series)
     MPLcharinfo*    charinfo;   // Data type information about each character
+    unsigned long   wtfactor;   // Used to rescale factional weights (1 by default)
     int             numparts;   // The number of data type partitions
     MPLpartition*   partstack;  // A place for unused partitions
     MPLpartition**  partitions; // The array of partitions

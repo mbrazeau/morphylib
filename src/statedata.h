@@ -40,7 +40,7 @@ char*       mpl_get_preprocessed_matrix(Morphyp handl);
 int         mpl_write_input_rawchars_to_cells(Morphyp handl);
 int         mpl_create_state_dictionary(Morphyp handl);
 int         mpl_convert_cells(Morphyp handl);
-int         mpl_convert_rawdata(Morphyp handl);
+int         mpl_preproc_rawdata(Morphyp handl);
 MPLmatrix*  mpl_new_mpl_matrix(const int ntaxa, const int nchar, const int nstates);
 int         mpl_delete_mpl_matrix(MPLmatrix* m);
 MPLmatrix*  mpl_get_mpl_matrix(Morphyp m);
