@@ -309,6 +309,11 @@ int     mpl_set_charac_weight
          const double   weight,
          Morphy         m);
 
+    
+double  mpl_get_charac_weight
+    
+        (const int char_id,
+         const Morphy   m);
 
 /*!
 
