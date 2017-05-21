@@ -97,9 +97,10 @@ typedef struct charinfo_s {
     int          ninapplics;
     bool         included;
     MPLchtype    chtype;
+    long double  usrweight;
     union {
-        int      intwt;
-        Mflt     fltwt;
+        unsigned long   intwt;
+        Mflt            fltwt;
     };
     Mflt         CIndex;
     Mflt         RCIndex;
@@ -117,6 +118,9 @@ typedef struct partition_s {
     int             maxnchars;
     int             ncharsinpart;
     int*            charindices;
+    bool            usingfltwt;
+    unsigned long   intwts;
+    Mflt            fltwts;
     MPLtipfxn       tipupdate;
     MPLtipfxn       tipfinalize;
     MPLdownfxn      inappdownfxn;

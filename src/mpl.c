@@ -281,8 +281,21 @@ int mpl_apply_tipdata(Morphy m)
 //int     mpl_excl_charac(const int charID, Morphy m);
 //
 
-//int     mpl_set_charac_weight(const int charID, Mflt weight);
-//
+int mpl_set_charac_weight(const int charID, const double weight, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    if (!mpl_get_num_charac(m)) {
+        return ERR_NO_DIMENSIONS;
+    }
+    
+    Morphyp mi = (Morphyp)m;
+    mi->charinfo[charID].usrweight = weight;
+    
+    return ERR_NO_ERROR;
+}
 
 
 int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)

@@ -305,8 +305,9 @@ int     mpl_excl_charac
 
 int     mpl_set_charac_weight
 
-        (const int  charID,
-         Mflt       weight);
+        (const int      charID,
+         const double   weight,
+         Morphy         m);
 
 
 /*!
