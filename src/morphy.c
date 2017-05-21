@@ -172,22 +172,22 @@ void mpl_assign_wagner_fxns(MPLpartition* part)
 {
     assert(part);
     
-    if (part->isNAtype) {
-        part->inappdownfxn  = NULL;
-        part->inappupfxn    = NULL;
-        part->prelimfxn     = NULL;//mpl_NA_fitch_second_downpass;
-        part->finalfxn      = NULL;
-        part->tipupdate     = NULL;
-        part->tipfinalize   = NULL;
-    }
-    else {
+//    if (part->isNAtype) {
+//        part->inappdownfxn  = NULL;
+//        part->inappupfxn    = NULL;
+//        part->prelimfxn     = NULL; 
+//        part->finalfxn      = NULL;
+//        part->tipupdate     = NULL;
+//        part->tipfinalize   = NULL;
+//    }
+//    else {
         part->prelimfxn     = mpl_wagner_downpass;
         part->finalfxn      = mpl_wagner_uppass;
         part->tipupdate     = mpl_wagner_tip_update;
         part->tipfinalize   = NULL;
         part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
         part->inappupfxn    = NULL;
-    }
+//    }
 }
 
 
@@ -200,7 +200,11 @@ int mpl_fetch_parsim_fxn_setter
     switch (chtype) {
         case FITCH_T:
             if (pars_assign) {
-                *pars_assign = &mpl_assign_fitch_fxns;
+                *pars_assign = mpl_assign_fitch_fxns;
+            }
+        case WAGNER_T:
+            if (pars_assign) {
+                *pars_assign = mpl_assign_wagner_fxns;
             }
             break;
             
