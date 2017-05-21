@@ -93,11 +93,11 @@ typedef struct {
 typedef struct charinfo_s MPLcharinfo;
 typedef struct charinfo_s {
     
-    int          charindex;
-    int          ninapplics;
-    bool         included;
-    MPLchtype    chtype;
-    long double  usrweight;
+    int         charindex;
+    int         ninapplics;
+    bool        included;
+    MPLchtype   chtype;
+    double      weight;
     union {
         unsigned long   intwt;
         Mflt            fltwt;
