@@ -40,6 +40,8 @@ int main (void)
     fails += test_simple_chtype_setting();
     fails += test_init_Morphy();
     fails += test_reinit_no_data();
+    fails += test_reinit_with_data();
+    fails += test_attemp_load_bad_dimens();
     fails += test_delete_Morphy_no_input();
     fails += test_basic_tip_apply();
  //    fails += test_deletion_success();

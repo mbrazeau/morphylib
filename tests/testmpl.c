@@ -137,6 +137,152 @@ int test_reinit_no_data(void)
     return failn;
 }
 
+int test_attemp_load_bad_dimens(void)
+{
+    theader("Attempt to load data with wrong dimensions");
+    int err     = 0;
+    int failn   = 0;
+    
+    /* The code of your test */
+    
+    Morphy new = mpl_new_Morphy();
+    
+    int ntax = 5;
+    int nchar = 10;
+    
+    char *rawmatrix =
+    "0000000010\
+    0-001-22-0\
+    0-001-110-\
+    10(03)0101100\
+    1-000-0000\
+    0-00{01}100-0;";
+    
+    err = mpl_init_Morphy(ntax, nchar, new);
+    
+    if (err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    err = mpl_attach_rawdata(rawmatrix, new);
+    
+    if (!err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    // Correct ntax:
+    ntax = 6;
+    
+    err = mpl_init_Morphy(ntax, nchar, new);
+    
+    if (err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    // Now attach the data:
+    // This should return no error.
+    err = mpl_attach_rawdata(rawmatrix, new);
+    
+    if (err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_delete_Morphy(new);
+    return failn;
+
+}
+
+int test_reinit_with_data(void)
+{
+    theader("Reinitialise the dimensions with a dataset loaded");
+    int err     = 0;
+    int failn   = 0;
+    
+    /* The code of your test */
+    
+    Morphy new = mpl_new_Morphy();
+    
+    int ntax = 6;
+    int nchar = 10;
+    
+    char *rawmatrix =
+    "0000000010\
+    0-001-22-0\
+    0-001-110-\
+    10(03)0101100\
+    1-000-0000\
+    0-00{01}100-0;";
+    
+    err = mpl_init_Morphy(ntax, nchar, new);
+    
+    if (err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    err = mpl_attach_rawdata(rawmatrix, new);
+    
+    if (err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+   
+    ntax = 10;
+    nchar = 200;
+    
+    err = mpl_init_Morphy(ntax, nchar, new);
+    if (!err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (ntax == mpl_get_numtaxa(new)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (nchar == mpl_get_num_charac(new)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_delete_Morphy(new);
+    
+    return failn;
+}
+
 
 int test_simple_chtype_setting(void)
 {
