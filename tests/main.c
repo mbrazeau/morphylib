@@ -51,6 +51,7 @@ int main (void)
     fails += test_small_fitch_na();
     fails += test_small_fitch_withmissing();
     
+    // TODO: Cleanup these tests
     test_state_retrieval();
     fails += test_small_wagner();
     
