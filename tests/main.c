@@ -44,15 +44,15 @@ int main (void)
     fails += test_attemp_load_bad_dimens();
     fails += test_delete_Morphy_no_input();
     fails += test_basic_tip_apply();
- //    fails += test_deletion_success();
+    // TODO: set this test up to return
+    test_state_retrieval();
     
     // fitch.c tests
     fails += test_small_fitch();
     fails += test_small_fitch_na();
     fails += test_small_fitch_withmissing();
     
-    // TODO: Cleanup these tests
-    test_state_retrieval();
+    // wagner.c tests 
     fails += test_small_wagner();
     
     printf("\n\nTest summary:\n\n");
