@@ -9,6 +9,135 @@
 #include "mpltest.h"
 #include "testmpl.h"
 
+int test_create_destroy_Morphy(void)
+{
+    theader("Test simple create/destroy");
+    int failn = 0;
+    
+    Morphy new = mpl_new_Morphy();
+    if (!new) {
+        ++failn;
+        pfail;
+        return failn;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_delete_Morphy(new)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    new = NULL;
+    if (!mpl_delete_Morphy(new)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    return failn;
+}
+
+
+int test_init_Morphy(void)
+{
+    theader("Test of basic Morphy initialisation");
+    int err     = 0;
+    int failn   = 0;
+    
+    Morphy new = mpl_new_Morphy();
+    
+    int ntax = 21;
+    int nchar = 100;
+    
+    err = mpl_init_Morphy(ntax, nchar, new);
+    
+    if (err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (ntax != mpl_get_numtaxa(new)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (nchar != mpl_get_num_charac(new)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_delete_Morphy(new);
+    
+    return failn;
+}
+
+
+int test_reinit_no_data(void)
+{
+    theader("Reinitialise the dimensions with no dataset loaded");
+    int err     = 0;
+    int failn   = 0;
+    
+    /* The code of your test */
+
+    Morphy new = mpl_new_Morphy();
+    
+    int ntax = 21;
+    int nchar = 100;
+    
+    err = mpl_init_Morphy(ntax, nchar, new);
+    
+    if (err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    ntax = 10;
+    nchar = 200;
+    
+    err = mpl_init_Morphy(ntax, nchar, new);
+    
+    if (ntax != mpl_get_numtaxa(new)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (nchar != mpl_get_num_charac(new)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_delete_Morphy(new);
+    
+    return failn;
+}
+
+
 int test_simple_chtype_setting(void)
 {
     theader("Simple test of setting character types (parsimony)");

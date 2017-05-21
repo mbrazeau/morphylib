@@ -36,7 +36,10 @@ int main (void)
     fails += test_data_partitioning_gapnewstate();
     
     // mpl.c tests
+    fails += test_create_destroy_Morphy();
     fails += test_simple_chtype_setting();
+    fails += test_init_Morphy();
+    fails += test_reinit_no_data();
     fails += test_delete_Morphy_no_input();
     fails += test_basic_tip_apply();
  //    fails += test_deletion_success();
