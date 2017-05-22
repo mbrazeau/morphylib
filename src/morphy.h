@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <float.h>
+#include <math.h>
 //#include <glib.h>
 
 //typedef struct mplarray_s {
@@ -37,6 +39,7 @@ int             mpl_set_num_charac(const int ncharac, Morphyp m);
 int             mpl_get_gaphandl(Morphyp handl);
 int             mpl_check_data_loaded(Morphyp m);
 char            mpl_get_gap_symbol(Morphyp handl);
+bool            mpl_isreal(const double n);
 MPLchtype*      mpl_get_charac_types(Morphyp handl);
 int             mpl_assign_partition_fxns(MPLpartition* part);
 int             mpl_fetch_parsim_fxn_setter (void(**pars_assign)(MPLpartition*), MPLchtype chtype);

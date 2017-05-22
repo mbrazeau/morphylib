@@ -32,6 +32,8 @@ Morphyp mpl_new_Morphy_t(void)
     new->symbols.gap        = DEFAULTGAP;
     new->symbols.missing    = DEFAULTMISSING;
     new->nthreads           = 1; // There is always at least one thread in use
+    new->usrwtbase          = 0;
+    new->wtbase             = 1;
     
     return new;
 }
@@ -94,6 +96,84 @@ int mpl_check_data_loaded(Morphyp m)
 char mpl_get_gap_symbol(Morphyp handl)
 {
     return handl->symbols.gap;
+}
+
+
+/*!
+ @brief Checks whether or not a value corresponds to a real number or is whole
+ @discussion Should be used only to check values from external calling functions
+ that are not expected to be the product of a calculation (i.e. are a user-
+ supplied value, such as an input weight).
+ @param n The value to be tested.
+ @return A true/false value: true if value is fractional, false if value is
+ whole.
+ */
+bool mpl_isreal(const double n)
+{
+    assert(!(n > LONG_MAX));
+    long i = (long)n;
+    if (n == (double)i) {
+        return false;
+    }
+    return true;
+}
+
+
+int mpl_change_weight_base(const int wtbase, Morphyp handl)
+{
+    if (handl->usrwtbase) {
+        return 1;
+    }
+    
+    handl->wtbase = wtbase;
+    
+    return 0;
+}
+
+
+int mpl_calc_new_weightbase(const double wt)
+{
+    int base = 1;
+    while (fabs(1.0 - base * wt) > MPLWTMIN) {
+        ++base;
+        if (base > 10) {
+            break;
+        }
+    }
+
+    if (base > 10) {
+        base = 1;
+        while ((double)((int)(base * wt)) != (base * wt)) {
+            base *= 10;
+        }
+    }
+    
+    return base;
+}
+
+
+void mpl_set_new_weight_public
+(const double wt, const int char_id, Morphyp handl)
+{
+    bool wtisreal = mpl_isreal(wt);
+  
+    if (wtisreal) {
+        if (!mpl_isreal(handl->charinfo[char_id].usrweight)) {
+            ++handl->numrealwts;
+        }
+       
+        int newbase = mpl_calc_new_weightbase(wt);
+        if (newbase > handl->wtbase) {
+            mpl_change_weight_base(newbase, handl);
+        }
+    }
+    else {
+        if (mpl_isreal(handl->charinfo[char_id].usrweight)) {
+            --handl->numrealwts;
+        }
+    }
+   
+    handl->charinfo[char_id].usrweight = wt;
 }
 
 //MPLarray* mpl_new_array(size_t elemsize)

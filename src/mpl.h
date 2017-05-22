@@ -303,13 +303,14 @@ int     mpl_excl_charac
          Morphy     m);
 
 
+// TODO: Document
 int     mpl_set_charac_weight
 
         (const int      charID,
          const double   weight,
          Morphy         m);
 
-    
+// TODO: Document
 double  mpl_get_charac_weight
     
         (const int char_id,

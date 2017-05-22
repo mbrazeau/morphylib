@@ -292,7 +292,7 @@ int mpl_set_charac_weight(const int charID, const double weight, Morphy m)
     }
     
     Morphyp mi = (Morphyp)m;
-    mi->charinfo[charID].weight = weight;
+    mi->charinfo[charID].usrweight = weight;
     
     return ERR_NO_ERROR;
 }
@@ -303,7 +303,7 @@ double mpl_get_charac_weight(const int char_id, const Morphy m)
         return ERR_UNEXP_NULLPTR;
     }
     
-    return ((Morphyp)m)->charinfo[char_id].weight;
+    return ((Morphyp)m)->charinfo[char_id].usrweight;
 }
 
 int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
