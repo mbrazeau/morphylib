@@ -10,6 +10,89 @@
 //#include "testmorphy.h"
 #include "../src/morphy.h"
 
+int test_isreal(void)
+{
+    theader("Testing check for real numbers");
+//    int err     = 0;
+    int failn   = 0;
+    
+    /* The code of your test */
+    double whole1 = 1.0;
+    double whole2 = 2.0;
+    double whole3 = 15.0;
+    double whole4 = 23.0;
+    double frac1 = 1.5;
+    double frac2 = 2.789;
+    double frac3 = 3.0000001;
+    double frac4 = 4.000000002;
+    
+    if (mpl_isreal(whole1)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_isreal(whole2)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_isreal(whole3)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_isreal(whole4)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (!mpl_isreal(frac1)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (!mpl_isreal(frac2)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (!mpl_isreal(frac3)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (!mpl_isreal(frac4)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    return failn;
+}
+
 int test_count_gaps_basic(void)
 {
     theader("Testing counting of gaps in matrix");

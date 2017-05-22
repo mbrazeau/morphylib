@@ -29,6 +29,7 @@ int main (void)
     fails += test_usr_order_symbols();
     
     // morphy.c tests
+    fails += test_isreal();
     fails += test_count_gaps_basic();
     fails += test_partition_push_index();
     fails += test_data_partitioning_simple();
