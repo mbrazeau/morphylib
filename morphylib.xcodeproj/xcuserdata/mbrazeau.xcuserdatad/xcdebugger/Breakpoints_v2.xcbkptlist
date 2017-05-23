@@ -63,7 +63,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "604"
             endingLineNumber = "604"
-            landmarkName = "mpl_alloc_stateset()"
+            landmarkName = "mpl_compare_partitions()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -79,7 +79,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "546"
             endingLineNumber = "546"
-            landmarkName = "mpl_alloc_stateset()"
+            landmarkName = "mpl_compare_partition_with_char_info()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -94,7 +94,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "397"
-            endingLineNumber = "397">
+            endingLineNumber = "397"
+            landmarkName = "mpl_part_push_index()"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -343,7 +345,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "583"
             endingLineNumber = "583"
-            landmarkName = "mpl_alloc_stateset()"
+            landmarkName = "mpl_search_partitions()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
