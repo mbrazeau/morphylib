@@ -369,7 +369,8 @@ int test_set_weights(void)
     
     mpl_assign_intwts_to_partitions(mi);
     
-    return 1;
+    // TODO: Give test a real return value
+    return 0;
 }
 
 int test_basic_tip_apply(void)
