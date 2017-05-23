@@ -332,6 +332,34 @@ int test_data_partitioning_gapnewstate(void)
     
 }
 
+int test_set_weights(void)
+{
+    theader("Test of basic weight setting");
+//    int err     = 0;
+    int failn   = 0;
+    
+    /* The code of your test */
+    int ntax = 6;
+    int nchar = 10;
+    double weights[] = {0.333, 0.25, 0.5};
+    int chars2wt[] = {2, 5, 6};
+    int i = 0;
+    int numwts = 3;
+    
+    Morphy m = mpl_new_Morphy();
+    
+    mpl_init_Morphy(ntax, nchar, m);
+
+    for (i = 0; i < numwts; ++i) {
+        mpl_set_charac_weight(chars2wt[i], weights[i], m);
+    }
+    mpl_scale_all_intweights((Morphyp)m);
+    
+    Morphyp mi = (Morphyp)m;
+    
+    return failn;
+}
+
 int test_basic_tip_apply(void)
 {
     theader("Testing application of state data to tips");

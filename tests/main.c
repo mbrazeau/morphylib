@@ -36,6 +36,7 @@ int main (void)
     fails += test_data_partitioning_simple();
     fails += test_data_partitioning_gapmissing();
     fails += test_data_partitioning_gapnewstate();
+    fails += test_set_weights();
     
     // mpl.c tests
     fails += test_create_destroy_Morphy();

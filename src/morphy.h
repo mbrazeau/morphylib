@@ -42,6 +42,7 @@ char            mpl_get_gap_symbol(Morphyp handl);
 bool            mpl_almost_equal(double a, double b);
 bool            mpl_isreal(const double n);
 void            mpl_set_new_weight_public(const double wt, const int char_id, Morphyp handl);
+void            mpl_scale_all_intweights(Morphyp handl);
 MPLchtype*      mpl_get_charac_types(Morphyp handl);
 int             mpl_assign_partition_fxns(MPLpartition* part);
 int             mpl_fetch_parsim_fxn_setter (void(**pars_assign)(MPLpartition*), MPLchtype chtype);

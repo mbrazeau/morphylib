@@ -98,7 +98,8 @@ char mpl_get_gap_symbol(Morphyp handl)
     return handl->symbols.gap;
 }
 
-void mpl_flt_rational_approx(long *a, long *b, const double fval)
+void mpl_flt_rational_approx
+(unsigned long *a, unsigned long *b, const double fval)
 {
    /* Using David Eppstein's method 
     http://www.ics.uci.edu/~eppstein/numth/frap.c*/
@@ -196,6 +197,23 @@ int mpl_change_weight_base(const unsigned long wtbase, Morphyp handl)
 //    return base;
 //}
 
+static inline unsigned long mpl_greatest_common_denom
+(unsigned long a, unsigned long b)
+{
+    unsigned long t = 0;
+    while (b) {
+        t = b;
+        b = a % b;
+        a = t;
+    }
+    
+    return a;
+}
+
+unsigned long mpl_least_common_multiple(unsigned long a, unsigned long b)
+{
+    return (a * b) / mpl_greatest_common_denom(a, b);
+}
 
 void mpl_set_new_weight_public
 (const double wt, const int char_id, Morphyp handl)
@@ -213,7 +231,12 @@ void mpl_set_new_weight_public
         mpl_flt_rational_approx(&handl->charinfo[char_id].intwt,
                                 &handl->charinfo[char_id].basewt,
                                 wt);
-       
+        
+        unsigned long newbase = handl->charinfo[char_id].basewt;
+        unsigned long oldbase = handl->wtbase;
+        if (newbase != oldbase) {
+            handl->wtbase = mpl_least_common_multiple(newbase, oldbase);
+        }
     }
     else {
         
@@ -224,6 +247,20 @@ void mpl_set_new_weight_public
         handl->charinfo[char_id].intwt = wt;
     }
    
+}
+
+void mpl_scale_all_intweights(Morphyp handl)
+{
+    if (handl->wtbase == 1) {
+        return;
+    }
+    
+    int i = 0;
+    int nchar = mpl_get_num_charac((Morphy)handl);
+    
+    for (i = 0; i < nchar; ++i) {
+        handl->charinfo[i].intwt *= handl->wtbase / handl->charinfo[i].basewt;
+    }
 }
 
 //MPLarray* mpl_new_array(size_t elemsize)

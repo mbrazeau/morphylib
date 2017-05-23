@@ -101,8 +101,8 @@ typedef struct charinfo_s {
     bool        included;
     MPLchtype   chtype;
     double      usrweight;
-    long        basewt;
-    long        intwt;
+    unsigned long        basewt;
+    unsigned long        intwt;
     Mflt        fltwt;
 //    union {
 //        unsigned long   intwt;
@@ -186,7 +186,6 @@ typedef struct Morphy_t {
     int             numrealwts;
     MPLcharinfo*    charinfo;   // Data type information about each character
     unsigned long   usrwtbase;
-    unsigned long   smallestwtbase;
     unsigned long   wtbase;   // Used to rescale factional weights (1 by default)
     int             numparts;   // The number of data type partitions
     MPLpartition*   partstack;  // A place for unused partitions
