@@ -15,13 +15,14 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#ifdef MPLDBL
+//#ifdef MPLDBL
 typedef double Mflt;
-#elif MPLLDBL
-typedef long double Mflt;
-#else
-typedef float Mflt;
-#endif
+#define MPL_EPSILON DBL_EPSILON
+//#elif MPLLDBL
+//typedef long double Mflt;
+//#else
+//typedef float Mflt;
+//#endif
 
 typedef unsigned int MPLstate;
 
@@ -38,7 +39,8 @@ typedef unsigned int MPLstate;
 #define USRWTMIN        0.00001 /*! Minimum fractional weight a caller can ask 
                                     for when setting weights. Anything less than 
                                     this will be considered 0. */
-#define MPLWTMIN        0.00000001
+#define MPLWTMIN        (MPL_EPSILON * 10) /*! Safest (for me!) if calculations
+                                               steer pretty clear of epsilon */
     
 typedef struct MPLndsets MPLndsets;
 typedef struct partition_s MPLpartition;
@@ -99,10 +101,13 @@ typedef struct charinfo_s {
     bool        included;
     MPLchtype   chtype;
     double      usrweight;
-    union {
-        unsigned long   intwt;
-        Mflt            fltwt;
-    };
+    long        basewt;
+    long        intwt;
+    Mflt        fltwt;
+//    union {
+//        unsigned long   intwt;
+//        Mflt            fltwt;
+//    };
     Mflt         CIndex;
     Mflt         RCIndex;
     Mflt         HIndex;
@@ -181,6 +186,7 @@ typedef struct Morphy_t {
     int             numrealwts;
     MPLcharinfo*    charinfo;   // Data type information about each character
     unsigned long   usrwtbase;
+    unsigned long   smallestwtbase;
     unsigned long   wtbase;   // Used to rescale factional weights (1 by default)
     int             numparts;   // The number of data type partitions
     MPLpartition*   partstack;  // A place for unused partitions

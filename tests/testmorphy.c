@@ -93,6 +93,45 @@ int test_isreal(void)
     return failn;
 }
 
+int test_almost_equal(void)
+{
+    theader("Testing almost equal function for comparing doubles");
+    int failn   = 0;
+    
+    /* The code of your test */
+    double athird1 = 0.3333333;
+    double athird2 = 0.3333333;
+    double athird3 = 0.3333334;
+    double frac1 = 1.2345678;
+    double frac2 = 1.2346789;
+    
+    if (!mpl_almost_equal(athird1, athird2)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_almost_equal(athird1, athird3)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_almost_equal(frac1, frac2)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    return failn;
+}
+
 int test_count_gaps_basic(void)
 {
     theader("Testing counting of gaps in matrix");

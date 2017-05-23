@@ -10,6 +10,7 @@
 #define testmorphy_h
 
 int test_isreal(void);
+int test_almost_equal(void);
 int test_count_gaps_basic(void);
 int test_partition_push_index(void);
 int test_data_partitioning_simple(void);

@@ -98,6 +98,58 @@ char mpl_get_gap_symbol(Morphyp handl)
     return handl->symbols.gap;
 }
 
+void mpl_flt_rational_approx(long *a, long *b, const double fval)
+{
+   /* Using David Eppstein's method 
+    http://www.ics.uci.edu/~eppstein/numth/frap.c*/
+    
+    
+    long m[2][2];
+    long ai;
+    long maxden = 100;
+    double x = fval;
+    
+    m[0][0] = m[1][1] = 1;
+    m[0][1] = m[1][0] = 0;
+    
+    while (m[1][0] * (ai = (long)x) + m[1][1] <= maxden) {
+        long t;
+        t = m[0][0] * ai + m[0][1];
+        m[0][1] = m[0][0];
+        m[0][0] = t;
+        t = m[1][0] * ai + m[1][1];
+        m[1][1] = m[1][0];
+        m[1][0] = t;
+        if (x == (double)ai) {
+            break;
+        }
+        x = 1 /(x - (double) ai);
+        if (x > (double)INT_MAX) {
+            break;
+        }
+    }
+    
+    *a = m[0][0];
+    *b = m[1][0];
+}
+
+
+bool mpl_almost_equal(double a, double b)
+{
+    double diff = fabs(a - b);
+    double largest = 0.0;
+    
+    a = fabs(a);
+    b = fabs(b);
+   
+    largest = (b > a) ? b : a;
+    
+    if (diff <= largest * MPL_EPSILON) {
+        return true;
+    }
+    
+    return false;
+}
 
 /*!
  @brief Checks whether or not a value corresponds to a real number or is whole
@@ -110,7 +162,7 @@ char mpl_get_gap_symbol(Morphyp handl)
  */
 bool mpl_isreal(const double n)
 {
-    assert(!(n > LONG_MAX));
+    assert(!(n > (double)LONG_MAX));
     long i = (long)n;
     if (n == (double)i) {
         return false;
@@ -119,7 +171,7 @@ bool mpl_isreal(const double n)
 }
 
 
-int mpl_change_weight_base(const int wtbase, Morphyp handl)
+int mpl_change_weight_base(const unsigned long wtbase, Morphyp handl)
 {
     if (handl->usrwtbase) {
         return 1;
@@ -131,25 +183,18 @@ int mpl_change_weight_base(const int wtbase, Morphyp handl)
 }
 
 
-int mpl_calc_new_weightbase(const double wt)
-{
-    int base = 1;
-    while (fabs(1.0 - base * wt) > MPLWTMIN) {
-        ++base;
-        if (base > 10) {
-            break;
-        }
-    }
-
-    if (base > 10) {
-        base = 1;
-        while ((double)((int)(base * wt)) != (base * wt)) {
-            base *= 10;
-        }
-    }
-    
-    return base;
-}
+//int mpl_calc_new_weightbase(const double wt)
+//{
+//    int base = 1;
+//    while (mpl_almost_equal(1.0, base * wt)) {
+//        ++base;
+//        if ((int)(base * MPLWTMIN) == 1) {
+//            break;
+//        }
+//    }
+//
+//    return base;
+//}
 
 
 void mpl_set_new_weight_public
@@ -157,23 +202,28 @@ void mpl_set_new_weight_public
 {
     bool wtisreal = mpl_isreal(wt);
   
+    handl->charinfo[char_id].usrweight = wt;
+    
     if (wtisreal) {
+        
         if (!mpl_isreal(handl->charinfo[char_id].usrweight)) {
             ++handl->numrealwts;
         }
+        
+        mpl_flt_rational_approx(&handl->charinfo[char_id].intwt,
+                                &handl->charinfo[char_id].basewt,
+                                wt);
        
-        int newbase = mpl_calc_new_weightbase(wt);
-        if (newbase > handl->wtbase) {
-            mpl_change_weight_base(newbase, handl);
-        }
     }
     else {
+        
         if (mpl_isreal(handl->charinfo[char_id].usrweight)) {
             --handl->numrealwts;
         }
+    
+        handl->charinfo[char_id].intwt = wt;
     }
    
-    handl->charinfo[char_id].usrweight = wt;
 }
 
 //MPLarray* mpl_new_array(size_t elemsize)

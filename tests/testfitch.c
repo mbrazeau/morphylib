@@ -146,7 +146,7 @@ int test_small_fitch_withmissing(void)
     int ntax	= 12;
     int nchar	= 1;
     char *rawmatrix =
-    "21--3\?\?--032;";
+    "23--1\?\?--032;";
     
     Morphy m1 = mpl_new_Morphy();
     mpl_init_Morphy(ntax, nchar, m1);
