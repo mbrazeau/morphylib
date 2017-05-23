@@ -1,0 +1,566 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5115BC7F1ECCA7F000014306 /* fitch.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C8191EC1A613007AE2F2 /* fitch.c */; };
+		5115BC801ECCA7F000014306 /* morphy.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C81B1EC1A613007AE2F2 /* morphy.c */; };
+		5115BC811ECCA7F000014306 /* mpl.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C81E1EC1A613007AE2F2 /* mpl.c */; };
+		5115BC821ECCA7F000014306 /* statedata.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C8211EC1A613007AE2F2 /* statedata.c */; };
+		5117C8231EC1A613007AE2F2 /* fitch.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C8191EC1A613007AE2F2 /* fitch.c */; };
+		5117C8241EC1A613007AE2F2 /* fitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5117C81A1EC1A613007AE2F2 /* fitch.h */; };
+		5117C8251EC1A613007AE2F2 /* morphy.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C81B1EC1A613007AE2F2 /* morphy.c */; };
+		5117C8261EC1A613007AE2F2 /* morphy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5117C81C1EC1A613007AE2F2 /* morphy.h */; };
+		5117C8271EC1A613007AE2F2 /* morphydefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 5117C81D1EC1A613007AE2F2 /* morphydefs.h */; };
+		5117C8281EC1A613007AE2F2 /* mpl.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C81E1EC1A613007AE2F2 /* mpl.c */; };
+		5117C8291EC1A613007AE2F2 /* mpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 5117C81F1EC1A613007AE2F2 /* mpl.h */; };
+		5117C82A1EC1A613007AE2F2 /* mplerror.h in Headers */ = {isa = PBXBuildFile; fileRef = 5117C8201EC1A613007AE2F2 /* mplerror.h */; };
+		5117C82B1EC1A613007AE2F2 /* statedata.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C8211EC1A613007AE2F2 /* statedata.c */; };
+		5117C82C1EC1A613007AE2F2 /* statedata.h in Headers */ = {isa = PBXBuildFile; fileRef = 5117C8221EC1A613007AE2F2 /* statedata.h */; };
+		5117C83B1EC1B775007AE2F2 /* teststatedata.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C83A1EC1B775007AE2F2 /* teststatedata.c */; };
+		5117C83C1EC1B785007AE2F2 /* fitch.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C8191EC1A613007AE2F2 /* fitch.c */; };
+		5117C83E1EC1B785007AE2F2 /* morphy.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C81B1EC1A613007AE2F2 /* morphy.c */; };
+		5117C8411EC1B785007AE2F2 /* mpl.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C81E1EC1A613007AE2F2 /* mpl.c */; };
+		5117C8441EC1B785007AE2F2 /* statedata.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C8211EC1A613007AE2F2 /* statedata.c */; };
+		5117C8461EC1B785007AE2F2 /* teststatedata.c in Sources */ = {isa = PBXBuildFile; fileRef = 5117C83A1EC1B775007AE2F2 /* teststatedata.c */; };
+		5117C8481EC1BBA9007AE2F2 /* mpltest.h in Headers */ = {isa = PBXBuildFile; fileRef = 5117C8471EC1BBA9007AE2F2 /* mpltest.h */; };
+		5132D4D71EC5E5AB00763C12 /* testmorphy.c in Sources */ = {isa = PBXBuildFile; fileRef = 5132D4D31EC5E5AB00763C12 /* testmorphy.c */; };
+		5132D4D81EC5E5AB00763C12 /* testmorphy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5132D4D41EC5E5AB00763C12 /* testmorphy.h */; };
+		5132D4D91EC5E5AB00763C12 /* testmpl.c in Sources */ = {isa = PBXBuildFile; fileRef = 5132D4D51EC5E5AB00763C12 /* testmpl.c */; };
+		5132D4DA1EC5E5AB00763C12 /* testmpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 5132D4D61EC5E5AB00763C12 /* testmpl.h */; };
+		5132D4DD1EC5E60100763C12 /* testmorphy.c in Sources */ = {isa = PBXBuildFile; fileRef = 5132D4D31EC5E5AB00763C12 /* testmorphy.c */; };
+		5132D4DF1EC5E60100763C12 /* testmpl.c in Sources */ = {isa = PBXBuildFile; fileRef = 5132D4D51EC5E5AB00763C12 /* testmpl.c */; };
+		514F916C1ED177DD0049A10B /* wagner.c in Sources */ = {isa = PBXBuildFile; fileRef = 514F916A1ED177DD0049A10B /* wagner.c */; };
+		514F916D1ED177DD0049A10B /* wagner.c in Sources */ = {isa = PBXBuildFile; fileRef = 514F916A1ED177DD0049A10B /* wagner.c */; };
+		514F916E1ED177DD0049A10B /* wagner.c in Sources */ = {isa = PBXBuildFile; fileRef = 514F916A1ED177DD0049A10B /* wagner.c */; };
+		514F916F1ED177DD0049A10B /* wagner.h in Headers */ = {isa = PBXBuildFile; fileRef = 514F916B1ED177DD0049A10B /* wagner.h */; };
+		514F91701ED177DD0049A10B /* wagner.h in Headers */ = {isa = PBXBuildFile; fileRef = 514F916B1ED177DD0049A10B /* wagner.h */; };
+		514F91731ED19B1C0049A10B /* testwagner.c in Sources */ = {isa = PBXBuildFile; fileRef = 514F91711ED19B1C0049A10B /* testwagner.c */; };
+		51ABB1731EC2270D00DDE825 /* teststatedata.h in Headers */ = {isa = PBXBuildFile; fileRef = 51ABB1721EC2270D00DDE825 /* teststatedata.h */; };
+		51ABB1751EC2272B00DDE825 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 51ABB1741EC2272B00DDE825 /* main.c */; };
+		51ABB1771EC2276700DDE825 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 51ABB1741EC2272B00DDE825 /* main.c */; };
+		51E0B7F71ECB20CF0076BA7D /* testfitch.c in Sources */ = {isa = PBXBuildFile; fileRef = 51E0B7F51ECB20CF0076BA7D /* testfitch.c */; };
+		51E0B7F81ECB20CF0076BA7D /* testfitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 51E0B7F61ECB20CF0076BA7D /* testfitch.h */; };
+		51E0B7F91ECB21C40076BA7D /* testfitch.c in Sources */ = {isa = PBXBuildFile; fileRef = 51E0B7F51ECB20CF0076BA7D /* testfitch.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5117C8311EC1B722007AE2F2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		5115BC7B1ECCA7CC00014306 /* libmorphylib-shared.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmorphylib-shared.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5117C8171EC1A5C3007AE2F2 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.sh; };
+		5117C8191EC1A613007AE2F2 /* fitch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fitch.c; path = src/fitch.c; sourceTree = "<group>"; };
+		5117C81A1EC1A613007AE2F2 /* fitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fitch.h; path = src/fitch.h; sourceTree = "<group>"; };
+		5117C81B1EC1A613007AE2F2 /* morphy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = morphy.c; path = src/morphy.c; sourceTree = "<group>"; };
+		5117C81C1EC1A613007AE2F2 /* morphy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = morphy.h; path = src/morphy.h; sourceTree = "<group>"; };
+		5117C81D1EC1A613007AE2F2 /* morphydefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = morphydefs.h; path = src/morphydefs.h; sourceTree = "<group>"; };
+		5117C81E1EC1A613007AE2F2 /* mpl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mpl.c; path = src/mpl.c; sourceTree = "<group>"; };
+		5117C81F1EC1A613007AE2F2 /* mpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpl.h; path = src/mpl.h; sourceTree = "<group>"; };
+		5117C8201EC1A613007AE2F2 /* mplerror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mplerror.h; path = src/mplerror.h; sourceTree = "<group>"; };
+		5117C8211EC1A613007AE2F2 /* statedata.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = statedata.c; path = src/statedata.c; sourceTree = "<group>"; };
+		5117C8221EC1A613007AE2F2 /* statedata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = statedata.h; path = src/statedata.h; sourceTree = "<group>"; };
+		5117C8331EC1B722007AE2F2 /* morphytest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = morphytest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5117C83A1EC1B775007AE2F2 /* teststatedata.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = teststatedata.c; path = tests/teststatedata.c; sourceTree = "<group>"; };
+		5117C8471EC1BBA9007AE2F2 /* mpltest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mpltest.h; path = tests/mpltest.h; sourceTree = "<group>"; };
+		5132D4D31EC5E5AB00763C12 /* testmorphy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testmorphy.c; path = tests/testmorphy.c; sourceTree = "<group>"; };
+		5132D4D41EC5E5AB00763C12 /* testmorphy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testmorphy.h; path = tests/testmorphy.h; sourceTree = "<group>"; };
+		5132D4D51EC5E5AB00763C12 /* testmpl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testmpl.c; path = tests/testmpl.c; sourceTree = "<group>"; };
+		5132D4D61EC5E5AB00763C12 /* testmpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testmpl.h; path = tests/testmpl.h; sourceTree = "<group>"; };
+		514F916A1ED177DD0049A10B /* wagner.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = wagner.c; path = src/wagner.c; sourceTree = "<group>"; };
+		514F916B1ED177DD0049A10B /* wagner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wagner.h; path = src/wagner.h; sourceTree = "<group>"; };
+		514F91711ED19B1C0049A10B /* testwagner.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testwagner.c; path = tests/testwagner.c; sourceTree = "<group>"; };
+		514F91721ED19B1C0049A10B /* testwagner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testwagner.h; path = tests/testwagner.h; sourceTree = "<group>"; };
+		516F2B221EACDD0200345BCB /* libmorphylib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmorphylib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		51A329781EC4A1DC002CE2F3 /* pymorphy.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = pymorphy.py; path = pyMorphy/pymorphy.py; sourceTree = "<group>"; };
+		51ABB1721EC2270D00DDE825 /* teststatedata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = teststatedata.h; path = tests/teststatedata.h; sourceTree = "<group>"; };
+		51ABB1741EC2272B00DDE825 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = tests/main.c; sourceTree = "<group>"; };
+		51E0B7F51ECB20CF0076BA7D /* testfitch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = testfitch.c; path = tests/testfitch.c; sourceTree = "<group>"; };
+		51E0B7F61ECB20CF0076BA7D /* testfitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testfitch.h; path = tests/testfitch.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5115BC781ECCA7CC00014306 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5117C8301EC1B722007AE2F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		516F2B1F1EACDD0200345BCB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5117C82D1EC1A709007AE2F2 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				5117C8201EC1A613007AE2F2 /* mplerror.h */,
+				5117C81D1EC1A613007AE2F2 /* morphydefs.h */,
+				5117C81A1EC1A613007AE2F2 /* fitch.h */,
+				5117C8191EC1A613007AE2F2 /* fitch.c */,
+				514F916B1ED177DD0049A10B /* wagner.h */,
+				514F916A1ED177DD0049A10B /* wagner.c */,
+				5117C81C1EC1A613007AE2F2 /* morphy.h */,
+				5117C81B1EC1A613007AE2F2 /* morphy.c */,
+				5117C81F1EC1A613007AE2F2 /* mpl.h */,
+				5117C81E1EC1A613007AE2F2 /* mpl.c */,
+				5117C8221EC1A613007AE2F2 /* statedata.h */,
+				5117C8211EC1A613007AE2F2 /* statedata.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		5117C82E1EC1A757007AE2F2 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				5117C8471EC1BBA9007AE2F2 /* mpltest.h */,
+				51ABB1721EC2270D00DDE825 /* teststatedata.h */,
+				5117C83A1EC1B775007AE2F2 /* teststatedata.c */,
+				5132D4D41EC5E5AB00763C12 /* testmorphy.h */,
+				5132D4D31EC5E5AB00763C12 /* testmorphy.c */,
+				51E0B7F61ECB20CF0076BA7D /* testfitch.h */,
+				51E0B7F51ECB20CF0076BA7D /* testfitch.c */,
+				5132D4D61EC5E5AB00763C12 /* testmpl.h */,
+				5132D4D51EC5E5AB00763C12 /* testmpl.c */,
+				514F91721ED19B1C0049A10B /* testwagner.h */,
+				514F91711ED19B1C0049A10B /* testwagner.c */,
+				51ABB1741EC2272B00DDE825 /* main.c */,
+			);
+			name = tests;
+			sourceTree = "<group>";
+		};
+		516F2B191EACDD0200345BCB = {
+			isa = PBXGroup;
+			children = (
+				5117C8171EC1A5C3007AE2F2 /* Makefile */,
+				5117C82D1EC1A709007AE2F2 /* src */,
+				5117C82E1EC1A757007AE2F2 /* tests */,
+				51A329791EC4A1E9002CE2F3 /* pymorphy */,
+				516F2B231EACDD0200345BCB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		516F2B231EACDD0200345BCB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				516F2B221EACDD0200345BCB /* libmorphylib.a */,
+				5117C8331EC1B722007AE2F2 /* morphytest */,
+				5115BC7B1ECCA7CC00014306 /* libmorphylib-shared.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		51A329791EC4A1E9002CE2F3 /* pymorphy */ = {
+			isa = PBXGroup;
+			children = (
+				51A329781EC4A1DC002CE2F3 /* pymorphy.py */,
+			);
+			name = pymorphy;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5115BC791ECCA7CC00014306 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				514F91701ED177DD0049A10B /* wagner.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		516F2B201EACDD0200345BCB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				51ABB1731EC2270D00DDE825 /* teststatedata.h in Headers */,
+				5117C8271EC1A613007AE2F2 /* morphydefs.h in Headers */,
+				514F916F1ED177DD0049A10B /* wagner.h in Headers */,
+				5117C82C1EC1A613007AE2F2 /* statedata.h in Headers */,
+				5117C8261EC1A613007AE2F2 /* morphy.h in Headers */,
+				5132D4D81EC5E5AB00763C12 /* testmorphy.h in Headers */,
+				5117C8291EC1A613007AE2F2 /* mpl.h in Headers */,
+				5117C8241EC1A613007AE2F2 /* fitch.h in Headers */,
+				5132D4DA1EC5E5AB00763C12 /* testmpl.h in Headers */,
+				51E0B7F81ECB20CF0076BA7D /* testfitch.h in Headers */,
+				5117C8481EC1BBA9007AE2F2 /* mpltest.h in Headers */,
+				5117C82A1EC1A613007AE2F2 /* mplerror.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5115BC7A1ECCA7CC00014306 /* morphylib-shared */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5115BC7E1ECCA7CD00014306 /* Build configuration list for PBXNativeTarget "morphylib-shared" */;
+			buildPhases = (
+				5115BC771ECCA7CC00014306 /* Sources */,
+				5115BC781ECCA7CC00014306 /* Frameworks */,
+				5115BC791ECCA7CC00014306 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "morphylib-shared";
+			productName = morphylib.dylib;
+			productReference = 5115BC7B1ECCA7CC00014306 /* libmorphylib-shared.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		5117C8321EC1B722007AE2F2 /* morphytest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5117C8371EC1B722007AE2F2 /* Build configuration list for PBXNativeTarget "morphytest" */;
+			buildPhases = (
+				5117C82F1EC1B722007AE2F2 /* Sources */,
+				5117C8301EC1B722007AE2F2 /* Frameworks */,
+				5117C8311EC1B722007AE2F2 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = morphytest;
+			productName = morphytest;
+			productReference = 5117C8331EC1B722007AE2F2 /* morphytest */;
+			productType = "com.apple.product-type.tool";
+		};
+		516F2B211EACDD0200345BCB /* morphylib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 516F2B261EACDD0200345BCB /* Build configuration list for PBXNativeTarget "morphylib" */;
+			buildPhases = (
+				516F2B1E1EACDD0200345BCB /* Sources */,
+				516F2B1F1EACDD0200345BCB /* Frameworks */,
+				516F2B201EACDD0200345BCB /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = morphylib;
+			productName = MorPhy2;
+			productReference = 516F2B221EACDD0200345BCB /* libmorphylib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		516F2B1A1EACDD0200345BCB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = brazeaulab;
+				TargetAttributes = {
+					5115BC7A1ECCA7CC00014306 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					5117C8321EC1B722007AE2F2 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					516F2B211EACDD0200345BCB = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 516F2B1D1EACDD0200345BCB /* Build configuration list for PBXProject "morphylib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 516F2B191EACDD0200345BCB;
+			productRefGroup = 516F2B231EACDD0200345BCB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				516F2B211EACDD0200345BCB /* morphylib */,
+				5115BC7A1ECCA7CC00014306 /* morphylib-shared */,
+				5117C8321EC1B722007AE2F2 /* morphytest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5115BC771ECCA7CC00014306 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5115BC7F1ECCA7F000014306 /* fitch.c in Sources */,
+				5115BC801ECCA7F000014306 /* morphy.c in Sources */,
+				5115BC811ECCA7F000014306 /* mpl.c in Sources */,
+				514F916D1ED177DD0049A10B /* wagner.c in Sources */,
+				5115BC821ECCA7F000014306 /* statedata.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5117C82F1EC1B722007AE2F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				51E0B7F91ECB21C40076BA7D /* testfitch.c in Sources */,
+				5132D4DD1EC5E60100763C12 /* testmorphy.c in Sources */,
+				5132D4DF1EC5E60100763C12 /* testmpl.c in Sources */,
+				514F916E1ED177DD0049A10B /* wagner.c in Sources */,
+				514F91731ED19B1C0049A10B /* testwagner.c in Sources */,
+				51ABB1771EC2276700DDE825 /* main.c in Sources */,
+				5117C83C1EC1B785007AE2F2 /* fitch.c in Sources */,
+				5117C83E1EC1B785007AE2F2 /* morphy.c in Sources */,
+				5117C8411EC1B785007AE2F2 /* mpl.c in Sources */,
+				5117C8441EC1B785007AE2F2 /* statedata.c in Sources */,
+				5117C8461EC1B785007AE2F2 /* teststatedata.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		516F2B1E1EACDD0200345BCB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5117C8231EC1A613007AE2F2 /* fitch.c in Sources */,
+				5117C82B1EC1A613007AE2F2 /* statedata.c in Sources */,
+				51E0B7F71ECB20CF0076BA7D /* testfitch.c in Sources */,
+				514F916C1ED177DD0049A10B /* wagner.c in Sources */,
+				5132D4D91EC5E5AB00763C12 /* testmpl.c in Sources */,
+				51ABB1751EC2272B00DDE825 /* main.c in Sources */,
+				5117C8251EC1A613007AE2F2 /* morphy.c in Sources */,
+				5117C8281EC1A613007AE2F2 /* mpl.c in Sources */,
+				5132D4D71EC5E5AB00763C12 /* testmorphy.c in Sources */,
+				5117C83B1EC1B775007AE2F2 /* teststatedata.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5115BC7C1ECCA7CD00014306 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5115BC7D1ECCA7CD00014306 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		5117C8381EC1B722007AE2F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5117C8391EC1B722007AE2F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		516F2B241EACDD0200345BCB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"-I/usr/local/Cellar/pcre/8.40/include",
+					"-I/usr/local/Cellar/glib/2.52.0/include/glib-2.0",
+					"-I/usr/local/Cellar/glib/2.52.0/lib/glib-2.0/include",
+					"-I/usr/local/opt/gettext/include",
+				);
+				SDKROOT = macosx;
+				WARNING_LDFLAGS = "-Wall";
+			};
+			name = Debug;
+		};
+		516F2B251EACDD0200345BCB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_PEDANTIC = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = (
+					"-I/usr/local/Cellar/pcre/8.40/include",
+					"-I/usr/local/Cellar/glib/2.52.0/include/glib-2.0",
+					"-I/usr/local/Cellar/glib/2.52.0/lib/glib-2.0/include",
+					"-I/usr/local/opt/gettext/include",
+				);
+				SDKROOT = macosx;
+				WARNING_LDFLAGS = "-Wall";
+			};
+			name = Release;
+		};
+		516F2B271EACDD0200345BCB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		516F2B281EACDD0200345BCB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5115BC7E1ECCA7CD00014306 /* Build configuration list for PBXNativeTarget "morphylib-shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5115BC7C1ECCA7CD00014306 /* Debug */,
+				5115BC7D1ECCA7CD00014306 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5117C8371EC1B722007AE2F2 /* Build configuration list for PBXNativeTarget "morphytest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5117C8381EC1B722007AE2F2 /* Debug */,
+				5117C8391EC1B722007AE2F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		516F2B1D1EACDD0200345BCB /* Build configuration list for PBXProject "morphylib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				516F2B241EACDD0200345BCB /* Debug */,
+				516F2B251EACDD0200345BCB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		516F2B261EACDD0200345BCB /* Build configuration list for PBXNativeTarget "morphylib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				516F2B271EACDD0200345BCB /* Debug */,
+				516F2B281EACDD0200345BCB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 516F2B1A1EACDD0200345BCB /* Project object */;
+}
