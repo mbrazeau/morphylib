@@ -341,6 +341,10 @@ int mpl_fitch_NA_tip_update
 
         tpass2[j] = tpass1[j];
         
+        // I don't see how this corresponds to the written algorithm 
+        // I imagined it should equate to steps 2.8 and 2.9 but the logic
+        // doesn't seem to line up.  What am I missing?
+        
         if (tpass2[j] & astates[j]) {
             if (astates[j] & ISAPPLIC) {
                 tpass2[j] &= ISAPPLIC;
