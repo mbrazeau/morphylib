@@ -52,6 +52,7 @@ int main (void)
     
     // fitch.c tests
     fails += test_small_fitch();
+    fails += test_weighted_small_fitch();
     fails += test_small_fitch_na();
     fails += test_small_fitch_withmissing();
     

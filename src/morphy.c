@@ -530,6 +530,7 @@ MPLpartition* mpl_new_partition(const MPLchtype chtype, const bool hasNA)
         free(new);
         return NULL;
     }
+
     new->maxnchars      = 1;
     new->ncharsinpart   = 0;
     
@@ -940,6 +941,30 @@ int mpl_copy_data_into_tips(Morphyp handl)
     }
     
     return ERR_NO_ERROR;
+}
+
+int mpl_assign_intwts_to_partitions(Morphyp handl)
+{
+    int i = 0;
+    int j = 0;
+    int numparts = mpl_get_numparts(handl);
+    
+    if (!numparts) {
+        return ERR_NO_DATA;
+    }
+    
+    for (i = 0; i < numparts; ++i) {
+        handl->partitions[i]->intwts = (unsigned long*)calloc
+                                        (handl->partitions[i]->ncharsinpart,
+                                         sizeof(unsigned long));
+        
+        for (j = 0; j < handl->partitions[i]->ncharsinpart; ++j) {
+            int charindex = handl->partitions[i]->charindices[j];
+            handl->partitions[i]->intwts[j] = handl->charinfo[charindex].intwt;
+        }
+    }
+    
+    return 0;
 }
 
 int mpl_update_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)

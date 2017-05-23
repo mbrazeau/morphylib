@@ -345,19 +345,31 @@ int test_set_weights(void)
     int chars2wt[] = {2, 5, 6};
     int i = 0;
     int numwts = 3;
+ 
+    char *rawmatrix =
+    "0000000010\
+    0-001-22-0\
+    0-001-110-\
+    10(03)0101100\
+    1-000-0000\
+    0-00{01}100-0;";
     
     Morphy m = mpl_new_Morphy();
     
     mpl_init_Morphy(ntax, nchar, m);
 
+    mpl_attach_rawdata(rawmatrix, m);
     for (i = 0; i < numwts; ++i) {
         mpl_set_charac_weight(chars2wt[i], weights[i], m);
     }
-    mpl_scale_all_intweights((Morphyp)m);
     
     Morphyp mi = (Morphyp)m;
+    mpl_scale_all_intweights(mi);
+    mpl_apply_tipdata(mi);
     
-    return failn;
+    mpl_assign_intwts_to_partitions(mi);
+    
+    return 1;
 }
 
 int test_basic_tip_apply(void)

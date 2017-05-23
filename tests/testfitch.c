@@ -50,6 +50,47 @@ int test_small_fitch(void)
     return failn;
 }
 
+int test_weighted_small_fitch(void)
+{
+    theader("Testing a two-tip weighted Fitch optimisation");
+    
+    int failn = 0;
+    int ntax	= 2;
+    int nchar	= 10;
+    //    int numna   = 0;
+    char *rawmatrix =
+    "0000000010\
+     1111111111;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    
+    mpl_attach_rawdata(rawmatrix, m1);
+    
+    mpl_set_charac_weight(1, 3, m1);
+    mpl_set_num_internal_nodes(1, m1);
+    
+    mpl_apply_tipdata(m1);
+    
+    int length = 0;
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+    printf("The length: %i\n", length);
+    
+    
+    mpl_delete_Morphy(m1);
+    
+    if (length != 11) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    return failn;
+}
+
 
 int test_small_fitch_na(void)
 {

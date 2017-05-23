@@ -60,6 +60,7 @@ int             mpl_delete_all_partitions(Morphyp handl);
 int             mpl_setup_statesets(Morphyp handl);
 int             mpl_destroy_statesets(Morphyp handl);
 int             mpl_copy_data_into_tips(Morphyp handl);
+int             mpl_assign_intwts_to_partitions(Morphyp handl);
 int             mpl_update_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part);
 int             mpl_update_NA_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part);
 

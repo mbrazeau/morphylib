@@ -24,6 +24,8 @@ int mpl_fitch_downpass
     MPLstate* right = rset->downpass1;
     MPLstate* n     = nset->downpass1;
     
+    unsigned long* weights = part->intwts;
+    
     for (i = 0; i < nchars; ++i) {
         j = indices[i];
         if (left[j] & right[j]) {
@@ -31,7 +33,7 @@ int mpl_fitch_downpass
         }
         else {
             n[j] = left[j] | right[j];
-            ++steps;
+            steps += weights[i];
         }
     }
     
