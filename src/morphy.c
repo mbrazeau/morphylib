@@ -223,19 +223,8 @@ void mpl_set_new_weight_public
     handl->charinfo[char_id].usrweight = wt;
     
     if (wtisreal) {
-        
         if (!mpl_isreal(handl->charinfo[char_id].usrweight)) {
             ++handl->numrealwts;
-        }
-        
-        mpl_flt_rational_approx(&handl->charinfo[char_id].intwt,
-                                &handl->charinfo[char_id].basewt,
-                                wt);
-        
-        unsigned long newbase = handl->charinfo[char_id].basewt;
-        unsigned long oldbase = handl->wtbase;
-        if (newbase != oldbase) {
-            handl->wtbase = mpl_least_common_multiple(newbase, oldbase);
         }
     }
     else {
@@ -244,9 +233,19 @@ void mpl_set_new_weight_public
             --handl->numrealwts;
         }
     
-        handl->charinfo[char_id].intwt = wt;
+        //handl->charinfo[char_id].intwt = wt;
     }
-   
+    
+    mpl_flt_rational_approx(&handl->charinfo[char_id].intwt,
+                                &handl->charinfo[char_id].basewt,
+                                wt);
+        
+    unsigned long newbase = handl->charinfo[char_id].basewt;
+    unsigned long oldbase = handl->wtbase;
+    
+    if (newbase != oldbase) {
+        handl->wtbase = mpl_least_common_multiple(newbase, oldbase);
+    }
 }
 
 void mpl_scale_all_intweights(Morphyp handl)
@@ -467,17 +466,21 @@ int mpl_delete_partition(MPLpartition* part)
         if (part->charindices) {
             free(part->charindices);
             part->charindices   = NULL;
-            part->maxnchars     = 0;
-            part->ncharsinpart  = 0;
-            part->chtype        = NONE_T;
-            part->tipupdate     = NULL;
-            part->tipfinalize   = NULL;
-            part->inappdownfxn  = NULL;
-            part->inappupfxn    = NULL;
-            part->prelimfxn     = NULL;
-            part->finalfxn      = NULL;
-            part->next          = NULL;
         }
+        if (part->intwts) {
+            free(part->intwts);
+            part->intwts = NULL;
+        }
+        part->maxnchars     = 0;
+        part->ncharsinpart  = 0;
+        part->chtype        = NONE_T;
+        part->tipupdate     = NULL;
+        part->tipfinalize   = NULL;
+        part->inappdownfxn  = NULL;
+        part->inappupfxn    = NULL;
+        part->prelimfxn     = NULL;
+        part->finalfxn      = NULL;
+        part->next          = NULL;
         free(part);
         err = ERR_NO_ERROR;
     }

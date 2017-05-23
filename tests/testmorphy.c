@@ -132,6 +132,59 @@ int test_almost_equal(void)
     return failn;
 }
 
+int test_resetting_weights(void)
+{
+    theader("Testing a two-tip weighted Fitch optimisation");
+    
+    int failn = 0;
+    int ntax	= 2;
+    int nchar	= 10;
+    //    int numna   = 0;
+    char *rawmatrix =
+    "0000000010\
+    1111111111;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    
+    mpl_attach_rawdata(rawmatrix, m1);
+    
+    mpl_set_charac_weight(1, 3, m1);
+    mpl_set_num_internal_nodes(1, m1);
+    
+    mpl_apply_tipdata(m1);
+    
+    int length = 0;
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+    printf("The length: %i\n", length);
+    
+    if (length != 11) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_set_charac_weight(1, 1, m1);
+    mpl_apply_tipdata(m1);
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+
+    if (length != 9) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    mpl_delete_Morphy(m1);
+    
+    return failn;
+}
+
+
 int test_count_gaps_basic(void)
 {
     theader("Testing counting of gaps in matrix");
@@ -336,6 +389,7 @@ int test_set_weights(void)
 {
     theader("Test of basic weight setting");
 //    int err     = 0;
+    int err = 0;
     int failn   = 0;
     
     /* The code of your test */
@@ -365,10 +419,18 @@ int test_set_weights(void)
     
     Morphyp mi = (Morphyp)m;
     mpl_scale_all_intweights(mi);
-    mpl_apply_tipdata(mi);
+    err = mpl_apply_tipdata(mi);
     
-    mpl_assign_intwts_to_partitions(mi);
+    if (err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
     
+    
+    mpl_delete_Morphy(m);
     // TODO: Give test a real return value
     return 0;
 }
