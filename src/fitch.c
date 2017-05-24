@@ -184,8 +184,8 @@ int mpl_NA_fitch_second_downpass
     int steps = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->uppass1;
-    MPLstate* right = rset->uppass1;
+    MPLstate* left  = lset->downpass2;
+    MPLstate* right = rset->downpass2;
     MPLstate* nifin = nset->uppass1;
     MPLstate* npre    = nset->downpass2;
     MPLstate* stacts  = nset->subtree_actives;
