@@ -292,6 +292,10 @@ int mpl_set_charac_weight(const int charID, const double weight, Morphy m)
         return ERR_NO_DIMENSIONS;
     }
     
+    if (charID >= mpl_get_num_charac(m)) {
+        return ERR_OUT_OF_BOUNDS;
+    }
+    
     Morphyp mi = (Morphyp)m;
 //    mi->charinfo[charID].usrweight = weight;
     mpl_set_new_weight_public(weight, charID, mi);
@@ -300,13 +304,22 @@ int mpl_set_charac_weight(const int charID, const double weight, Morphy m)
 }
 
 
-double mpl_get_charac_weight(const int char_id, const Morphy m)
+unsigned long mpl_get_charac_weight
+(double* weight, const int char_id, const Morphy m)
 {
     if (!m) {
         return ERR_UNEXP_NULLPTR;
     }
     
-    return ((Morphyp)m)->charinfo[char_id].usrweight;
+    if (char_id >= mpl_get_num_charac(m)) {
+        return ERR_OUT_OF_BOUNDS;
+    }
+    
+    Morphyp mi = (Morphyp)m;
+    
+    *weight = (double) mi->charinfo[char_id].intwt/mi->charinfo[char_id].basewt;
+    
+    return mi->charinfo[char_id].intwt;
 }
 
 

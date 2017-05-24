@@ -311,9 +311,10 @@ int     mpl_set_charac_weight
          Morphy         m);
 
 // TODO: Document
-double  mpl_get_charac_weight
+unsigned long mpl_get_charac_weight
     
-        (const int char_id,
+        (double*    weight,
+         const int char_id,
          const Morphy   m);
 
 /*!
