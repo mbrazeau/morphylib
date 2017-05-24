@@ -56,6 +56,7 @@ int main (void)
     fails += test_weighted_small_fitch();
     fails += test_small_fitch_na();
     fails += test_small_fitch_withmissing();
+    fails += test_bulk_balanced_tree_cases();
     
     // wagner.c tests 
     fails += test_small_wagner();
