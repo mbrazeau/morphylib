@@ -303,7 +303,25 @@ int     mpl_excl_charac
          Morphy     m);
 
 
-// TODO: Document
+/*!
+    
+ @brief Sets the weight for a specified character.
+ 
+ @discussion Sets a weight for a specified character. The function takes a 
+ floating point value. However, in the current implementation, fractional values 
+ will be interpreted and estimated using an approximation of the rational 
+ factors. In the current version, MorphyLib uses this method to circumvent any
+ floating point calculations that aren't absolutely necessary.
+ 
+ @param charID The index of the character to be weighted.
+ 
+ @param weight The weight requested for the character.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return A Morphy error code.
+ 
+ */
 int     mpl_set_charac_weight
 
         (const int      charID,
