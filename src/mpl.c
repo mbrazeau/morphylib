@@ -612,7 +612,7 @@ const char* mpl_get_stateset
     
     mpl_allocate_stset_stringptrs(mpl_get_num_charac(m), mi->statesets[nodeID]);
     
-   /* if (passnum == 1) {
+    if (passnum == 1) {
         if (mi->statesets[nodeID]->downp1str[character]) {
             free(mi->statesets[nodeID]->downp1str[character]);
         }
@@ -634,8 +634,8 @@ const char* mpl_get_stateset
         if (mi->statesets[nodeID]->upp2str[character]) {
             free(mi->statesets[nodeID]->upp2str[character]);
         }
-        mi->statesets[nodeID]->downp1str[character] = ret;
-    }*/
+        mi->statesets[nodeID]->upp2str[character] = ret;
+    }
     
     return ret;
 }
