@@ -209,8 +209,8 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
     // Check validity of preprocessed matrix
     MPL_ERR_T err = ERR_NO_ERROR;
     err = mpl_check_nexus_matrix_dimensions(mpl_get_preprocessed_matrix(m1),
-                                                mpl_get_numtaxa(m1),
-                                                mpl_get_num_charac(m1));
+                                            mpl_get_numtaxa(m1),
+                                            mpl_get_num_charac(m1));
     
     if (err) {
         mpl_delete_rawdata(m1);
@@ -489,7 +489,8 @@ int mpl_second_up_recon
     for (i = 0; i < numparts; ++i) {
         upfxn = handl->partitions[i]->inappupfxn;
         if (upfxn) {
-            res += upfxn(lstates, rstates, nstates, astates, handl->partitions[i]);
+            res += upfxn(lstates, rstates, nstates, astates,
+                         handl->partitions[i]);
         }
     }
     
