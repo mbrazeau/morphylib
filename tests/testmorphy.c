@@ -134,7 +134,7 @@ int test_almost_equal(void)
 
 int test_resetting_weights(void)
 {
-    theader("Testing a two-tip weighted Fitch optimisation");
+    theader("Testing a two-tip weighted Fitch with weight reset");
     
     int failn = 0;
     int ntax	= 2;
@@ -183,6 +183,64 @@ int test_resetting_weights(void)
     
     return failn;
 }
+
+
+int test_resetting_frac_weights(void)
+{
+    theader("Testing resetting of weights after using real numbers");
+    
+    int failn = 0;
+    int ntax	= 2;
+    int nchar	= 10;
+    //    int numna   = 0;
+    char *rawmatrix =
+    "0000000010\
+     1111111111;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    
+    mpl_attach_rawdata(rawmatrix, m1);
+    
+    mpl_set_charac_weight(1, 0.333, m1);
+    mpl_set_charac_weight(2, 0.333, m1);
+    mpl_set_charac_weight(7, 0.333, m1);
+    mpl_set_num_internal_nodes(1, m1);
+    
+    mpl_apply_tipdata(m1);
+    
+    int length = 0;
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+    printf("The length: %i\n", length);
+    
+    if (length != 21) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_set_charac_weight(1, 1, m1);
+    mpl_set_charac_weight(2, 1, m1);
+    mpl_set_charac_weight(7, 1, m1);
+    mpl_apply_tipdata(m1);
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+
+    if (length != 9) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    mpl_delete_Morphy(m1);
+    
+    return failn;
+}
+
 
 
 int test_count_gaps_basic(void)

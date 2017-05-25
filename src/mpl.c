@@ -297,7 +297,7 @@ int mpl_set_charac_weight(const int charID, const double weight, Morphy m)
     }
     
     Morphyp mi = (Morphyp)m;
-//    mi->charinfo[charID].usrweight = weight;
+//    mi->charinfo[charID].realweight = weight;
     mpl_set_new_weight_public(weight, charID, mi);
     
     return ERR_NO_ERROR;

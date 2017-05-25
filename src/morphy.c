@@ -220,46 +220,56 @@ void mpl_set_new_weight_public
 {
     bool wtisreal = mpl_isreal(wt);
   
-    handl->charinfo[char_id].usrweight = wt;
     
     if (wtisreal) {
-        if (!mpl_isreal(handl->charinfo[char_id].usrweight)) {
+        // TODO: This assumes a user weight has been set
+        if (!mpl_isreal(handl->charinfo[char_id].realweight) ||
+            handl->charinfo[char_id].realweight == 0.0)
+        {
             ++handl->numrealwts;
         }
     }
     else {
         
-        if (mpl_isreal(handl->charinfo[char_id].usrweight)) {
+        if (mpl_isreal(handl->charinfo[char_id].realweight)) {
             --handl->numrealwts;
         }
     
         //handl->charinfo[char_id].intwt = wt;
     }
     
-    mpl_flt_rational_approx(&handl->charinfo[char_id].intwt,
-                                &handl->charinfo[char_id].basewt,
-                                wt);
-        
-    unsigned long newbase = handl->charinfo[char_id].basewt;
-    unsigned long oldbase = handl->wtbase;
-    
-    if (newbase != oldbase) {
-        handl->wtbase = mpl_least_common_multiple(newbase, oldbase);
-    }
+    handl->charinfo[char_id].realweight = wt;
 }
 
 void mpl_scale_all_intweights(Morphyp handl)
 {
-    if (handl->wtbase == 1) {
-        return;
-    }
-    
     int i = 0;
     int nchar = mpl_get_num_charac((Morphy)handl);
     
-    for (i = 0; i < nchar; ++i) {
-        handl->charinfo[i].intwt *= handl->wtbase / handl->charinfo[i].basewt;
+   
+    if (!handl->numrealwts) {
+        if (handl->usrwtbase) {
+            handl->wtbase = handl->usrwtbase;
+        } else {
+            handl->wtbase = DEFAULTWTBASE;
+        }
     }
+    
+    for (i = 0; i < nchar; ++i) {
+        mpl_flt_rational_approx(&handl->charinfo[i].intwt,
+                                &handl->charinfo[i].basewt,
+                                handl->charinfo[i].realweight);
+    }
+    
+    for (i = 0; i < nchar; ++i) {
+        handl->wtbase = mpl_least_common_multiple(handl->wtbase, handl->charinfo[i].basewt);
+    }
+    
+    for (i = 0; i < nchar; ++i) {
+        handl->charinfo[i].intwt *= (handl->wtbase / handl->charinfo[i].basewt);
+        handl->charinfo[i].basewt = handl->wtbase;
+    }
+        
 }
 
 //MPLarray* mpl_new_array(size_t elemsize)

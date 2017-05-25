@@ -32,6 +32,7 @@ int main (void)
     fails += test_isreal();
     fails += test_almost_equal();
     fails += test_resetting_weights();
+    fails += test_resetting_frac_weights();
     fails += test_count_gaps_basic();
     fails += test_partition_push_index();
     fails += test_data_partitioning_simple();
