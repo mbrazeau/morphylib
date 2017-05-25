@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <float.h>
+#include <math.h>
 //#include <glib.h>
 
 //typedef struct mplarray_s {
@@ -37,6 +39,10 @@ int             mpl_set_num_charac(const int ncharac, Morphyp m);
 int             mpl_get_gaphandl(Morphyp handl);
 int             mpl_check_data_loaded(Morphyp m);
 char            mpl_get_gap_symbol(Morphyp handl);
+bool            mpl_almost_equal(double a, double b);
+bool            mpl_isreal(const double n);
+void            mpl_set_new_weight_public(const double wt, const int char_id, Morphyp handl);
+void            mpl_scale_all_intweights(Morphyp handl);
 MPLchtype*      mpl_get_charac_types(Morphyp handl);
 int             mpl_assign_partition_fxns(MPLpartition* part);
 int             mpl_fetch_parsim_fxn_setter (void(**pars_assign)(MPLpartition*), MPLchtype chtype);
@@ -49,11 +55,13 @@ int             mpl_count_gaps_in_columns(Morphyp handl);
 int             mpl_setup_partitions(Morphyp handle);
 int             mpl_get_numparts(Morphyp handl);
 MPLndsets*      mpl_alloc_stateset(int numchars);
-void            mpl_free_stateset(MPLndsets* statesets);
+void            mpl_free_stateset(const int nchars, MPLndsets* statesets);
 int             mpl_delete_all_partitions(Morphyp handl);
+int             mpl_allocate_stset_stringptrs(const int nchars, MPLndsets* set);
 int             mpl_setup_statesets(Morphyp handl);
 int             mpl_destroy_statesets(Morphyp handl);
 int             mpl_copy_data_into_tips(Morphyp handl);
+int             mpl_assign_intwts_to_partitions(Morphyp handl);
 int             mpl_update_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part);
 int             mpl_update_NA_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part);
 

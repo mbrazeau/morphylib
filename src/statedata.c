@@ -570,6 +570,7 @@ int mpl_delete_mpl_matrix(MPLmatrix* m)
             }
         }
         free(m->cells);
+        m->cells = NULL;
     }
     
 //    if (m->chtypes) {
@@ -689,7 +690,7 @@ int mpl_write_input_rawchars_to_cells(Morphyp handl)
 }
 
 // TODO: Rename this.
-int mpl_convert_rawdata(Morphyp handl)
+int mpl_preproc_rawdata(Morphyp handl)
 {
     int ret = ERR_NO_ERROR;
     
@@ -735,7 +736,7 @@ char *mpl_translate_state2char(MPLstate cstates, Morphyp handl)
     }
     char* symbols = mpl_get_symbols((Morphy)handl);
     
-    if (cstates != MISSING) {
+    if (cstates < (MISSING-NA)) {
         while (cstates) {
             if (1 & cstates) {
                 if (shift == 0 && gapshift) {
@@ -775,6 +776,8 @@ int mpl_init_charac_info(Morphyp handl)
         handl->charinfo[i].charindex    = i;
         handl->charinfo[i].included     = true;
         handl->charinfo[i].chtype       = DEFAULCHARTYPE;
+        handl->charinfo[i].realweight   = 1.0;
+        handl->charinfo[i].basewt       = 1;
         handl->charinfo[i].intwt        = 1;
     }
     

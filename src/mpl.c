@@ -29,10 +29,11 @@ int mpl_delete_Morphy(Morphy m)
     Morphyp m1 = (Morphyp)m;
     
     // TODO: All Morphy destructors
-    mpl_delete_rawdata(m);
+    free(m1->char_t_matrix);
+    m1->char_t_matrix = NULL;
+    mpl_delete_mpl_matrix(&m1->inmatrix);
     mpl_destroy_symbolset(m1);
     mpl_delete_charac_info(m1);
-//    mpl_delete_mpl_matrix(m1->inmatrix);
     mpl_delete_all_partitions(m1);
     mpl_destroy_statesets(m1);
     free(m1);
@@ -46,8 +47,7 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     if (!m) {
         return ERR_UNEXP_NULLPTR;
     }
-    // TODO: Checking against resets: if this call resets exising dimensions,
-    // then the whole object should get destroyed and reinitialised.
+    
     if (!ntax || !nchar) {
         return ERR_NO_DIMENSIONS;
     }
@@ -56,13 +56,13 @@ int mpl_init_Morphy(const int ntax, const int nchar, Morphy m)
     Morphyp mi = (Morphyp)m;
     
     if (ntax != mpl_get_numtaxa(m)) {
-        if (mi->char_t_matrix) {
+        if (mpl_check_data_loaded(mi)) {
             return ERR_EX_DATA_CONF;
         }
     }
     
     if (nchar != mpl_get_num_charac(m)) {
-        if (mi->char_t_matrix) {
+        if (mpl_check_data_loaded(mi)) {
             return ERR_EX_DATA_CONF;
         }
     }
@@ -126,6 +126,7 @@ int mpl_set_num_internal_nodes(const int nnodes, Morphy m)
     return ERR_NO_ERROR;
 }
 
+
 int mpl_get_num_internal_nodes(Morphy m)
 {
     if (!m) {
@@ -135,7 +136,7 @@ int mpl_get_num_internal_nodes(Morphy m)
     return (((Morphyp)m)->numnodes - mpl_get_numtaxa(m));
 }
 
-
+// Requires new matrix in order to re-set (disallows conflict)
 int mpl_attach_symbols(const char *symbols, Morphy m)
 {
     if (!symbols || !m) {
@@ -200,6 +201,9 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
     }
     
     Morphyp m1 = (Morphyp)m;
+    if (mpl_check_data_loaded(m1)) {
+        return ERR_EX_DATA_CONF;
+    }
     mpl_copy_raw_matrix(rawmatrix, m1);
     
     // Check validity of preprocessed matrix
@@ -213,7 +217,7 @@ int mpl_attach_rawdata(const char* rawmatrix, Morphy m)
         return err;
     }
     
-    err = mpl_convert_rawdata((Morphyp)m);
+    err = mpl_preproc_rawdata((Morphyp)m);
     
     return err;
 }
@@ -231,6 +235,8 @@ int mpl_delete_rawdata(Morphy m)
         free(mp->char_t_matrix);
         mp->char_t_matrix = NULL;
         mpl_delete_mpl_matrix(mpl_get_mpl_matrix((Morphyp)m));
+        mpl_delete_all_partitions((Morphyp)m);
+        
 //        mp->inmatrix = NULL;
     }
     return ERR_NO_ERROR;
@@ -254,7 +260,8 @@ int mpl_apply_tipdata(Morphy m)
     
     // Setup the partitions
     mpl_setup_partitions(mi);
-    
+    mpl_scale_all_intweights(mi);
+    mpl_assign_intwts_to_partitions(mi);
     // TODO: Check if any weights are floats; then all arith is FP.
     
     // Create all the internal data memory
@@ -276,8 +283,45 @@ int mpl_apply_tipdata(Morphy m)
 //int     mpl_excl_charac(const int charID, Morphy m);
 //
 
-//int     mpl_set_charac_weight(const int charID, Mflt weight);
-//
+int mpl_set_charac_weight(const int charID, const double weight, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    if (!mpl_get_num_charac(m)) {
+        return ERR_NO_DIMENSIONS;
+    }
+    
+    if (charID >= mpl_get_num_charac(m)) {
+        return ERR_OUT_OF_BOUNDS;
+    }
+    
+    Morphyp mi = (Morphyp)m;
+//    mi->charinfo[charID].realweight = weight;
+    mpl_set_new_weight_public(weight, charID, mi);
+    
+    return ERR_NO_ERROR;
+}
+
+
+unsigned long mpl_get_charac_weight
+(double* weight, const int char_id, const Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    if (char_id >= mpl_get_num_charac(m)) {
+        return ERR_OUT_OF_BOUNDS;
+    }
+    
+    Morphyp mi = (Morphyp)m;
+    
+    *weight = (double) mi->charinfo[char_id].intwt/mi->charinfo[char_id].basewt;
+    
+    return mi->charinfo[char_id].intwt;
+}
 
 
 int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
@@ -529,7 +573,7 @@ int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m)
 //int     mpl_get_insertcost_max(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //int     mpl_get_insertcost_min(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //
-int mpl_get_packed_states
+unsigned int mpl_get_packed_states
 (const int nodeID, const int character, const int passnum, const Morphy m)
 {
     if (!m) {
@@ -562,6 +606,36 @@ const char* mpl_get_stateset
     // structures.
     MPLstate result = mpl_get_packed_states(nodeID, character, passnum, m);
     char* ret = mpl_translate_state2char(result, (Morphyp)m);
+  
+    Morphyp mi = (Morphyp)m;
+    
+    
+    mpl_allocate_stset_stringptrs(mpl_get_num_charac(m), mi->statesets[nodeID]);
+    
+    if (passnum == 1) {
+        if (mi->statesets[nodeID]->downp1str[character]) {
+            free(mi->statesets[nodeID]->downp1str[character]);
+        }
+        mi->statesets[nodeID]->downp1str[character] = ret;
+    }
+    else if (passnum == 2) {
+        if (mi->statesets[nodeID]->upp1str[character]) {
+            free(mi->statesets[nodeID]->upp1str[character]);
+        }
+        mi->statesets[nodeID]->upp1str[character] = ret;
+    }
+    else if (passnum == 3) {
+        if (mi->statesets[nodeID]->downp2str[character]) {
+            free(mi->statesets[nodeID]->downp2str[character]);
+        }
+        mi->statesets[nodeID]->downp2str[character] = ret;
+    }
+    else if (passnum == 4) {
+        if (mi->statesets[nodeID]->upp2str[character]) {
+            free(mi->statesets[nodeID]->upp2str[character]);
+        }
+        mi->statesets[nodeID]->upp2str[character] = ret;
+    }
     
     return ret;
 }

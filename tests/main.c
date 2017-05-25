@@ -12,6 +12,7 @@
 #include "testmorphy.h"
 #include "testmpl.h"
 #include "testfitch.h"
+#include "testwagner.h"
 
 int main (void)
 {
@@ -28,24 +29,38 @@ int main (void)
     fails += test_usr_order_symbols();
     
     // morphy.c tests
+    fails += test_isreal();
+    fails += test_almost_equal();
+    fails += test_resetting_weights();
+    fails += test_resetting_frac_weights();
     fails += test_count_gaps_basic();
     fails += test_partition_push_index();
     fails += test_data_partitioning_simple();
     fails += test_data_partitioning_gapmissing();
     fails += test_data_partitioning_gapnewstate();
+    fails += test_set_weights();
     
     // mpl.c tests
+    fails += test_create_destroy_Morphy();
     fails += test_simple_chtype_setting();
+    fails += test_init_Morphy();
+    fails += test_reinit_no_data();
+    fails += test_reinit_with_data();
+    fails += test_attemp_load_bad_dimens();
     fails += test_delete_Morphy_no_input();
     fails += test_basic_tip_apply();
- //    fails += test_deletion_success();
+    // TODO: set this test up to return
+    test_state_retrieval();
     
     // fitch.c tests
     fails += test_small_fitch();
+    fails += test_weighted_small_fitch();
     fails += test_small_fitch_na();
     fails += test_small_fitch_withmissing();
+    fails += test_bulk_balanced_tree_cases();
     
-    test_state_retrieval();
+    // wagner.c tests 
+    fails += test_small_wagner();
     
     printf("\n\nTest summary:\n\n");
     if (fails) {

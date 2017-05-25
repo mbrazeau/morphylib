@@ -15,3 +15,20 @@
 #define psump printf("[  ** PASSED ** ] All tests passed.\n")
 
 #define theader(testname) printf("\n\n\t%s\n\n", testname);
+
+typedef struct {
+    MPLchtype   userchtype;
+    int         numoftype;
+    int*        indices;
+} typesetter;
+
+typedef struct {
+    int         numtax;
+    int         numchar;
+    char*       symbols;
+    char*       usrmatrix;
+    MPLgap_t    usrgaphandl;
+    typesetter* typesetters;
+    int         numtypes;
+    
+} testdata;

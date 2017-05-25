@@ -10,6 +10,7 @@
 #include "morphy.h"
 #include "statedata.h"
 #include "fitch.h"
+#include "wagner.h"
 #include "mpl.h"
 
 void *mpl_alloc(size_t size, int setval)
@@ -31,6 +32,8 @@ Morphyp mpl_new_Morphy_t(void)
     new->symbols.gap        = DEFAULTGAP;
     new->symbols.missing    = DEFAULTMISSING;
     new->nthreads           = 1; // There is always at least one thread in use
+    new->usrwtbase          = 0;
+    new->wtbase             = 1;
     
     return new;
 }
@@ -93,6 +96,180 @@ int mpl_check_data_loaded(Morphyp m)
 char mpl_get_gap_symbol(Morphyp handl)
 {
     return handl->symbols.gap;
+}
+
+void mpl_flt_rational_approx
+(unsigned long *a, unsigned long *b, const double fval)
+{
+   /* Using David Eppstein's method 
+    http://www.ics.uci.edu/~eppstein/numth/frap.c*/
+    
+    
+    long m[2][2];
+    long ai;
+    long maxden = 100;
+    double x = fval;
+    
+    m[0][0] = m[1][1] = 1;
+    m[0][1] = m[1][0] = 0;
+    
+    while (m[1][0] * (ai = (long)x) + m[1][1] <= maxden) {
+        long t;
+        t = m[0][0] * ai + m[0][1];
+        m[0][1] = m[0][0];
+        m[0][0] = t;
+        t = m[1][0] * ai + m[1][1];
+        m[1][1] = m[1][0];
+        m[1][0] = t;
+        if (x == (double)ai) {
+            break;
+        }
+        x = 1 /(x - (double) ai);
+        if (x > (double)INT_MAX) {
+            break;
+        }
+    }
+    
+    *a = m[0][0];
+    *b = m[1][0];
+}
+
+
+bool mpl_almost_equal(double a, double b)
+{
+    double diff = fabs(a - b);
+    double largest = 0.0;
+    
+    a = fabs(a);
+    b = fabs(b);
+   
+    largest = (b > a) ? b : a;
+    
+    if (diff <= largest * MPL_EPSILON) {
+        return true;
+    }
+    
+    return false;
+}
+
+/*!
+ @brief Checks whether or not a value corresponds to a real number or is whole
+ @discussion Should be used only to check values from external calling functions
+ that are not expected to be the product of a calculation (i.e. are a user-
+ supplied value, such as an input weight).
+ @param n The value to be tested.
+ @return A true/false value: true if value is fractional, false if value is
+ whole.
+ */
+bool mpl_isreal(const double n)
+{
+    assert(!(n > (double)LONG_MAX));
+    long i = (long)n;
+    if (n == (double)i) {
+        return false;
+    }
+    return true;
+}
+
+
+int mpl_change_weight_base(const unsigned long wtbase, Morphyp handl)
+{
+    if (handl->usrwtbase) {
+        return 1;
+    }
+    
+    handl->wtbase = wtbase;
+    
+    return 0;
+}
+
+
+//int mpl_calc_new_weightbase(const double wt)
+//{
+//    int base = 1;
+//    while (mpl_almost_equal(1.0, base * wt)) {
+//        ++base;
+//        if ((int)(base * MPLWTMIN) == 1) {
+//            break;
+//        }
+//    }
+//
+//    return base;
+//}
+
+static inline unsigned long mpl_greatest_common_denom
+(unsigned long a, unsigned long b)
+{
+    unsigned long t = 0;
+    while (b) {
+        t = b;
+        b = a % b;
+        a = t;
+    }
+    
+    return a;
+}
+
+unsigned long mpl_least_common_multiple(unsigned long a, unsigned long b)
+{
+    return (a * b) / mpl_greatest_common_denom(a, b);
+}
+
+void mpl_set_new_weight_public
+(const double wt, const int char_id, Morphyp handl)
+{
+    bool wtisreal = mpl_isreal(wt);
+  
+    
+    if (wtisreal) {
+        // TODO: This assumes a user weight has been set
+        if (!mpl_isreal(handl->charinfo[char_id].realweight) ||
+            handl->charinfo[char_id].realweight == 0.0)
+        {
+            ++handl->numrealwts;
+        }
+    }
+    else {
+        
+        if (mpl_isreal(handl->charinfo[char_id].realweight)) {
+            --handl->numrealwts;
+        }
+    
+        //handl->charinfo[char_id].intwt = wt;
+    }
+    
+    handl->charinfo[char_id].realweight = wt;
+}
+
+void mpl_scale_all_intweights(Morphyp handl)
+{
+    int i = 0;
+    int nchar = mpl_get_num_charac((Morphy)handl);
+    
+   
+    if (!handl->numrealwts) {
+        if (handl->usrwtbase) {
+            handl->wtbase = handl->usrwtbase;
+        } else {
+            handl->wtbase = DEFAULTWTBASE;
+        }
+    }
+    
+    for (i = 0; i < nchar; ++i) {
+        mpl_flt_rational_approx(&handl->charinfo[i].intwt,
+                                &handl->charinfo[i].basewt,
+                                handl->charinfo[i].realweight);
+    }
+    
+    for (i = 0; i < nchar; ++i) {
+        handl->wtbase = mpl_least_common_multiple(handl->wtbase, handl->charinfo[i].basewt);
+    }
+    
+    for (i = 0; i < nchar; ++i) {
+        handl->charinfo[i].intwt *= (handl->wtbase / handl->charinfo[i].basewt);
+        handl->charinfo[i].basewt = handl->wtbase;
+    }
+        
 }
 
 //MPLarray* mpl_new_array(size_t elemsize)
@@ -167,6 +344,29 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
     }
 }
 
+void mpl_assign_wagner_fxns(MPLpartition* part)
+{
+    assert(part);
+    
+//    if (part->isNAtype) {
+//        part->inappdownfxn  = NULL;
+//        part->inappupfxn    = NULL;
+//        part->prelimfxn     = NULL; 
+//        part->finalfxn      = NULL;
+//        part->tipupdate     = NULL;
+//        part->tipfinalize   = NULL;
+//    }
+//    else {
+        part->prelimfxn     = mpl_wagner_downpass;
+        part->finalfxn      = mpl_wagner_uppass;
+        part->tipupdate     = mpl_wagner_tip_update;
+        part->tipfinalize   = NULL;
+        part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
+        part->inappupfxn    = NULL;
+//    }
+}
+
+
 
 int mpl_fetch_parsim_fxn_setter
 (void(**pars_assign)(MPLpartition*), MPLchtype chtype)
@@ -176,7 +376,12 @@ int mpl_fetch_parsim_fxn_setter
     switch (chtype) {
         case FITCH_T:
             if (pars_assign) {
-                *pars_assign = &mpl_assign_fitch_fxns;
+                *pars_assign = mpl_assign_fitch_fxns;
+            }
+            break;
+        case WAGNER_T:
+            if (pars_assign) {
+                *pars_assign = mpl_assign_wagner_fxns;
             }
             break;
             
@@ -271,9 +476,21 @@ int mpl_delete_partition(MPLpartition* part)
         if (part->charindices) {
             free(part->charindices);
             part->charindices   = NULL;
-            part->maxnchars     = 0;
-            part->ncharsinpart  = 0;
         }
+        if (part->intwts) {
+            free(part->intwts);
+            part->intwts = NULL;
+        }
+        part->maxnchars     = 0;
+        part->ncharsinpart  = 0;
+        part->chtype        = NONE_T;
+        part->tipupdate     = NULL;
+        part->tipfinalize   = NULL;
+        part->inappdownfxn  = NULL;
+        part->inappupfxn    = NULL;
+        part->prelimfxn     = NULL;
+        part->finalfxn      = NULL;
+        part->next          = NULL;
         free(part);
         err = ERR_NO_ERROR;
     }
@@ -286,7 +503,7 @@ int mpl_delete_all_partitions(Morphyp handl)
     assert(handl);
     int i = 0;
     
-    if (handl->partstack) {
+    if (handl->numparts) {
         
         MPLpartition* p = handl->partstack;
         MPLpartition* q = NULL;
@@ -326,6 +543,7 @@ MPLpartition* mpl_new_partition(const MPLchtype chtype, const bool hasNA)
         free(new);
         return NULL;
     }
+
     new->maxnchars      = 1;
     new->ncharsinpart   = 0;
     
@@ -492,6 +710,10 @@ int mpl_setup_partitions(Morphyp handl)
     MPLpartition* p     = NULL;
     int numparts        = 0;
     
+    if (handl->partitions) {
+        mpl_delete_all_partitions(handl);
+    }
+    
     for (i = 0; i < nchar; ++i) {
         // Examine the character info for each character in the matrix
         chinfo = &handl->charinfo[i];
@@ -539,6 +761,69 @@ int mpl_get_numparts(Morphyp handl)
 }
 
 
+void mpl_delete_nodal_strings(const int nchars, MPLndsets* set)
+{
+    int i = 0;
+    
+    for (i = 0; i < nchars; ++i) {
+        if (set->downp1str) {
+            free(set->downp1str[i]);
+            set->downp1str[i] = NULL;
+        }
+        if (set->upp1str) {
+            free(set->upp1str[i]);
+            set->upp1str[i] = NULL;
+        }
+        if (set->downp2str) {
+            free(set->downp2str[i]);
+            set->downp2str[i] = NULL;
+        }
+        if (set->upp2str) {
+            free(set->upp2str[i]);
+            set->upp2str[i] = NULL;
+        }
+    }
+}
+
+
+int mpl_allocate_stset_stringptrs(const int nchars, MPLndsets* set)
+{
+    if (!set->downp1str) {
+        set->downp1str = (char**)calloc(nchars, sizeof(char*));
+        if (!set->downp1str) {
+            mpl_delete_nodal_strings(nchars, set);
+            return ERR_BAD_MALLOC;
+        }
+    }
+    
+    if (!set->upp1str) {
+        set->upp1str = (char**)calloc(nchars, sizeof(char*));
+        if (!set->upp1str) {
+            mpl_delete_nodal_strings(nchars, set);
+            return ERR_BAD_MALLOC;
+        }
+    }
+    
+    if (!set->downp2str) {
+        set->downp2str = (char**)calloc(nchars, sizeof(char*));
+        if (!set->downp2str) {
+            mpl_delete_nodal_strings(nchars, set);
+            return ERR_BAD_MALLOC;
+        }
+    }
+    
+    if (!set->upp2str) {
+        set->upp2str = (char**)calloc(nchars, sizeof(char*));
+        if (!set->upp2str) {
+            mpl_delete_nodal_strings(nchars, set);
+            return ERR_BAD_MALLOC;
+        }
+    }
+    
+    
+    return ERR_NO_ERROR;
+}
+
 MPLndsets* mpl_alloc_stateset(int numchars)
 {
     MPLndsets* new = (MPLndsets*)calloc(1, sizeof(MPLndsets));
@@ -546,65 +831,67 @@ MPLndsets* mpl_alloc_stateset(int numchars)
         return NULL;
     }
     
-    new->downpass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->downpass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->downpass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->uppass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->uppass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->uppass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->downpass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->downpass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->downpass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->uppass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->uppass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->uppass2) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_actives = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_actives = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_actives) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_downpass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_downpass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_downpass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_uppass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_uppass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_uppass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_downpass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_downpass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_downpass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_uppass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_uppass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_uppass2) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
+    
+    mpl_allocate_stset_stringptrs(numchars, new);
     
     return new;
 }
 
 
-void mpl_free_stateset(MPLndsets* statesets)
+void mpl_free_stateset(const int nchars, MPLndsets* statesets)
 {
     if (!statesets) {
         return;
@@ -617,9 +904,9 @@ void mpl_free_stateset(MPLndsets* statesets)
         free(statesets->uppass1);
         statesets->uppass1 = NULL;
     }
-    if (statesets->downpass1) {
-        free(statesets->downpass1);
-        statesets->downpass1 = NULL;
+    if (statesets->downpass2) {
+        free(statesets->downpass2);
+        statesets->downpass2 = NULL;
     }
     if (statesets->uppass2) {
         free(statesets->uppass2);
@@ -637,14 +924,17 @@ void mpl_free_stateset(MPLndsets* statesets)
         free(statesets->subtree_uppass1);
         statesets->subtree_uppass1 = NULL;
     }
-    if (statesets->subtree_downpass1) {
-        free(statesets->subtree_downpass1);
-        statesets->subtree_downpass1 = NULL;
+    if (statesets->subtree_downpass2) {
+        free(statesets->subtree_downpass2);
+        statesets->subtree_downpass2 = NULL;
     }
     if (statesets->subtree_uppass2) {
         free(statesets->subtree_uppass2);
         statesets->subtree_uppass2 = NULL;
     }
+    
+    mpl_delete_nodal_strings(nchars, statesets);
+    
     if (statesets->downp1str) {
         // TODO: loop & free allocated strings
         free(statesets->downp1str);
@@ -676,8 +966,13 @@ int mpl_setup_statesets(Morphyp handl)
     
     // TODO: Implement total numnodes getter
     int numnodes = handl->numnodes;
-    handl->statesets = (MPLndsets**)calloc(numnodes,
-                                              sizeof(MPLndsets*));
+    
+    if (handl->statesets) {
+        return 1;
+    }
+    
+    handl->statesets = (MPLndsets**)calloc(numnodes, sizeof(MPLndsets*));
+        
     if (!handl->statesets) {
         return ERR_BAD_MALLOC;
     }
@@ -708,7 +1003,7 @@ int mpl_destroy_statesets(Morphyp handl)
     if (handl->statesets) {
         
         for (i = 0; i < numnodes; ++i) {
-            mpl_free_stateset(handl->statesets[i]);
+            mpl_free_stateset(mpl_get_num_charac((Morphy)handl), handl->statesets[i]);
         }
         
         free(handl->statesets);
@@ -736,6 +1031,36 @@ int mpl_copy_data_into_tips(Morphyp handl)
     }
     
     return ERR_NO_ERROR;
+}
+
+int mpl_assign_intwts_to_partitions(Morphyp handl)
+{
+    int i = 0;
+    int j = 0;
+    int numparts = mpl_get_numparts(handl);
+    
+    if (!numparts) {
+        return ERR_NO_DATA;
+    }
+    
+    for (i = 0; i < numparts; ++i) {
+        
+        if (handl->partitions[i]->intwts) {
+            free(handl->partitions[i]->intwts);
+            handl->partitions[i]->intwts = NULL;
+        }
+        
+        handl->partitions[i]->intwts = (unsigned long*)calloc
+                                        (handl->partitions[i]->ncharsinpart,
+                                         sizeof(unsigned long));
+        
+        for (j = 0; j < handl->partitions[i]->ncharsinpart; ++j) {
+            int charindex = handl->partitions[i]->charindices[j];
+            handl->partitions[i]->intwts[j] = handl->charinfo[charindex].intwt;
+        }
+    }
+    
+    return 0;
 }
 
 int mpl_update_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)

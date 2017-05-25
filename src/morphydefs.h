@@ -15,26 +15,33 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#ifdef MPLDBL
+//#ifdef MPLDBL
 typedef double Mflt;
-#elif MPLLDBL
-typedef long double Mflt;
-#else
-typedef float Mflt;
-#endif
+#define MPL_EPSILON DBL_EPSILON
+//#elif MPLLDBL
+//typedef long double Mflt;
+//#else
+//typedef float Mflt;
+//#endif
 
 typedef unsigned int MPLstate;
 
-#define NA              ((MPLstate)1)
+#define NA              ((MPLstate)0b1)
 #define MISSING         ((MPLstate)~0)
 #define ISAPPLIC        (((MPLstate)~0)^NA)
 #define MAXSTATES       (CHAR_BIT * sizeof(MPLstate))
 #define DEFAULTGAP      '-'
 #define DEFAULTMISSING  '?'
 #define DEFAULCHARTYPE  FITCH_T
+#define DEFAULTWTBASE   1
 #define NACUTOFF        2   // The max number of NA tokens that can be ignored
                             // in a column
 #define MPLCHARMAX      INT_MAX
+#define USRWTMIN        0.00001 /*! Minimum fractional weight a caller can ask 
+                                    for when setting weights. Anything less than 
+                                    this will be considered 0. */
+#define MPLWTMIN        (MPL_EPSILON * 10) /*! Safest (for me!) if calculations
+                                               steer pretty clear of epsilon */
     
 typedef struct MPLndsets MPLndsets;
 typedef struct partition_s MPLpartition;
@@ -90,14 +97,18 @@ typedef struct {
 typedef struct charinfo_s MPLcharinfo;
 typedef struct charinfo_s {
     
-    int          charindex;
-    int          ninapplics;
-    bool         included;
-    MPLchtype    chtype;
-    union {
-        int      intwt;
-        Mflt     fltwt;
-    };
+    int         charindex;
+    int         ninapplics;
+    bool        included;
+    MPLchtype   chtype;
+    double      realweight;
+    unsigned long        basewt;
+    unsigned long        intwt;
+    Mflt        fltwt;
+//    union {
+//        unsigned long   intwt;
+//        Mflt            fltwt;
+//    };
     Mflt         CIndex;
     Mflt         RCIndex;
     Mflt         HIndex;
@@ -114,6 +125,9 @@ typedef struct partition_s {
     int             maxnchars;
     int             ncharsinpart;
     int*            charindices;
+    bool            usingfltwt;
+    unsigned long*  intwts;
+    Mflt*           fltwts;
     MPLtipfxn       tipupdate;
     MPLtipfxn       tipfinalize;
     MPLdownfxn      inappdownfxn;
@@ -170,7 +184,10 @@ typedef struct Morphy_t {
     
     int             numtaxa;    // The number of terminal taxa
     int             numcharacters;  // The number of characters (transformation series)
+    int             numrealwts;
     MPLcharinfo*    charinfo;   // Data type information about each character
+    unsigned long   usrwtbase;
+    unsigned long   wtbase;   // Used to rescale factional weights (1 by default)
     int             numparts;   // The number of data type partitions
     MPLpartition*   partstack;  // A place for unused partitions
     MPLpartition**  partitions; // The array of partitions

@@ -10,6 +10,239 @@
 //#include "testmorphy.h"
 #include "../src/morphy.h"
 
+int test_isreal(void)
+{
+    theader("Testing check for real numbers");
+//    int err     = 0;
+    int failn   = 0;
+    
+    /* The code of your test */
+    double whole1 = 1.0;
+    double whole2 = 2.0;
+    double whole3 = 15.0;
+    double whole4 = 23.0;
+    double frac1 = 1.5;
+    double frac2 = 2.789;
+    double frac3 = 3.0000001;
+    double frac4 = 4.000000002;
+    
+    if (mpl_isreal(whole1)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_isreal(whole2)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_isreal(whole3)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_isreal(whole4)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (!mpl_isreal(frac1)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (!mpl_isreal(frac2)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (!mpl_isreal(frac3)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (!mpl_isreal(frac4)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    return failn;
+}
+
+int test_almost_equal(void)
+{
+    theader("Testing almost equal function for comparing doubles");
+    int failn   = 0;
+    
+    /* The code of your test */
+    double athird1 = 0.3333333;
+    double athird2 = 0.3333333;
+    double athird3 = 0.3333334;
+    double frac1 = 1.2345678;
+    double frac2 = 1.2346789;
+    
+    if (!mpl_almost_equal(athird1, athird2)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_almost_equal(athird1, athird3)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    if (mpl_almost_equal(frac1, frac2)) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    return failn;
+}
+
+int test_resetting_weights(void)
+{
+    theader("Testing a two-tip weighted Fitch with weight reset");
+    
+    int failn = 0;
+    int ntax	= 2;
+    int nchar	= 10;
+    //    int numna   = 0;
+    char *rawmatrix =
+    "0000000010\
+    1111111111;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    
+    mpl_attach_rawdata(rawmatrix, m1);
+    
+    mpl_set_charac_weight(1, 3, m1);
+    mpl_set_num_internal_nodes(1, m1);
+    
+    mpl_apply_tipdata(m1);
+    
+    int length = 0;
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+    printf("The length: %i\n", length);
+    
+    if (length != 11) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_set_charac_weight(1, 1, m1);
+    mpl_apply_tipdata(m1);
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+
+    if (length != 9) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    mpl_delete_Morphy(m1);
+    
+    return failn;
+}
+
+
+int test_resetting_frac_weights(void)
+{
+    theader("Testing resetting of weights after using real numbers");
+    
+    int failn = 0;
+    int ntax	= 2;
+    int nchar	= 10;
+    //    int numna   = 0;
+    char *rawmatrix =
+    "0000000010\
+     1111111111;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    
+    mpl_attach_rawdata(rawmatrix, m1);
+    
+    mpl_set_charac_weight(1, 0.333, m1);
+    mpl_set_charac_weight(2, 0.333, m1);
+    mpl_set_charac_weight(7, 0.333, m1);
+    mpl_set_num_internal_nodes(1, m1);
+    
+    mpl_apply_tipdata(m1);
+    
+    int length = 0;
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+    printf("The length: %i\n", length);
+    
+    if (length != 21) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_set_charac_weight(1, 1, m1);
+    mpl_set_charac_weight(2, 1, m1);
+    mpl_set_charac_weight(7, 1, m1);
+    mpl_apply_tipdata(m1);
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+
+    if (length != 9) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    mpl_delete_Morphy(m1);
+    
+    return failn;
+}
+
+
+
 int test_count_gaps_basic(void)
 {
     theader("Testing counting of gaps in matrix");
@@ -208,6 +441,56 @@ int test_data_partitioning_gapnewstate(void)
     
     return failn;
     
+}
+
+int test_set_weights(void)
+{
+    theader("Test of basic weight setting");
+//    int err     = 0;
+    int err = 0;
+    int failn   = 0;
+    
+    /* The code of your test */
+    int ntax = 6;
+    int nchar = 10;
+    double weights[] = {0.333, 0.25, 0.5};
+    int chars2wt[] = {2, 5, 6};
+    int i = 0;
+    int numwts = 3;
+ 
+    char *rawmatrix =
+    "0000000010\
+    0-001-22-0\
+    0-001-110-\
+    10(03)0101100\
+    1-000-0000\
+    0-00{01}100-0;";
+    
+    Morphy m = mpl_new_Morphy();
+    
+    mpl_init_Morphy(ntax, nchar, m);
+
+    mpl_attach_rawdata(rawmatrix, m);
+    for (i = 0; i < numwts; ++i) {
+        mpl_set_charac_weight(chars2wt[i], weights[i], m);
+    }
+    
+    Morphyp mi = (Morphyp)m;
+    mpl_scale_all_intweights(mi);
+    err = mpl_apply_tipdata(mi);
+    
+    if (err) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    
+    mpl_delete_Morphy(m);
+    // TODO: Give test a real return value
+    return 0;
 }
 
 int test_basic_tip_apply(void)
