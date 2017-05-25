@@ -573,7 +573,7 @@ int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m)
 //int     mpl_get_insertcost_max(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //int     mpl_get_insertcost_min(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //
-int mpl_get_packed_states
+unsigned int mpl_get_packed_states
 (const int nodeID, const int character, const int passnum, const Morphy m)
 {
     if (!m) {

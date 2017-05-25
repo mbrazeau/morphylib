@@ -611,7 +611,29 @@ int     mpl_get_insertcost
          int        cutoff,
          Morphy     m);
 
+/*!
 
+ @brief Returns the state set for a character at a given node as set bits in an
+ unsigned integer.
+ 
+ @discussion If the caller requires the internal state representation of a nodal
+ set used by MorphyLib, this function can be called to retrieve it. The caller
+ needs to specify the node index, the character number, and the pass number 
+ (1-based, because these are not indices in a C array).
+
+ @param nodeID The index of the node set required.
+
+ @param character The character number to be queried.
+
+ @param passnum The traversal iteration corresponding to the set required. These
+ range from 1 to 4 and represent first downpass, first uppass, second downpass
+ and second uppass respectively.
+
+ @return An unsigned integer with bits set corresponding to values used by
+ MorphyLib.
+ 
+ */
+unsigned
 int     mpl_get_packed_states
 
         (const int  nodeID,
