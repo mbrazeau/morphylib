@@ -259,6 +259,7 @@ int test_small_fitch_withmissing(void)
 int test_bulk_balanced_tree_cases(void)
 {
     theader("Testing bulk tree cases");
+    int err = 0;
     int failn = 0;
     int ntax	= 12;
     int nchar	= 1;
@@ -319,8 +320,14 @@ int test_bulk_balanced_tree_cases(void)
         Morphy m1 = mpl_new_Morphy();
         mpl_init_Morphy(ntax, nchar, m1);
         //    mpl_set_gaphandl(GAP_MISSING, m1);
-        mpl_attach_rawdata(rawmatrices[j], m1);
-        
+        err = mpl_attach_rawdata(rawmatrices[j], m1);
+        if (err) {
+            ++failn;
+            pfail;
+        }
+        else {
+            ppass;
+        }
         mpl_set_num_internal_nodes(13, m1);
         
         mpl_apply_tipdata(m1);
@@ -374,40 +381,40 @@ int test_bulk_balanced_tree_cases(void)
             ppass;
         }
         
-        char* result = NULL;
-        for (i = 1; i < 5; ++ i) {
-            int k = 0;
-            printf("Pass %i: ", i);
-            for (k = 0; k < ntax; ++k) {
-                result = (char*)mpl_get_stateset(k, 0, i, m1);
-                printf("%s ", result);
-                
-            }
-            printf("\n");
-        }
-        printf("\n");
-        
-        for (i = ntax; i < (ntax-2 + mpl_get_num_internal_nodes(m1)); ++i) {
-            int k = 0;
-            printf("Node %i: ", i);
-            for (k = 1; k < 5; ++k) {
-                result = (char*)mpl_get_stateset(i, 0, k, m1);
-                if (!(*result)) {
-                    printf(". ");
-                }
-                else {
-                    int pad = 0;
-                    int paddiff = 6;
-                    pad = paddiff - (int)strlen(result);
-                    int x = 0;
-                    for (x = 0; x < pad && pad > 0; ++x) {
-                        printf(" ");
-                    }
-                    printf("%s ", result);
-                }
-            }
-            printf("\n");
-        }
+//        char* result = NULL;
+//        for (i = 1; i < 5; ++ i) {
+//            int k = 0;
+//            printf("Pass %i: ", i);
+//            for (k = 0; k < ntax; ++k) {
+//                result = (char*)mpl_get_stateset(k, 0, i, m1);
+//                printf("%s ", result);
+//                
+//            }
+//            printf("\n");
+//        }
+//        printf("\n");
+//        
+//        for (i = ntax; i < (ntax-2 + mpl_get_num_internal_nodes(m1)); ++i) {
+//            int k = 0;
+//            printf("Node %i: ", i);
+//            for (k = 1; k < 5; ++k) {
+//                result = (char*)mpl_get_stateset(i, 0, k, m1);
+//                if (!(*result)) {
+//                    printf(". ");
+//                }
+//                else {
+//                    int pad = 0;
+//                    int paddiff = 6;
+//                    pad = paddiff - (int)strlen(result);
+//                    int x = 0;
+//                    for (x = 0; x < pad && pad > 0; ++x) {
+//                        printf(" ");
+//                    }
+//                    printf("%s ", result);
+//                }
+//            }
+//            printf("\n");
+//        }
 
         mpl_delete_Morphy(m1);
     }

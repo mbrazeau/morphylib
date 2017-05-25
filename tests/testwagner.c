@@ -62,5 +62,7 @@ int test_small_wagner(void)
     else {
         ppass;
     }
+    
+    mpl_delete_Morphy(m1);
     return failn;
 }

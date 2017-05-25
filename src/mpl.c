@@ -31,6 +31,7 @@ int mpl_delete_Morphy(Morphy m)
     // TODO: All Morphy destructors
     free(m1->char_t_matrix);
     m1->char_t_matrix = NULL;
+    mpl_delete_mpl_matrix(&m1->inmatrix);
     mpl_destroy_symbolset(m1);
     mpl_delete_charac_info(m1);
     mpl_delete_all_partitions(m1);
@@ -605,6 +606,36 @@ const char* mpl_get_stateset
     // structures.
     MPLstate result = mpl_get_packed_states(nodeID, character, passnum, m);
     char* ret = mpl_translate_state2char(result, (Morphyp)m);
+  
+    Morphyp mi = (Morphyp)m;
+    
+    
+    mpl_allocate_stset_stringptrs(mpl_get_num_charac(m), mi->statesets[nodeID]);
+    
+   /* if (passnum == 1) {
+        if (mi->statesets[nodeID]->downp1str[character]) {
+            free(mi->statesets[nodeID]->downp1str[character]);
+        }
+        mi->statesets[nodeID]->downp1str[character] = ret;
+    }
+    else if (passnum == 2) {
+        if (mi->statesets[nodeID]->upp1str[character]) {
+            free(mi->statesets[nodeID]->upp1str[character]);
+        }
+        mi->statesets[nodeID]->upp1str[character] = ret;
+    }
+    else if (passnum == 3) {
+        if (mi->statesets[nodeID]->downp2str[character]) {
+            free(mi->statesets[nodeID]->downp2str[character]);
+        }
+        mi->statesets[nodeID]->downp2str[character] = ret;
+    }
+    else if (passnum == 4) {
+        if (mi->statesets[nodeID]->upp2str[character]) {
+            free(mi->statesets[nodeID]->upp2str[character]);
+        }
+        mi->statesets[nodeID]->downp1str[character] = ret;
+    }*/
     
     return ret;
 }

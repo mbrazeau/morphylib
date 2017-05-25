@@ -764,57 +764,57 @@ MPLndsets* mpl_alloc_stateset(int numchars)
         return NULL;
     }
     
-    new->downpass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->downpass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->downpass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->uppass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->uppass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->uppass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->downpass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->downpass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->downpass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->uppass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->uppass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->uppass2) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_actives = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_actives = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_actives) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_downpass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_downpass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_downpass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_uppass1 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_uppass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_uppass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_downpass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_downpass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_downpass1) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_uppass2 = (MPLstate*)calloc(1, numchars * sizeof(MPLstate));
+    new->subtree_uppass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->subtree_uppass2) {
-        mpl_free_stateset(new);
+        mpl_free_stateset(numchars, new);
         return NULL;
     }
     
@@ -822,7 +822,70 @@ MPLndsets* mpl_alloc_stateset(int numchars)
 }
 
 
-void mpl_free_stateset(MPLndsets* statesets)
+void mpl_delete_nodal_strings(const int nchars, MPLndsets* set)
+{
+    int i = 0;
+    
+    for (i = 0; i < nchars; ++i) {
+        if (set->downp1str) {
+            free(set->downp1str[i]);
+            set->downp1str[i] = NULL;
+        }
+        if (set->upp1str) {
+            free(set->upp1str[i]);
+            set->upp1str[i] = NULL;
+        }
+        if (set->downp2str) {
+            free(set->downp2str[i]);
+            set->downp2str[i] = NULL;
+        }
+        if (set->upp2str) {
+            free(set->upp2str[i]);
+            set->upp2str[i] = NULL;
+        }
+    }
+}
+
+int mpl_allocate_stset_stringptrs(const int nchars, MPLndsets* set)
+{
+    if (!set->downp1str) {
+        set->downp1str = (char**)calloc(nchars, sizeof(char*));
+        if (!set->downp1str) {
+            mpl_delete_nodal_strings(nchars, set);
+            return ERR_BAD_MALLOC;
+        }
+    }
+    
+    if (!set->upp1str) {
+        set->upp1str = (char**)calloc(nchars, sizeof(char*));
+        if (!set->upp1str) {
+            mpl_delete_nodal_strings(nchars, set);
+            return ERR_BAD_MALLOC;
+        }
+    }
+    
+    if (!set->downp2str) {
+        set->downp2str = (char**)calloc(nchars, sizeof(char*));
+        if (!set->downp2str) {
+            mpl_delete_nodal_strings(nchars, set);
+            return ERR_BAD_MALLOC;
+        }
+    }
+    
+    if (!set->upp2str) {
+        set->upp2str = (char**)calloc(nchars, sizeof(char*));
+        if (!set->upp2str) {
+            mpl_delete_nodal_strings(nchars, set);
+            return ERR_BAD_MALLOC;
+        }
+    }
+        
+    
+    return ERR_NO_ERROR;
+}
+
+
+void mpl_free_stateset(const int nchars, MPLndsets* statesets)
 {
     if (!statesets) {
         return;
@@ -835,9 +898,9 @@ void mpl_free_stateset(MPLndsets* statesets)
         free(statesets->uppass1);
         statesets->uppass1 = NULL;
     }
-    if (statesets->downpass1) {
-        free(statesets->downpass1);
-        statesets->downpass1 = NULL;
+    if (statesets->downpass2) {
+        free(statesets->downpass2);
+        statesets->downpass2 = NULL;
     }
     if (statesets->uppass2) {
         free(statesets->uppass2);
@@ -855,14 +918,17 @@ void mpl_free_stateset(MPLndsets* statesets)
         free(statesets->subtree_uppass1);
         statesets->subtree_uppass1 = NULL;
     }
-    if (statesets->subtree_downpass1) {
-        free(statesets->subtree_downpass1);
-        statesets->subtree_downpass1 = NULL;
+    if (statesets->subtree_downpass2) {
+        free(statesets->subtree_downpass2);
+        statesets->subtree_downpass2 = NULL;
     }
     if (statesets->subtree_uppass2) {
         free(statesets->subtree_uppass2);
         statesets->subtree_uppass2 = NULL;
     }
+    
+    mpl_delete_nodal_strings(nchars, statesets);
+    
     if (statesets->downp1str) {
         // TODO: loop & free allocated strings
         free(statesets->downp1str);
@@ -894,12 +960,15 @@ int mpl_setup_statesets(Morphyp handl)
     
     // TODO: Implement total numnodes getter
     int numnodes = handl->numnodes;
-    handl->statesets = (MPLndsets**)calloc(numnodes,
-                                              sizeof(MPLndsets*));
-    if (!handl->statesets) {
-        return ERR_BAD_MALLOC;
-    }
     
+    if (!handl->statesets) {
+        
+        handl->statesets = (MPLndsets**)calloc(numnodes, sizeof(MPLndsets*));
+        
+        if (!handl->statesets) {
+            return ERR_BAD_MALLOC;
+        }
+    }
     int i = 0;
     int nchars = mpl_get_num_charac((Morphyp)handl);
     
@@ -926,7 +995,7 @@ int mpl_destroy_statesets(Morphyp handl)
     if (handl->statesets) {
         
         for (i = 0; i < numnodes; ++i) {
-            mpl_free_stateset(handl->statesets[i]);
+            mpl_free_stateset(mpl_get_num_charac((Morphy)handl), handl->statesets[i]);
         }
         
         free(handl->statesets);
@@ -967,6 +1036,12 @@ int mpl_assign_intwts_to_partitions(Morphyp handl)
     }
     
     for (i = 0; i < numparts; ++i) {
+        
+        if (handl->partitions[i]->intwts) {
+            free(handl->partitions[i]->intwts);
+            handl->partitions[i]->intwts = NULL;
+        }
+        
         handl->partitions[i]->intwts = (unsigned long*)calloc
                                         (handl->partitions[i]->ncharsinpart,
                                          sizeof(unsigned long));

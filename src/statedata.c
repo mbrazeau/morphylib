@@ -570,6 +570,7 @@ int mpl_delete_mpl_matrix(MPLmatrix* m)
             }
         }
         free(m->cells);
+        m->cells = NULL;
     }
     
 //    if (m->chtypes) {

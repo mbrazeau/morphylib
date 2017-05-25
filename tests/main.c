@@ -50,7 +50,7 @@ int main (void)
     fails += test_delete_Morphy_no_input();
     fails += test_basic_tip_apply();
     // TODO: set this test up to return
-    test_state_retrieval();
+    //    test_state_retrieval();
     
     // fitch.c tests
     fails += test_small_fitch();
