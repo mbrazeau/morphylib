@@ -736,7 +736,7 @@ char *mpl_translate_state2char(MPLstate cstates, Morphyp handl)
     }
     char* symbols = mpl_get_symbols((Morphy)handl);
     
-    if (cstates != MISSING) {
+    if (cstates < (MISSING-NA)) {
         while (cstates) {
             if (1 & cstates) {
                 if (shift == 0 && gapshift) {
