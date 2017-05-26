@@ -179,6 +179,36 @@ int test_resetting_weights(void)
     else {
         ppass;
     }
+    
+    mpl_set_charac_weight(1, 0.0, m1);
+    mpl_set_charac_weight(2, 0.0, m1);
+    mpl_set_charac_weight(3, 0.0, m1);
+    mpl_apply_tipdata(m1);
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+
+    if (length != 6) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_set_charac_weight(1, 1, m1);
+    mpl_set_charac_weight(2, 1, m1);
+    mpl_set_charac_weight(3, 1, m1);
+    mpl_apply_tipdata(m1);
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+
+    if (length != 9) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
     mpl_delete_Morphy(m1);
     
     return failn;
