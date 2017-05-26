@@ -99,7 +99,7 @@ typedef struct charinfo_s {
     
     int         charindex;
     int         ninapplics;
-    bool        included;
+//    bool        included;
     MPLchtype   chtype;
     double      realweight;
     unsigned long        basewt;

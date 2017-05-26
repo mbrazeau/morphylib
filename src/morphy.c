@@ -248,7 +248,7 @@ void mpl_scale_all_intweights(Morphyp handl)
     
    
     if (!handl->numrealwts) {
-        if (handl->usrwtbase) {
+        if (handl->usrwtbase != 0) {
             handl->wtbase = handl->usrwtbase;
         } else {
             handl->wtbase = DEFAULTWTBASE;
@@ -718,35 +718,35 @@ int mpl_setup_partitions(Morphyp handl)
         // Examine the character info for each character in the matrix
         chinfo = &handl->charinfo[i];
         
-        if (chinfo->included) {
-            p = mpl_search_partitions(chinfo, first, mpl_get_gaphandl(handl));
-            
-            if (p) {
-                mpl_part_push_index(i, p);
+        //        if (chinfo->included) {
+        p = mpl_search_partitions(chinfo, first, mpl_get_gaphandl(handl));
+        
+        if (p) {
+            mpl_part_push_index(i, p);
+        }
+        else {
+            bool hasNA = false;
+            if (handl->gaphandl == GAP_INAPPLIC) {
+                if (chinfo->ninapplics > NACUTOFF) {
+                    hasNA = true;
+                }
+            }
+            p = mpl_new_partition(chinfo->chtype, hasNA);
+            //            last->next =
+            mpl_part_push_index(i, p);
+            if (!first) {
+                first = p;
+                last = p;
             }
             else {
-                bool hasNA = false;
-                if (handl->gaphandl == GAP_INAPPLIC) {
-                    if (chinfo->ninapplics > NACUTOFF) {
-                        hasNA = true;
-                    }
-                }
-                p = mpl_new_partition(chinfo->chtype, hasNA);
-                //            last->next =
-                mpl_part_push_index(i, p);
-                if (!first) {
-                    first = p;
-                    last = p;
-                }
-                else {
-                    last->next = p;
-                    last = p;
-                }
-                
-                ++numparts;
+                last->next = p;
+                last = p;
             }
+            
+            ++numparts;
         }
     }
+    //    }
     
     handl->numparts = numparts;
     err = mpl_put_partitions_in_handle(first, handl);

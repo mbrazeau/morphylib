@@ -774,7 +774,6 @@ int mpl_init_charac_info(Morphyp handl)
     int i = 0;
     for (i = 0; i < nchar; ++i) {
         handl->charinfo[i].charindex    = i;
-        handl->charinfo[i].included     = true;
         handl->charinfo[i].chtype       = DEFAULCHARTYPE;
         handl->charinfo[i].realweight   = 1.0;
         handl->charinfo[i].basewt       = 1;

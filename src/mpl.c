@@ -349,10 +349,10 @@ int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m)
     
     // Setting a character to 'NONE_T' should exclude it from use.
     if (chtype == NONE_T) {
-        handl->charinfo[charID].included = false;
+        handl->charinfo[charID].realweight = 0.0;
     }
     else {
-        handl->charinfo[charID].included = true;
+        handl->charinfo[charID].realweight = handl->wtbase;
     }
     
     // TODO: Update any data partitionings.
