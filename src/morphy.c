@@ -262,7 +262,8 @@ void mpl_scale_all_intweights(Morphyp handl)
     }
     
     for (i = 0; i < nchar; ++i) {
-        handl->wtbase = mpl_least_common_multiple(handl->wtbase, handl->charinfo[i].basewt);
+        handl->wtbase = mpl_least_common_multiple(handl->wtbase,
+                                                  handl->charinfo[i].basewt);
     }
     
     for (i = 0; i < nchar; ++i) {
