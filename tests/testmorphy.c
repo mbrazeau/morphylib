@@ -538,6 +538,8 @@ int test_weights_realtree(void)
     mpl_init_Morphy(ntax, nchar, m1);
     mpl_attach_rawdata(rawmatrix, m1);
     mpl_set_num_internal_nodes(13, m1);
+    mpl_set_parsim_t(0, FITCH_T, m1);
+    mpl_set_parsim_t(1, FITCH_T, m1);
     mpl_set_charac_weight(0, 1, m1);
     mpl_set_charac_weight(1, 2, m1);
     mpl_apply_tipdata(m1);
