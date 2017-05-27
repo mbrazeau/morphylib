@@ -38,6 +38,7 @@ int main (void)
     fails += test_data_partitioning_simple();
     fails += test_data_partitioning_gapmissing();
     fails += test_data_partitioning_gapnewstate();
+    fails += test_weights_realtree();
     fails += test_set_weights();
     
     // mpl.c tests
