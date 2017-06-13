@@ -117,14 +117,22 @@ typedef struct charinfo_s {
 } MPLcharinfo;
     
     
+typedef struct {
+    int     maxchars;
+    int     nupdate;
+    int*    indices;
+} MPLcupdate;
+    
+    
 typedef struct partition_s MPLpartition;
 typedef struct partition_s {
     
-    MPLchtype       chtype;
-    bool            isNAtype;
+    MPLchtype       chtype;       /*!< The optimality type used for this partition */
+    bool            isNAtype;     /*!< This character should be treated as having inapplicable data */ 
     int             maxnchars;
     int             ncharsinpart;
     int*            charindices;
+    unsigned long*  nchanges;
     bool            usingfltwt;
     unsigned long*  intwts;
     Mflt*           fltwts;
