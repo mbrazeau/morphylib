@@ -51,7 +51,7 @@ Morphy mplobj = mpl_new_Morphy();
   - Num extra internal nodes needed: Different calling programs may have different ways of structuring trees, either as lists or linked data structures. Therefore, it is up to the calling program to decide how many additional nodes are required.
   
   ```C
-  mpl_set_num_internal_nodes(num_nodes);
+  mpl_set_num_internal_nodes(num_nodes, mplobj);
   ```
   
   Note, however, that MorphyLib functions currently only support calculations on completely binary trees. Therefore, you should have at least as many internal nodes as are required to for the number of terminals in your dataset. It is also recommended that you use a 'dummy root' ancestral to the tree's main calculation root and which has its own ancestral state set. It is probably not necessary, but given MorphyLib's current state of development and internal architecture, this is probably safest until now.
@@ -81,3 +81,7 @@ If treating the gap symbol as inapplicable, then four whole passes are required 
 - Second uppass
 
 *Getting ancestral state sets*
+
+**Future developemnt**
+
+This workflow is sufficient for getting the length of a given tree and for outputting the ancestral state sets when inapplicable data are treated as such. However, applying this to a tree search will be extremely slow. Most programs doing heuristic tree searches do not optimize over the whole tree, but use 'shortcuts' that allow length calculations by optimising only at proposed insertion sites. Support for these procedures will soon be added. However, inapplicable data add complications to the process that can't always be foreseen. Thus, partial re-optimisation of subtrees may sometimes be required for accurate length counts on characters with inapplicable scores.
