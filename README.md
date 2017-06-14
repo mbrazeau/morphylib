@@ -82,6 +82,6 @@ If treating the gap symbol as inapplicable, then four whole passes are required 
 
 *Getting ancestral state sets*
 
-**Future developemnt**
+**Future development**
 
 This workflow is sufficient for getting the length of a given tree and for outputting the ancestral state sets when inapplicable data are treated as such. However, applying this to a tree search will be extremely slow. Most programs doing heuristic tree searches do not optimize over the whole tree, but use 'shortcuts' that allow length calculations by optimising only at proposed insertion sites. Support for these procedures will soon be added. However, inapplicable data add complications to the process that can't always be foreseen. Thus, partial re-optimisation of subtrees may sometimes be required for accurate length counts on characters with inapplicable scores.
