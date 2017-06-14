@@ -1,7 +1,7 @@
 # Makefile for morphy library
 NAME	:= libmorphy_$(shell uname -m)-$(shell uname -s)
 CC		:= gcc
-DBGF	:= -g -D DEBUG
+DBGF	:= -g -D DEBUG 
 CFLAGS	:= -c -Wall -fPIC #$(shell pkg-config --cflags glib-2.0)
 SRC		:= *.c
 OBJS	:= *.o
