@@ -13,7 +13,7 @@ A forthcoming paper by myself and co-authors will describe the algorithms used b
 
 So far, building is supported for Unix-like systems (e.g. Linux, Mac OS). A makefile in the root MorphyLib directory builds both static and dynamic libraries. 
 
-Additionally, a Python file is included and maintained which supplies all the bindings for that language. 
+Additionally, Python and R bindings are being supplied and maintained, but may not be entirely up to date with the core library. 
 
 **Using MorphyLib**
 
