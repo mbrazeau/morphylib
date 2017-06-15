@@ -1,7 +1,7 @@
 # MorphyLib     [![Build Status](https://travis-ci.org/mbrazeau/MorphyLib.svg?branch=master)](https://travis-ci.org/mbrazeau/MorphyLib)
 Phylogenetic reconstruction library using inapplicable data reconstruction
 
-**About MorphyLib right now**
+## About MorphyLib right now
 
 MorphyLib is a work in progress. It is currently only in development and, while it can now be called with real-world data, it is untested in its current form and not ready for general implementation.
 
@@ -9,13 +9,13 @@ MorphyLib is a library for phylogenetic analysis programming and is therefore li
 
 A forthcoming paper by myself and co-authors will describe the algorithms used by MorphyLib. 
 
-**Building Morphy**
+## Building Morphy
 
 So far, building is supported for Unix-like systems (e.g. Linux, Mac OS). A makefile in the root MorphyLib directory builds both static and dynamic libraries. 
 
 Additionally, Python and R bindings are being supplied and maintained, but may not be entirely up to date with the core library. 
 
-**Using MorphyLib**
+## Using MorphyLib
 
 The API is [documented](http://htmlpreview.github.io/?https://github.com/mbrazeau/MorphyLib/blob/master/Documentation/html/mpl_8h.html) in the [`mpl.h`](https://github.com/mbrazeau/MorphyLib/blob/master/src/mpl.h) file. 
 
@@ -24,13 +24,13 @@ The caller creates an instance of the Morphy object through the `mpl_new_Morphy`
 MorphyLib has its own rules for 'packing' state data as set bits in integers and therefore you are required to supply a data matrix and dimensions to it in order to perform any calculations.
 
 
-*Basic algorithm and application*
+### Basic algorithm and application
 
 A currently in-prep paper in collaboration with Thomas Guillerme and Martin R. Smith describes the algorithm for reconstructing exact ancestral state sets when inapplicable data are in play. The general principle is that inapplicable data imply an underlying presence/absence character. Because of this, MorphyLib uses a bitmask to reconstruct ancestral state sets as partially resolved on the downpass when there is an inapplicable token involved. The second uppass will finalise any state sets not affected by inapplicable values, but will also make a final estimation of whether or not the reconstruction will be inapplicable or applicable. Unfortunately, because exact reconstruction of the applicable states requires exact reconstruction of an implicit binary character, two further passes are required for final ancestral state calculations
 
 Thus, for complete ancestral states reconstructions, 
 
-*Setting up a MorphyLib session*
+### Setting up a MorphyLib session
 
 A C or C++ program using MorphyLib needs to include the `mpl.h` header file.
 
@@ -69,7 +69,7 @@ Morphy mplobj = mpl_new_Morphy();
   
  *What happens inside MorphyLib?*: When the parameters are applied, the data are partitioned according to type of parsimony and then whether or not there is a significant number of inapplicable tokens (i.e. 3 or more per column).
 
-*Calculating ancestral states and obtaining a tree length*
+### Calculating ancestral states and obtaining a tree length
 
 If treating the gap symbol as inapplicable, then four whole passes are required on an initial tree in order to get the full ancestral state set calculations and lengths for the tree.
 
@@ -80,8 +80,8 @@ If treating the gap symbol as inapplicable, then four whole passes are required 
 - Second downpass
 - Second uppass
 
-*Getting ancestral state sets*
+### Getting ancestral state sets*
 
-**Future development**
+## Future development
 
 This workflow is sufficient for getting the length of a given tree and for outputting the ancestral state sets when inapplicable data are treated as such. However, applying this to a tree search will be extremely slow. Most programs doing heuristic tree searches do not optimize over the whole tree, but use 'shortcuts' that allow length calculations by optimising only at proposed insertion sites. Support for these procedures will soon be added. However, inapplicable data add complications to the process that can't always be foreseen. Thus, partial re-optimisation of subtrees may sometimes be required for accurate length counts on characters with inapplicable scores.
