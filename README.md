@@ -80,7 +80,7 @@ If treating the gap symbol as inapplicable, then four whole passes are required 
 - Second downpass
 - Second uppass
 
-### Getting ancestral state sets*
+### Getting ancestral state sets
 
 ## Future development
 
