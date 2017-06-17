@@ -10,7 +10,7 @@ SNAME	:= $(NAME).a
 DNAME	:= $(NAME).so
 TDIRS	:= ./tests/
 LIBS	:= #$(shell pkg-config --libs glib-2.0)
-LDFLAGS	:= -L ./ $(LIBS) 
+LDFLAGS	:= -L ./$(LIBS) 
 
 
 .PHONY: all clean test run debug
@@ -18,13 +18,14 @@ LDFLAGS	:= -L ./ $(LIBS)
 all: $(SNAME) $(DNAME)
 
 debug: CFLAGS := $(CFLAGS) $(DBGF)
-#debug: all 
+debug: LDFLAGS := $(LDFLAGS) --coverage 
+debug: all 
 
 $(SNAME) : $(OBJS)
 	ar rvs $(SNAME) $(OBJS)
 
 $(DNAME) : $(OBJS)
-	$(CC) -shared -o $(DNAME) $(OBJS) 
+	$(CC) -shared -o $(DNAME) $(OBJS) $(LDFLAGS)
 
 $(OBJS) : $(SRCDIR)$(SRC)
 	$(CC) $(CFLAGS) $(SRCDIR)$(SRC) 
@@ -33,7 +34,7 @@ $(OBJS) : $(SRCDIR)$(SRC)
 clean:
 	rm *.o
 
-test: $(SNAME) debug
-	$(CC) $(LDFLAGS) -I./ --coverage -o ./tests/utest ./tests/*.c $(SNAME) $(LDFLAGS)
+test: 
+	$(CC) -I./ --coverage -o ./tests/utest ./tests/*.c $(SNAME) $(LDFLAGS) 
 run:
 	$(TDIRS)tcreate
