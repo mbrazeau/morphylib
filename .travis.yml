@@ -28,7 +28,7 @@ after_success:
   - lcov --directory . --capture --output-file coverage.info
   - lcov --remove coverage.info 'tests/*' '/usr/*' --output-file coverage.info
   - lcov --list coverage.info
-  - coveralls-lcov --repo-token=${COVERALLS_TOKEN} coverage.info
+  - coveralls-lcov --repo-token "DmbK0hPTO8S9QPraI4afrfqieeQnLpVpn" coverage.info
   - make clean
 
 skip_cleanup: true
