@@ -18,7 +18,7 @@ LDFLAGS	:= -L ./ $(LIBS)
 all: $(SNAME) $(DNAME)
 
 debug: CFLAGS := $(CFLAGS) $(DBGF)
-debug: all 
+#debug: all 
 
 $(SNAME) : $(OBJS)
 	ar rvs $(SNAME) $(OBJS)
@@ -33,7 +33,7 @@ $(OBJS) : $(SRCDIR)$(SRC)
 clean:
 	rm *.o
 
-test: $(SNAME)
-	$(CC) $(LDFLAGS) -I./ -o ./tests/utest ./tests/*.c $(SNAME) $(LDFLAGS)
+test: $(SNAME) debug
+	$(CC) $(LDFLAGS) -I./ --coverage -o ./tests/utest ./tests/*.c $(SNAME) $(LDFLAGS)
 run:
 	$(TDIRS)tcreate
