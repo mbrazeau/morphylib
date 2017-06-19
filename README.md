@@ -192,11 +192,46 @@ mpl_update_lower_root(n, n, mplobj);
 Should work as well, but this has not been as extensively tested.
 
 ### First uppass
+
+Final ancestral state sets for all-applicable characters and second-pass sets for characters with inapplicable values are calculated on the first uppass.
+
 ### Update the tips
+
+Ambiguous or missing data at tips needs to be updated in order for correct ancestral state reconstructions to occur for characters with inapplicability. This is also necessary for accurate indirect optimisation ($ref:goloboff95), when this feature is supported by MorphyLib. Ambiguous or missing data at tips is updated according to the reconstructed value at the immediate ancestor.
+
+The function
+```C
+int mpl_update_tip(const int tip_id, const int anc_id, Morphy m);
+```
+should be called for all tips in the tree.
+
 ### Second downpass
+- Initial pass updating inapplicable/applicable ambiguities
+- Counts steps associated with state changes
+
 ### Second uppass
+- Finalises the ancestral state sets
+- Adds length for the number of additional regions required (after $ref:delaet2014)
 
 ### Getting ancestral state sets
+
+After complete four-pass optimisation has been completed, it is possible to retrieve state sets for any pass, in any character state, for any internal node or tip. These can be retrieved in either of two formats: integer-type data with bits set for each state in the set or as a character string of ASCII values representing the symbols in that set.
+
+To retrieve the state sets in an integer:
+```C
+unsigned int mpl_get_packed_states(const int nodeID, const int character, const int passnum, Morphy m);
+```
+
+To retrieve a C-style (null-terminated) string:
+
+```C
+char* mpl_get_packed_states(const int nodeID, const int character, const int passnum, Morphy m);
+```
+
+Note that the pass number is 1-based, not 0-based, because these values do not index into an array. Therefore, the `passnum` variable should be either 1, 2, 3, or 4.
+
+Passes 3 and 4 should simply return null values for characters without significant inapplicable data.
+
 
 ## Future development
 
