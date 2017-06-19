@@ -171,6 +171,26 @@ length += mpl_first_down_recon(n->index, n->left->index, n->right->index, mplobj
 
 MorphyLib assumes a calculation root is being used to calculate the length of the tree (thus trees must be at least implicitly rooted while counting). The root of the tree must be updated if treating inapplicable data as such. This resolves any ambiguity between applicables and the inapplicable state in favour of the applicable value(s) (this is is consistent with both the auxiliary principle and with minimizing length of the tree).
 
+```C
+int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m);
+```
+
+Assuming that `n` is currently pointing to the calculation root of the tree.
+
+Two patterns of use are possible. The first assumes a dummy root is present (as is implemented in my own programs to facilitate uppasses without needing to check for a valid ancestor.
+
+```C
+mpl_update_lower_root(n->anc, n, mplobj);
+```
+
+Alternatively, if your tree structure does not require a dummy root ancestor:
+
+```C
+mpl_update_lower_root(n, n, mplobj);
+```
+
+Should work as well, but this has not been as extensively tested.
+
 ### First uppass
 ### Update the tips
 ### Second downpass
