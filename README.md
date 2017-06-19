@@ -43,12 +43,13 @@ A C or C++ program using MorphyLib needs to include the `mpl.h` header file.
 Morphy mplobj = mpl_new_Morphy();
 ```
 
-- Setting the dimensions of the data set:
-  - Set the initial dimensions:
+### Setting the dimensions of the data set:
+
+- Set the initial dimensions:
   ```C
   mpl_init_Morphy(ntax, nchar, mplobj);
   ```
-  - Num extra internal nodes needed: Different calling programs may have different ways of structuring trees, either as lists or linked data structures. Therefore, it is up to the calling program to decide how many additional nodes are required.
+  - Set the number of internal nodes needed: Different calling programs may have different ways of structuring trees, either as lists or linked data structures (the latter possibly using rings of records for internal nodes). Therefore, it is up to the calling program to decide how many additional nodes are required.
   
   ```C
   mpl_set_num_internal_nodes(num_nodes, mplobj);
@@ -56,20 +57,84 @@ Morphy mplobj = mpl_new_Morphy();
   
   Note, however, that MorphyLib functions currently only support calculations on completely binary trees. Therefore, you should have at least as many internal nodes as are required to for the number of terminals in your dataset. It is also recommended that you use a 'dummy root' ancestral to the tree's main calculation root and which has its own ancestral state set. It is probably not necessary, but given MorphyLib's current state of development and internal architecture, this is probably safest until now.
   
-- Supplying the input data
-  - Row-ordered format
-  - PAUP (Nexus) style currently supported; TNT/xread format forthcoming.
-  
- - Setting weights and parsimony type
-  - Real-number weights will be estimated as nearest rational approximations
-  
- - Setting inapplicable treatment: By default, MorphyLib treats the standard gap symbol '-' as inapplicable. However, the calling program can set the treatment of the gap symbol as either missing data or as a new state, to emulate the behaviour of other programs.
-  
- - Applying the data: Once the caller is satisfied with the settings, these parameters need to be applied to the dataset and will remain enforced until they are later changed. **Any changes must be applied again** otherwise, unexpected behaviour or a crash will occur.
-  
- *What happens inside MorphyLib?*: When the parameters are applied, the data are partitioned according to type of parsimony and then whether or not there is a significant number of inapplicable tokens (i.e. 3 or more per column).
+### Supplying the input data
 
-### Calculating ancestral states and obtaining a tree length
+The input data should be supplied in a 'row-ordered' format and as a single C-style (null-terminated) string and with a terminal semicolon. Currently, 
+ - The data are supplied to MorphyLib as follows:
+ ```C
+ char* matrix = "000...{01}11??---01;";
+ 
+ ...
+ 
+ mpl_attach_raw_data(matrix, mplobj);
+ ```
+ 
+ If the data set supplies a symbols list (i.e. from a Nexus file), then these can be supplied to MorphyLib in turn with
+ 
+ ```C
+ mpl_attach_symbols(symbols, mplobj);
+ ```
+ Again, as a null-terminated C-style string.
+ 
+ This feature is not necessary, as MorphyLib will extract all of the symbols from the dataset. However, once ordered characters are implemented, the order of a symbols list will determine the ordering of characters, as in PAUP*.
+  
+### Setting the parsimony type
+
+Currently, MorphyLib only supports parsimony. Currently, Fitch (unordered) parsimony is the only type fully implemented. Wagner (ordered) parsimony will soon become available. Different possible parsimony types are defined in a enumerated data type in `morphydefs.h`. 
+
+```C
+typedef enum {
+    
+    NONE_T          = 0,
+    FITCH_T         = 1,
+    WAGNER_T        = 2,
+    DOLLO_T         = 3,
+    IRREVERSIBLE_T  = 4,
+    USERTYPE_T      = 5,
+    
+    MAX_CTYPE,
+    
+} MPLchtype;
+```
+
+To set the parsimony type of a particular character, the following function is used:
+```C
+int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m);
+```
+The useage might be as follows:
+```C
+mpl_set_parsim_t(12, FITCH_T, mplobj)
+```
+At present, however, all characters are default type FITCH_T (unordered).
+
+### Setting character weights
+
+Weights are set in an analolgous fashion using the function
+```C
+int mpl_set_charac_weight(const int charID, const double weight, Morphy m);
+ ```
+MorphyLib will allow weights specified as a fractional (floating point) value, but will estimate the rational factors of this value to avoid the need for floating point arithmetic. All characters will be rescaled according to the least common multiple of the refactored weights. Thus, you may find strangely long tree lengths until I write a function to rescale them.
+  
+### Setting inapplicable treatment
+
+By default, MorphyLib treats the standard gap symbol '-' as inapplicable. However, the calling program can set the treatment of the gap symbol as either missing data or as a new state, to emulate the behaviour of other programs.
+  
+
+### Applying the data
+
+Once the caller is satisfied with the settings, these parameters need to be applied to the dataset and will remain enforced until they are later changed.
+
+```C
+mpl_apply_tipdata(mplobj);
+```
+
+**Any parameter changes must be applied by calling this function again** otherwise, unexpected behaviour or a crash will occur.
+  
+### *What happens inside MorphyLib?* 
+
+When the parameters are applied, the data are partitioned according to type of parsimony and then whether or not there is a significant number of inapplicable tokens (i.e. 3 or more per column).
+
+## Calculating ancestral states and obtaining a tree length
 
 If treating the gap symbol as inapplicable, then four whole passes are required on an initial tree in order to get the full ancestral state set calculations and lengths for the tree.
 
