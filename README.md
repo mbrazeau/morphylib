@@ -225,7 +225,7 @@ unsigned int mpl_get_packed_states(const int nodeID, const int character, const 
 To retrieve a C-style (null-terminated) string:
 
 ```C
-char* mpl_get_packed_states(const int nodeID, const int character, const int passnum, Morphy m);
+char* mpl_get_stateset(const int nodeID, const int character, const int passnum, Morphy m);
 ```
 
 Note that the pass number is 1-based, not 0-based, because these values do not index into an array. Therefore, the `passnum` variable should be either 1, 2, 3, or 4.
