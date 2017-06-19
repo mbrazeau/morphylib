@@ -103,7 +103,7 @@ int mpl_set_parsim_t(const int charID, const MPLchtype chtype, Morphy m);
 ```
 The useage might be as follows:
 ```C
-mpl_set_parsim_t(12, FITCH_T, mplobj)
+mpl_set_parsim_t(12, FITCH_T, mplobj);
 ```
 At present, however, all characters are default type FITCH_T (unordered).
 
