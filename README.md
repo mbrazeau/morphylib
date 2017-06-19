@@ -138,12 +138,43 @@ When the parameters are applied, the data are partitioned according to type of p
 
 If treating the gap symbol as inapplicable, then four whole passes are required on an initial tree in order to get the full ancestral state set calculations and lengths for the tree.
 
-- First downpass
-- Update the root values
-- First uppass
-- Update the tips
-- Second downpass
-- Second uppass
+MorphyLib stores a list of ancestral state sets for each node (internal and terminal) in the data set. It does not store any information
+
+The examples below will assume a generic node structure like the following:
+```C
+struct node {
+  struct node* anc, *left, *right; // Pointers to the neighboring nodes
+  int index // Unique index identifier of the node
+} node;
+```
+However, this would be specific to the calling program and is irrelevant to MorphyLib: other possibilities such as "Felsenstein-type" ring nodes, or edge lists could work as well. It is up to the calling program to keep track of the relationship between members and be able to uniquely identify them with an index value.
+
+### First downpass:
+
+Assuming `n` is a pointer to a node currently being visited by a downpass, the first downpass set at a node would be calculated as:
+
+```C
+mpl_first_down_recon(n->index, n->left->index, n->right->index, mplobj);
+```
+
+The return value of this function is the length added at that set, so if you need to store the length, the following pattern would be used:
+
+```C
+int length = 0;
+
+...
+
+length += mpl_first_down_recon(n->index, n->left->index, n->right->index, mplobj);
+```
+
+### Update the root values
+
+MorphyLib assumes a calculation root is being used to calculate the length of the tree (thus trees must be at least implicitly rooted while counting). The root of the tree must be updated if treating inapplicable data as such. This resolves any ambiguity between applicables and the inapplicable state in favour of the applicable value(s) (this is is consistent with both the auxiliary principle and with minimizing length of the tree).
+
+### First uppass
+### Update the tips
+### Second downpass
+### Second uppass
 
 ### Getting ancestral state sets
 
