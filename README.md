@@ -181,3 +181,10 @@ MorphyLib assumes a calculation root is being used to calculate the length of th
 ## Future development
 
 This workflow is sufficient for getting the length of a given tree and for outputting the ancestral state sets when inapplicable data are treated as such. However, applying this to a tree search will be extremely slow. Most programs doing heuristic tree searches do not optimize over the whole tree, but use 'shortcuts' that allow length calculations by optimising only at proposed insertion sites. Support for these procedures will soon be added. However, inapplicable data add complications to the process that can't always be foreseen. Thus, partial re-optimisation of subtrees may sometimes be required for accurate length counts on characters with inapplicable scores.
+
+## Acknowledgments
+
+This project has been and continues to be a long-standing passion project over a number of years, attempts, and re-developments (much of which can be explored on my GitHub page going back several years now). It would not have been possible to get this far in the process without the help of collaborators [Thomas Guillerme](https://github.com/TGuillerme) and [Martin R. Smith](https://github.com/ms609). Additionally, I acknowledge generous support from the European Research Council under the European Union’s Seventh Framework Programme (FP/2007–2013)/ERC Grant Agreement number 311092.
+
+## References
+All of this code depends on both published and currently in-prep work by myself and others. The details of the algorithm will be discussed in a forcoming series of papers.
