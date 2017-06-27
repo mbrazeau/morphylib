@@ -39,7 +39,7 @@ Morphyp mpl_new_Morphy_t(void)
 }
 
 
-void* mpl_get_from_matrix
+/*void* mpl_get_from_matrix
 (const int      row,
  const int      col,
  const int      ncol,
@@ -47,7 +47,7 @@ void* mpl_get_from_matrix
  const void*    data)
 {
     return (void*)(data + (row * ncol * size + (size * col)));
-}
+}*/
 
 
 int mpl_get_gaphandl(Morphyp handl)
