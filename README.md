@@ -11,7 +11,7 @@ A forthcoming paper by myself and co-authors will describe the algorithms used b
 
 ## Building Morphy
 
-For Linux and Mac, the Makefile is supplied that builds builds both static and dynamic libraries. For Windows, the Makefile.win file is supplied. Simply specify `nmake -f Makefile.win` and builds only the static library (at this time 27/06/2017).
+For Linux and Mac, the Makefile is supplied that builds builds both static and dynamic libraries. For Windows, the Makefile.win file is supplied. Simply specify `nmake -f Makefile.win`. This builds only the static library (at this time 27/06/2017).
 
 Additionally, Python and R bindings are being supplied and maintained, but may not be entirely up to date with the core library. 
 
