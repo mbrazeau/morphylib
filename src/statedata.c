@@ -94,7 +94,7 @@ int mpl_get_states_from_rawdata(Morphyp handl)
     char *rawmatrix = handl->char_t_matrix;
     char *current = NULL;
     int listmax = MAXSTATES + 1; // +1 for terminal null.
-    char statesymbols[listmax];
+    char* statesymbols = (char*)calloc(listmax, sizeof(char));//[listmax];
 //    int dbg_loopcount = 0;
     
     statesymbols[0] = '\0';
@@ -129,6 +129,7 @@ int mpl_get_states_from_rawdata(Morphyp handl)
     int numstates = (int)strlen(statesymbols);
     mpl_set_numsymbols(numstates, handl);
     mpl_assign_symbol_list_from_matrix(statesymbols, &handl->symbols);
+    free(statesymbols);
     return count-1;
 }
 
