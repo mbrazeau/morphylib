@@ -49,7 +49,6 @@ extern "C" {
 #include "morphydefs.h"
 #include "mplerror.h"
     
-    
 // Public functions
 
 /*!
@@ -621,7 +620,40 @@ int     mpl_update_lower_root
          Morphy m);
     
     
+int		mpl_first_down_update
+
+		(const int node_id,
+		 const int left_id,
+		 const int right_id,
+		 Morphy m);
     
+
+int		mpl_first_up_update
+
+		(const int node_id,
+		 const int left_id,
+		 const int right_id,
+		 const int anc_id,
+		 Morphy m);
+
+
+int		mpl_second_down_update
+
+		(const int node_id,
+		 const int left_id,
+		 const int right_id,
+		 Morphy m);
+
+
+int		mpl_second_up_update
+
+		(const int node_id,
+		 const int left_id,
+		 const int right_id,
+		 const int anc_id,
+		 Morphy m);
+
+
 int     mpl_get_insertcost
 
         (const int  srcID,
