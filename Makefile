@@ -1,5 +1,5 @@
 # Makefile for morphy library
-NAME	:= libmorphy_$(shell uname -m)-$(shell uname -s)
+NAME	:= libmorphy
 CC		:= gcc
 DBGF	:= -g -D DEBUG --coverage
 CFLAGS	:= -c -Wall -fPIC #$(shell pkg-config --cflags glib-2.0)
@@ -13,13 +13,16 @@ LIBS	:= #$(shell pkg-config --libs glib-2.0)
 LDFLAGS	:= -L ./$(LIBS) 
 
 
-.PHONY: all clean test run debug
+.PHONY: all clean test run debug release
 
 all: $(SNAME) $(DNAME)
 
 debug: CFLAGS := $(CFLAGS) $(DBGF)
 debug: LDFLAGS := $(LDFLAGS) --coverage 
-debug: all 
+debug: all
+
+release: CFLAGS := $(CFLAGS) -O3
+release: all
 
 $(SNAME) : $(OBJS)
 	ar rvs $(SNAME) $(OBJS)
