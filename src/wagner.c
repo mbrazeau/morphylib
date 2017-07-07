@@ -48,6 +48,7 @@ int mpl_wagner_downpass
     MPLstate* n     = nset->downpass1;
     
     unsigned long* weights = part->intwts;
+    
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
