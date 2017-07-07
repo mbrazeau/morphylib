@@ -73,8 +73,8 @@ int mpl_wagner_uppass
     int j     = 0;
     int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-//    MPLstate* left  = lset->downpass1;
-//    MPLstate* right = rset->downpass1;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
     MPLstate* npre  = nset->downpass1;
     MPLstate* nfin  = nset->uppass1;
     MPLstate* anc   = ancset->uppass1;
@@ -87,12 +87,9 @@ int mpl_wagner_uppass
             nfin[j] = anc[j] & npre[j];
         }
         else {
-//            if (left[j] & right[j]) {
-//                nfin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
-//            }
-//            else {
-//                nfin[j] = npre[j] | anc[j];
-//            }
+            MPLstate res = 0;
+            mpl_closed_interval(&res, left[j], right[j]);
+            nfin[j] = (res & anc[j]) | npre[j];
         }
        
         assert(nfin[j]);
