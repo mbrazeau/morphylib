@@ -10,6 +10,30 @@
 #include "wagner.h"
 
 
+static unsigned mpl_closed_interval(MPLstate* res, MPLstate a, MPLstate b)
+{
+    unsigned steps = 0;
+    MPLstate c = 0;
+    
+#ifdef DEBUG
+    assert(*res == 0);
+#endif
+    
+    if (b > a) {
+        c = b;
+        b = a;
+        a = c;
+    }
+    
+    *res = a & (-a);
+    
+    while(!(*res & b)) {
+        ++steps;
+        *res |= a >> steps;
+    }
+    
+    return steps;
+}
 
 int mpl_wagner_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
@@ -32,25 +56,9 @@ int mpl_wagner_downpass
             n[j] = left[j] & right[j];
         }
         else {
-            MPLstate temp = 0;
-            MPLstate min = 0;
-            MPLstate max = 0;
-            if (left[j] > right[j]) {
-                max = left[j];
-                min = right[j];
-            }
-            else {
-                min = left[j];
-                max = right[j];
-            }
             
-            temp = max & ~(max-1);
-            n[j] = temp;
-            while (!(n[j] & min)) {
-                steps += weights[i];
-                n[j] |= temp >> steps;
-            }
-            // TODO: Multiply by weights BEFORE next j
+            n[j] = 0;
+            steps += weights[i] * mpl_closed_interval(&n[j], left[j], right[j]);
         }
     }
     
