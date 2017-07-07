@@ -70,8 +70,9 @@ int mpl_fitch_uppass
                 nfin[j] = npre[j] | anc[j];
             }
         }
-       
+#ifdef DEBUG       
         assert(nfin[j]);
+#endif
     }
     
     return 0;
@@ -115,8 +116,9 @@ int mpl_NA_fitch_first_downpass
         }
         
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
-        
+#ifdef DEBUG
         assert(n[j]);
+#endif
     }
     
     return 0;
@@ -167,8 +169,9 @@ int mpl_NA_fitch_first_uppass
         else {
             nifin[j] = npre[j];
         }
-        
+#ifdef DEBUG
         assert(nifin[j]);
+#endif
     }
     
     
@@ -225,7 +228,9 @@ int mpl_NA_fitch_second_downpass
         
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
     
+#ifdef DEBUG
         assert(npre[j]);
+#endif
     }
     
     return steps;
@@ -289,7 +294,9 @@ int mpl_NA_fitch_second_uppass
                 steps += weights[i];
             }
         }
+#ifdef DEBUG
         assert(nfin[j]);
+#endif
     }
     
     return steps;
@@ -314,7 +321,9 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
         else {
             tfinal[j] = tprelim[j];
         }
+#ifdef DEBUG
         assert(tfinal[j]);
+#endif
     }
     return 0;
 }
@@ -353,9 +362,10 @@ int mpl_fitch_NA_tip_update
         }
         
         tpass3[j] = tpass2[j];
-        
+#ifdef DEBUG   
         assert(tpass3[j]);
         assert(tpass2[j]);
+#endif
     }
     
     return 0;
@@ -385,7 +395,9 @@ int mpl_fitch_NA_tip_finalize
         }
         
         stacts[j] = tfinal[j] & ISAPPLIC;
+#ifdef DEBUG
         assert(tfinal[j]);
+#endif
     }
     
     return 0;
