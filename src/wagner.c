@@ -10,7 +10,7 @@
 #include "wagner.h"
 
 
-static unsigned mpl_closed_interval(MPLstate* res, MPLstate a, MPLstate b)
+static inline unsigned mpl_closed_interval(MPLstate* res, MPLstate a, MPLstate b)
 {
     unsigned steps = 0;
     MPLstate c = 0;

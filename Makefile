@@ -1,8 +1,8 @@
 # Makefile for morphy library
 NAME	:= libmorphy
-CC		:= gcc
+CC		:= icc #gcc
 DBGF	:= -g -D DEBUG --coverage
-CFLAGS	:= -c -Wall -fPIC #$(shell pkg-config --cflags glib-2.0)
+CFLAGS	:= -c -Wall -fPIC -std=c99 #$(shell pkg-config --cflags glib-2.0)
 SRC		:= *.c
 OBJS	:= *.o
 SRCDIR	:= ./src/
