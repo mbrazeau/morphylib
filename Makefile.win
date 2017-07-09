@@ -1,0 +1,15 @@
+#Windows makefile
+NAME=libmorphy_
+CC=cl.exe
+DBGF=/DDEBUG
+CFLAGS= /c
+SRC= \*.c
+SRCDIR= .\src
+OBJS=*.obj
+ 
+all: $(OBJS)
+	lib.exe /OUT:libmorphy.lib $(OBJS)
+	del *.obj
+
+$(OBJS): $(SRCDIR)$(SRC)
+	$(CC) $(CFLAGS) $(SRCDIR)$(SRC)

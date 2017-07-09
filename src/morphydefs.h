@@ -127,13 +127,13 @@ typedef struct {
 typedef struct partition_s MPLpartition;
 typedef struct partition_s {
     
-    MPLchtype       chtype;       /*!< The optimality type used for this partition */
-    bool            isNAtype;     /*!< This character should be treated as having inapplicable data */ 
+    MPLchtype       chtype;         /*!< The optimality type used for this partition */
+    bool            isNAtype;       /*!< This character should be treated as having inapplicable data */ 
     int             maxnchars;
     int             ncharsinpart;
     int*            charindices;
-    unsigned long   nchanges; /*!< Number of state changes in this partition */
-    unsigned long*  nchangesarray; /*!< Array of state changes in each character */
+    unsigned long   nchanges;       /*!< Number of state changes in this partition */
+    unsigned long*  nchangesarray;  /*!< Array of state changes in each character */
     bool            usingfltwt;
     unsigned long*  intwts;
     Mflt*           fltwts;
@@ -151,6 +151,7 @@ typedef struct partition_s {
 
 typedef struct MPLndsets {
     
+    bool        needsupdate;
     MPLstate*   downpass1;
     MPLstate*   uppass1;
     MPLstate*   downpass2;

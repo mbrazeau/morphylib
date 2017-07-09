@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../src/mplerror.h"
 #include "../src/mpl.h"
+#include "./ctreelib/treelib.h"
+#include "./ctreelib/tltree.h"
 
 
 #define pfail \
@@ -15,6 +18,8 @@
 #define psump printf("[  ** PASSED ** ] All tests passed.\n")
 
 #define theader(testname) printf("\n\n\t%s\n\n", testname);
+
+int test_do_fullpass_on_tree(TLtree* t, Morphy m);
 
 typedef struct {
     MPLchtype   userchtype;

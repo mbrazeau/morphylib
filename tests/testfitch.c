@@ -9,6 +9,7 @@
 #include "../src/mpl.h"
 #include "../src/fitch.h"
 #include "testfitch.h"
+#include "ctreelib/treelib.h"
 #include <string.h>
 
 int test_small_fitch(void)
@@ -537,4 +538,72 @@ int test_state_retrieval(void)
     
     return failn;
 }
+
+
+int test_twopass_fitch(void)
+{
+    theader("Testing Fitch two passes");
+    int err     = 0;
+    int failn   = 0;
     
+    int ntax	= 10;
+    int nchar	= 10;
+    char *rawmatrix =
+    "1010312231\
+    2130233203\
+    3001210203\
+    2131111202\
+    3302222312\
+    2231202332\
+    1023203131\
+    1123103001\
+    2222213220\
+    3203321302;";
+    
+    TLP tlp = tl_new_TL();
+    tl_set_numtaxa(ntax, tlp);
+    Morphy m1 = mpl_new_Morphy();
+    
+    mpl_init_Morphy(ntax, nchar, m1);
+    mpl_set_gaphandl(GAP_MISSING, m1);
+    mpl_attach_rawdata(rawmatrix, m1);
+    mpl_set_num_internal_nodes(13, m1);
+    mpl_apply_tipdata(m1);
+    
+    char* newick = "((((1,((2,7),(5,9))),(4,8)),6),(3,10));";
+    tl_attach_Newick(newick, tlp);
+    tl_set_current_tree(0, tlp);
+    TLtree* tree = tl_get_TLtree(tlp);
+    
+    
+    int length = 0;
+    
+    length = test_do_fullpass_on_tree(tree, m1);
+    
+    if (length != 53) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_set_parsim_t(8, WAGNER_T, m1);
+    mpl_set_parsim_t(9, WAGNER_T, m1);
+    mpl_apply_tipdata(m1);
+    
+    length = test_do_fullpass_on_tree(tree, m1);
+    
+    if (length != 59) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_delete_Morphy(m1);
+    tl_delete_TL(tlp);
+    
+    return failn;
+}

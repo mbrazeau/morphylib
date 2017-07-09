@@ -10,5 +10,6 @@
 #define testwagner_h
 
 int test_small_wagner(void);
+int test_wagner_extended(void);
 
 #endif /* testwagner_h */

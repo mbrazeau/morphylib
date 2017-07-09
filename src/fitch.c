@@ -18,7 +18,7 @@ int mpl_fitch_downpass
     int i     = 0;
     int j     = 0;
     int steps = 0;
-    int* indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
@@ -26,12 +26,13 @@ int mpl_fitch_downpass
     
     unsigned long* weights = part->intwts;
     
+#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         j = indices[i];
-        if (left[j] & right[j]) {
-            n[j] = left[j] & right[j];
-        }
-        else {
+        
+        n[j] = left[j] & right[j];
+        
+        if (n[j] == 0) {
             n[j] = left[j] | right[j];
             steps += weights[i];
         }
@@ -47,7 +48,7 @@ int mpl_fitch_uppass
 {
     int i     = 0;
     int j     = 0;
-    int* indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
@@ -55,14 +56,15 @@ int mpl_fitch_uppass
     MPLstate* nfin  = nset->uppass1;
     MPLstate* anc   = ancset->uppass1;
     
+#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
         
-        if ((anc[j] & npre[j]) == anc[j]) {
-            nfin[j] = anc[j] & npre[j];
-        }
-        else {
+        nfin[j] = anc[j] & npre[j];
+        
+        if (nfin[j] == 0) {
+            
             if (left[j] & right[j]) {
                 nfin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
             }
@@ -70,8 +72,9 @@ int mpl_fitch_uppass
                 nfin[j] = npre[j] | anc[j];
             }
         }
-       
+#ifdef DEBUG
         assert(nfin[j]);
+#endif
     }
     
     return 0;
@@ -84,39 +87,36 @@ int mpl_NA_fitch_first_downpass
 {
     int i     = 0;
     int j     = 0;
-    int* indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
     MPLstate* n     = nset->downpass1;
-    MPLstate* stacts  = nset->subtree_actives;
-    MPLstate* lacts   = lset->subtree_actives;
-    MPLstate* racts   = rset->subtree_actives;
-    MPLstate temp = 0;
     
+#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         j = indices[i];
         
-        if ((temp = (left[j] & right[j]))) {
-            n[j] = temp;
-            
-            if (temp == NA) {
-                if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
-                    n[j] = (left[j] | right[j]);
-                }
-            }
-        }
-        else {
+        
+        n[j] = (left[j] & right[j]);
+        
+        if (n[j] == 0) {
             n[j] = (left[j] | right[j]);
             
             if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
                 n[j] = n[j] & ISAPPLIC;
             }
         }
-        
-        stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
-        
+        else {
+            if (n[j] == NA) {
+                if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
+                    n[j] = (left[j] | right[j]);
+                }
+            }
+        }
+#ifdef DEBUG
         assert(n[j]);
+#endif
     }
     
     return 0;
@@ -129,7 +129,7 @@ int mpl_NA_fitch_first_uppass
 {
     int i     = 0;
     int j     = 0;
-    int* indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
@@ -137,6 +137,7 @@ int mpl_NA_fitch_first_uppass
     MPLstate* nifin = nset->uppass1;
     MPLstate* anc   = ancset->uppass1;
     
+#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
@@ -167,8 +168,9 @@ int mpl_NA_fitch_first_uppass
         else {
             nifin[j] = npre[j];
         }
-        
+#ifdef DEBUG
         assert(nifin[j]);
+#endif
     }
     
     
@@ -182,7 +184,7 @@ int mpl_NA_fitch_second_downpass
     int i     = 0;
     int j     = 0;
     int steps = 0;
-    int* indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
     MPLstate* left  = lset->downpass2;
     MPLstate* right = rset->downpass2;
@@ -195,6 +197,7 @@ int mpl_NA_fitch_second_downpass
     
     unsigned long* weights = part->intwts;
     
+#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         
 //        temp = 0;
@@ -225,7 +228,9 @@ int mpl_NA_fitch_second_downpass
         
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
     
+#ifdef DEBUG
         assert(npre[j]);
+#endif
     }
     
     return steps;
@@ -239,7 +244,7 @@ int mpl_NA_fitch_second_uppass
     int i     = 0;
     int j     = 0;
     int steps = 0;
-    int* indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
     MPLstate* left  = lset->downpass2;
     MPLstate* right = rset->downpass2;
@@ -250,6 +255,7 @@ int mpl_NA_fitch_second_uppass
     MPLstate* racts = rset->subtree_actives;
     unsigned long* weights = part->intwts;
     
+#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
@@ -289,7 +295,9 @@ int mpl_NA_fitch_second_uppass
                 steps += weights[i];
             }
         }
+#ifdef DEBUG
         assert(nfin[j]);
+#endif
     }
     
     return steps;
@@ -314,7 +322,9 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
         else {
             tfinal[j] = tprelim[j];
         }
+#ifdef DEBUG
         assert(tfinal[j]);
+#endif
     }
     return 0;
 }
@@ -353,9 +363,10 @@ int mpl_fitch_NA_tip_update
         }
         
         tpass3[j] = tpass2[j];
-        
+#ifdef DEBUG   
         assert(tpass3[j]);
         assert(tpass2[j]);
+#endif
     }
     
     return 0;
@@ -385,7 +396,9 @@ int mpl_fitch_NA_tip_finalize
         }
         
         stacts[j] = tfinal[j] & ISAPPLIC;
+#ifdef DEBUG
         assert(tfinal[j]);
+#endif
     }
     
     return 0;
