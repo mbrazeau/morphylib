@@ -88,7 +88,15 @@ int test_wagner_extended(void)
     
     Morphy m = mpl_new_Morphy();
     
-    mpl_init_Morphy(numtaxa, nchar, m);
+    err = mpl_init_Morphy(numtaxa, nchar, m);
+    if (err) {
+        ++failn;
+        pfail;
+        err = 0;
+    }
+    else {
+        ppass;
+    }
     
     mpl_attach_rawdata(matrix, m);
     mpl_set_parsim_t(0, WAGNER_T, m);
@@ -103,7 +111,6 @@ int test_wagner_extended(void)
     tl_set_current_tree(0, tlp);
     TLtree* tree = tl_get_TLtree(tlp);
     
-    int index = 0;
     int* postorder = (int*)calloc(2 * numtaxa, sizeof(int));
     dbg_printf("\n");
     
@@ -120,5 +127,8 @@ int test_wagner_extended(void)
     }
     
     free(postorder);
+    mpl_delete_Morphy(m);
+    tl_delete_TL(tlp);
+    
     return failn;
 }

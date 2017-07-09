@@ -36,12 +36,6 @@ int mpl_fitch_downpass
             n[j] = left[j] | right[j];
             steps += weights[i];
         }
-//        if (left[j] & right[j]) {
-//        }
-//        else {
-//            n[j] = left[j] | right[j];
-//            steps += weights[i];
-//        }
     }
     
     return steps;
@@ -78,19 +72,7 @@ int mpl_fitch_uppass
                 nfin[j] = npre[j] | anc[j];
             }
         }
-        
-//        if ((anc[j] & npre[j]) == anc[j]) {
-//            nfin[j] = anc[j] & npre[j];
-//        }
-//        else {
-//            if (left[j] & right[j]) {
-//                nfin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
-//            }
-//            else {
-//                nfin[j] = npre[j] | anc[j];
-//            }
-//        }
-#ifdef DEBUG       
+#ifdef DEBUG
         assert(nfin[j]);
 #endif
     }
@@ -110,10 +92,6 @@ int mpl_NA_fitch_first_downpass
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
     MPLstate* n     = nset->downpass1;
-//    MPLstate* stacts  = nset->subtree_actives;
-//    MPLstate* lacts   = lset->subtree_actives;
-//    MPLstate* racts   = rset->subtree_actives;
-    MPLstate temp = 0;
     
 #pragma ivdep
     for (i = 0; i < nchars; ++i) {
@@ -136,24 +114,6 @@ int mpl_NA_fitch_first_downpass
                 }
             }
         }
-//        if ((temp = (left[j] & right[j]))) {
-//            n[j] = temp;
-//            
-//            if (temp == NA) {
-//                if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
-//                    n[j] = (left[j] | right[j]);
-//                }
-//            }
-//        }
-//        else {
-//            n[j] = (left[j] | right[j]);
-//            
-//            if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
-//                n[j] = n[j] & ISAPPLIC;
-//            }
-//        }
-        
-        //stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
 #ifdef DEBUG
         assert(n[j]);
 #endif
