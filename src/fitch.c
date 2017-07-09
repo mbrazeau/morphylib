@@ -11,12 +11,6 @@
 #include "fitch.h"
 #include "statedata.h"
 
-#ifdef ICC_COMPILER
-#define restrict restrict
-#elseif
-#define restrict
-#endif
-
 /**/
 int mpl_fitch_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
@@ -24,13 +18,13 @@ int mpl_fitch_downpass
     int i     = 0;
     int j     = 0;
     int steps = 0;
-    const int* restrict indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* restrict left  = lset->downpass1;
-    MPLstate* restrict right = rset->downpass1;
-    MPLstate* restrict n     = nset->downpass1;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* n     = nset->downpass1;
     
-    unsigned long* restrict weights = part->intwts;
+    unsigned long* weights = part->intwts;
     
 #pragma ivdep
     for (i = 0; i < nchars; ++i) {
@@ -60,13 +54,13 @@ int mpl_fitch_uppass
 {
     int i     = 0;
     int j     = 0;
-    const int* restrict indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* restrict left  = lset->downpass1;
-    MPLstate* restrict right = rset->downpass1;
-    MPLstate* restrict npre  = nset->downpass1;
-    MPLstate* restrict nfin  = nset->uppass1;
-    MPLstate* restrict anc   = ancset->uppass1;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* npre  = nset->downpass1;
+    MPLstate* nfin  = nset->uppass1;
+    MPLstate* anc   = ancset->uppass1;
     
 #pragma ivdep
     for (i = 0; i < nchars; ++i) {
@@ -111,11 +105,11 @@ int mpl_NA_fitch_first_downpass
 {
     int i     = 0;
     int j     = 0;
-    const int* restrict indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* restrict left  = lset->downpass1;
-    MPLstate* restrict right = rset->downpass1;
-    MPLstate* restrict n     = nset->downpass1;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* n     = nset->downpass1;
 //    MPLstate* stacts  = nset->subtree_actives;
 //    MPLstate* lacts   = lset->subtree_actives;
 //    MPLstate* racts   = rset->subtree_actives;
@@ -175,13 +169,13 @@ int mpl_NA_fitch_first_uppass
 {
     int i     = 0;
     int j     = 0;
-    const int* restrict indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* restrict left  = lset->downpass1;
-    MPLstate* restrict right = rset->downpass1;
-    MPLstate* restrict npre  = nset->downpass1;
-    MPLstate* restrict nifin = nset->uppass1;
-    MPLstate* restrict anc   = ancset->uppass1;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* npre  = nset->downpass1;
+    MPLstate* nifin = nset->uppass1;
+    MPLstate* anc   = ancset->uppass1;
     
 #pragma ivdep
     for (i = 0; i < nchars; ++i) {
@@ -230,18 +224,18 @@ int mpl_NA_fitch_second_downpass
     int i     = 0;
     int j     = 0;
     int steps = 0;
-    const int* restrict indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* restrict left  = lset->downpass2;
-    MPLstate* restrict right = rset->downpass2;
-    MPLstate* restrict nifin = nset->uppass1;
-    MPLstate* restrict npre    = nset->downpass2;
-    MPLstate* restrict stacts  = nset->subtree_actives;
-    MPLstate* restrict lacts   = lset->subtree_actives;
-    MPLstate* restrict racts   = rset->subtree_actives;
+    MPLstate* left  = lset->downpass2;
+    MPLstate* right = rset->downpass2;
+    MPLstate* nifin = nset->uppass1;
+    MPLstate* npre    = nset->downpass2;
+    MPLstate* stacts  = nset->subtree_actives;
+    MPLstate* lacts   = lset->subtree_actives;
+    MPLstate* racts   = rset->subtree_actives;
     MPLstate temp = 0;
     
-    unsigned long* restrict weights = part->intwts;
+    unsigned long* weights = part->intwts;
     
 #pragma ivdep
     for (i = 0; i < nchars; ++i) {
@@ -290,16 +284,16 @@ int mpl_NA_fitch_second_uppass
     int i     = 0;
     int j     = 0;
     int steps = 0;
-    const int* restrict indices    = part->charindices;
+    const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* restrict left  = lset->downpass2;
-    MPLstate* restrict right = rset->downpass2;
-    MPLstate* restrict npre  = nset->downpass2;
-    MPLstate* restrict nfin  = nset->uppass2;
-    MPLstate* restrict anc   = ancset->uppass2;
-    MPLstate* restrict lacts = lset->subtree_actives;
-    MPLstate* restrict racts = rset->subtree_actives;
-    unsigned long* restrict weights = part->intwts;
+    MPLstate* left  = lset->downpass2;
+    MPLstate* right = rset->downpass2;
+    MPLstate* npre  = nset->downpass2;
+    MPLstate* nfin  = nset->uppass2;
+    MPLstate* anc   = ancset->uppass2;
+    MPLstate* lacts = lset->subtree_actives;
+    MPLstate* racts = rset->subtree_actives;
+    unsigned long* weights = part->intwts;
     
 #pragma ivdep
     for (i = 0; i < nchars; ++i) {
