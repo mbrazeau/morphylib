@@ -11,6 +11,12 @@
 #include "fitch.h"
 #include "statedata.h"
 
+#ifdef ICC_COMPILER
+#define restrict restrict
+#elseif
+#define restrict
+#endif
+
 /**/
 int mpl_fitch_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
