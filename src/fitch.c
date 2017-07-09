@@ -26,7 +26,6 @@ int mpl_fitch_downpass
     
     unsigned long* weights = part->intwts;
     
-#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         j = indices[i];
         
@@ -56,7 +55,6 @@ int mpl_fitch_uppass
     MPLstate* nfin  = nset->uppass1;
     MPLstate* anc   = ancset->uppass1;
     
-#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
@@ -93,7 +91,6 @@ int mpl_NA_fitch_first_downpass
     MPLstate* right = rset->downpass1;
     MPLstate* n     = nset->downpass1;
     
-#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         j = indices[i];
         
@@ -137,7 +134,6 @@ int mpl_NA_fitch_first_uppass
     MPLstate* nifin = nset->uppass1;
     MPLstate* anc   = ancset->uppass1;
     
-#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
@@ -197,7 +193,6 @@ int mpl_NA_fitch_second_downpass
     
     unsigned long* weights = part->intwts;
     
-#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         
 //        temp = 0;
@@ -255,7 +250,6 @@ int mpl_NA_fitch_second_uppass
     MPLstate* racts = rset->subtree_actives;
     unsigned long* weights = part->intwts;
     
-#pragma ivdep
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
