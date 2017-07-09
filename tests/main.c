@@ -62,6 +62,7 @@ int main (void)
     
     // wagner.c tests 
     fails += test_small_wagner();
+    fails += test_wagner_extended();
     
     printf("\n\nTest summary:\n\n");
     if (fails) {

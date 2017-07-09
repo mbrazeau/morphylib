@@ -66,3 +66,69 @@ int test_small_wagner(void)
     mpl_delete_Morphy(m1);
     return failn;
 }
+
+int test_wagner_extended(void)
+{
+    theader("Extended test of Wanger optimisation");
+    int err     = 0;
+    int failn   = 0;
+    
+    int numtaxa = 6;
+    int nchar = 2;
+    TLP tlp = tl_new_TL();
+    tl_set_numtaxa(numtaxa, tlp);
+    
+    char* matrix =
+   "21\
+    21\
+    10\
+    10\
+    10\
+    03;";
+    
+    Morphy m = mpl_new_Morphy();
+    
+    mpl_init_Morphy(numtaxa, nchar, m);
+    
+    mpl_attach_rawdata(matrix, m);
+    mpl_set_parsim_t(0, WAGNER_T, m);
+    mpl_set_parsim_t(1, WAGNER_T, m);
+    mpl_set_num_internal_nodes(numtaxa, m);
+    mpl_apply_tipdata(m);
+    
+    char* newick = "(((1,2),3),(4,(5,6)));";
+    
+    tl_attach_Newick(newick, tlp);
+    
+    tl_set_current_tree(0, tlp);
+    TLtree* tree = tl_get_TLtree(tlp);
+    
+    int index = 0;
+    int* postorder = (int*)calloc(2 * numtaxa, sizeof(int));
+    tl_traverse_tree(tree->start, &index, postorder);
+    dbg_printf("\n");
+    
+    int i = 0;
+    int end = tl_upper_root(tree).index;
+    int length = 0;
+    
+    for (i = 0; i < end; ++i)
+    {
+        TLnode* n = &tree->trnodes[postorder[i]];
+        
+        if (!n->tip) {
+            length += mpl_first_down_recon(n->index, I_LDESC(n->index, tree), I_RDESC(n->index, tree), m);
+        }
+    }
+    
+    if (length != 6) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    free(postorder);
+    return failn;
+}

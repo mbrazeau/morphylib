@@ -9,6 +9,7 @@
 #include "../src/mpl.h"
 #include "../src/fitch.h"
 #include "testfitch.h"
+#include "ctreelib/treelib.h"
 #include <string.h>
 
 int test_small_fitch(void)
