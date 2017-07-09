@@ -20,7 +20,7 @@ int test_do_fullpass_on_tree(TLtree* t, Morphy m)
     int postorder[2 * t->ntaxa];
     
     end = tl_traverse_tree(t->start, &index, postorder);
-    
+    printf("\n");
     for (i = 0; i <= end; ++i)
     {
         TLnode* n = &t->trnodes[postorder[i]];
