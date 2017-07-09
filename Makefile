@@ -18,7 +18,7 @@ LDFLAGS	:= -L ./$(LIBS)
 all: $(SNAME) $(DNAME)
 
 debug: CFLAGS := $(CFLAGS) $(DBGF) #-fprofile-instr-generate
-debug: LDFLAGS := $(LDFLAGS) --coverage 
+debug: LDFLAGS := $(LDFLAGS) --coverage -lm
 debug: all
 
 release: CFLAGS := $(CFLAGS) -O3
