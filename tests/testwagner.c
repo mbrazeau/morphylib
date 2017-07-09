@@ -81,7 +81,7 @@ int test_wagner_extended(void)
     char* matrix =
    "21\
     21\
-    10\
+    20\
     10\
     10\
     03;";
@@ -105,21 +105,11 @@ int test_wagner_extended(void)
     
     int index = 0;
     int* postorder = (int*)calloc(2 * numtaxa, sizeof(int));
-    tl_traverse_tree(tree->start, &index, postorder);
     dbg_printf("\n");
     
-    int i = 0;
-    int end = tl_upper_root(tree).index;
     int length = 0;
     
-    for (i = 0; i < end; ++i)
-    {
-        TLnode* n = &tree->trnodes[postorder[i]];
-        
-        if (!n->tip) {
-            length += mpl_first_down_recon(n->index, I_LDESC(n->index, tree), I_RDESC(n->index, tree), m);
-        }
-    }
+    length = test_do_fullpass_on_tree(tree, m);
     
     if (length != 6) {
         ++failn;
