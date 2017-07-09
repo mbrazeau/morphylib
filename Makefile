@@ -18,7 +18,7 @@ LDFLAGS	:= -L ./$(LIBS)
 all: $(SNAME) $(DNAME)
 
 debug: CFLAGS := $(CFLAGS) $(DBGF) #-fprofile-instr-generate
-debug: LDFLAGS := $(LDFLAGS) --coverage -lm
+debug: LDFLAGS := $(LDFLAGS) --coverage
 debug: all
 
 release: CFLAGS := $(CFLAGS) -O3
@@ -38,6 +38,6 @@ clean:
 	rm *.o
 
 test: 
-	$(CC) -I./ -I./tests/ctreelib --coverage -o ./tests/utest ./tests/*.c ./tests/ctreelib/*.c  $(SNAME) $(LDFLAGS) 
+	$(CC) -I./ -I./tests/ctreelib --coverage -o ./tests/utest ./tests/*.c ./tests/ctreelib/*.c  $(SNAME) $(LDFLAGS) -lm
 run:
 	$(TDIRS)tcreate
