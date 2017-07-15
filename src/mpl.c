@@ -262,7 +262,6 @@ int mpl_apply_tipdata(Morphy m)
     mpl_setup_partitions(mi);
     mpl_scale_all_intweights(mi);
     mpl_assign_intwts_to_partitions(mi);
-    // TODO: Check if any weights are floats; then all arith is FP.
     
     // Create all the internal data memory
     mpl_setup_statesets(mi);

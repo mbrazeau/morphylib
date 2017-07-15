@@ -1027,6 +1027,7 @@ int mpl_copy_data_into_tips(Morphyp handl)
         for (j = 0; j < nchar; ++j) {
             nsets[i]->downpass1[j] =
             handl->inmatrix.cells[i * nchar + j].asint;
+            
             nsets[i]->downpass2[j] = nsets[i]->downpass1[j];
         }
     }
