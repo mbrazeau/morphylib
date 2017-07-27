@@ -187,7 +187,7 @@ int mpl_NA_fitch_first_update_downpass
         
         if (temp != n[j])
         {
-            // Flag it
+            // TODO: Flag it
             n[j] = temp;
         }
 #ifdef DEBUG
