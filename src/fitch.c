@@ -376,6 +376,64 @@ int mpl_NA_fitch_second_uppass
     return steps;
 }
 
+int mpl_fitch_NA_local_reopt
+(MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* tgt2set, MPLpartition* part,
+ int maxlen)
+{
+    
+    part->ntoupdate = 0; // V. important: resets the record of characters needing updates
+    
+    int i           = 0;
+    int j           = 0;
+    int need_update = 0;
+    int steps       = 0;
+    const int* indices  = part->charindices;
+    int nchars          = part->ncharsinpart;
+    MPLstate* tgt1d1    = tgt1set->downpass1;
+//    MPLstate* tgt1u1    = tgt1set->uppass1;
+    MPLstate* tgt2d1    = tgt2set->downpass1;
+//    MPLstate* tgt2u1    = tgt2set->uppass1;
+//
+    MPLstate* tgt1f     = tgt1set->uppass2;
+    MPLstate* tgt2f     = tgt2set->downpass2;
+    MPLstate* src       = srcset->downpass1; // TODO: Verify this.
+    
+    unsigned long* weights = part->intwts;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (!(src[j] & (tgt1f[j] | tgt2f[j]))) {
+            
+            if (src[j] & ISAPPLIC) {
+                if ((tgt1f[j] | tgt2f[j]) & ISAPPLIC) {
+                    steps += weights[i];
+                }
+                else {
+                    
+                    /* NOTE: This will be written simply at first, but there are
+                     * possible additional checks on tgt preliminary sets that 
+                     * could reduce the number of characters that need to be 
+                     * updated. */
+                    
+                    // part->update_indices[need_update] = j;
+                    // ++need_update;
+                }
+            }
+            else {
+                if (src[j] & (tgt1d1[j] | tgt2d1[j])) {
+                    // part->update_indices[need_update] = j;
+                    // ++need_update;
+                }
+            }
+        }
+    }
+    
+    return steps;
+}
+
+
 int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
 {
     int i     = 0;

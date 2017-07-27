@@ -21,7 +21,7 @@ debug: CFLAGS := $(CFLAGS) $(DBGF) #-fprofile-instr-generate
 debug: LDFLAGS := $(LDFLAGS) --coverage
 debug: all
 
-release: CFLAGS := $(CFLAGS) -O3 -xhost
+release: CFLAGS := $(CFLAGS) -O3 -xhost -prof-use -prof-dir=./profile
 release: all
 
 $(SNAME) : $(OBJS)

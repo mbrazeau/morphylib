@@ -133,7 +133,8 @@ typedef struct partition_s {
     int             ncharsinpart;
     int*            charindices;
     unsigned long   nchanges;       /*!< Number of state changes in this partition */
-    unsigned long*  nchangesarray;  /*!< Array of state changes in each character */
+    int             ntoupdate;
+    int*            update_indices;
     bool            usingfltwt;
     unsigned long*  intwts;
     Mflt*           fltwts;
