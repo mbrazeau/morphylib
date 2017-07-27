@@ -825,6 +825,52 @@ int mpl_allocate_stset_stringptrs(const int nchars, MPLndsets* set)
     return ERR_NO_ERROR;
 }
 
+
+void mpl_swap_downpass1(MPLndsets* nset)
+{
+    MPLstate* t = NULL;
+    t = nset->downpass1;
+    nset->downpass1 = nset->temp_downpass1;
+    nset->temp_downpass1 = t;
+}
+
+
+void mpl_swap_uppass1(MPLndsets* nset)
+{
+    MPLstate* t = NULL;
+    t = nset->uppass1;
+    nset->uppass1 = nset->temp_uppass1;
+    nset->temp_uppass1 = t;
+}
+
+
+void mpl_swap_downpass2(MPLndsets* nset)
+{
+    MPLstate* t = NULL;
+    t = nset->downpass2;
+    nset->downpass2 = nset->temp_downpass2;
+    nset->temp_downpass2 = t;
+}
+
+
+void mpl_swap_uppass2(MPLndsets* nset)
+{
+    MPLstate* t = NULL;
+    t = nset->uppass2;
+    nset->uppass2 = nset->temp_uppass2;
+    nset->temp_uppass2 = t;
+}
+
+
+void mpl_swap_tempsets(MPLndsets* nset)
+{
+    mpl_swap_downpass1(nset);
+    mpl_swap_uppass1(nset);
+    mpl_swap_downpass2(nset);
+    mpl_swap_uppass2(nset);
+}
+
+
 MPLndsets* mpl_alloc_stateset(int numchars)
 {
     MPLndsets* new = (MPLndsets*)calloc(1, sizeof(MPLndsets));
@@ -862,26 +908,26 @@ MPLndsets* mpl_alloc_stateset(int numchars)
         return NULL;
     }
     
-    new->subtree_downpass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
-    if (!new->subtree_downpass1) {
+    new->temp_downpass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
+    if (!new->temp_downpass1) {
         mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_uppass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
-    if (!new->subtree_uppass1) {
+    new->temp_uppass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
+    if (!new->temp_uppass1) {
         mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_downpass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
-    if (!new->subtree_downpass1) {
+    new->temp_downpass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
+    if (!new->temp_downpass1) {
         mpl_free_stateset(numchars, new);
         return NULL;
     }
     
-    new->subtree_uppass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
-    if (!new->subtree_uppass2) {
+    new->temp_uppass2 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
+    if (!new->temp_uppass2) {
         mpl_free_stateset(numchars, new);
         return NULL;
     }
@@ -917,21 +963,21 @@ void mpl_free_stateset(const int nchars, MPLndsets* statesets)
         free(statesets->subtree_actives);
         statesets->subtree_actives = NULL;
     }
-    if (statesets->subtree_downpass1) {
-        free(statesets->subtree_downpass1);
-        statesets->subtree_downpass1 = NULL;
+    if (statesets->temp_downpass1) {
+        free(statesets->temp_downpass1);
+        statesets->temp_downpass1 = NULL;
     }
-    if (statesets->subtree_uppass1) {
-        free(statesets->subtree_uppass1);
-        statesets->subtree_uppass1 = NULL;
+    if (statesets->temp_uppass1) {
+        free(statesets->temp_uppass1);
+        statesets->temp_uppass1 = NULL;
     }
-    if (statesets->subtree_downpass2) {
-        free(statesets->subtree_downpass2);
-        statesets->subtree_downpass2 = NULL;
+    if (statesets->temp_downpass2) {
+        free(statesets->temp_downpass2);
+        statesets->temp_downpass2 = NULL;
     }
-    if (statesets->subtree_uppass2) {
-        free(statesets->subtree_uppass2);
-        statesets->subtree_uppass2 = NULL;
+    if (statesets->temp_uppass2) {
+        free(statesets->temp_uppass2);
+        statesets->temp_uppass2 = NULL;
     }
     
     mpl_delete_nodal_strings(nchars, statesets);
