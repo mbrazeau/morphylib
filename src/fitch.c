@@ -78,8 +78,40 @@ int mpl_fitch_uppass
     return 0;
 }
 
+int mpl_fitch_local_reopt
+(MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* tgt2set, MPLpartition* part,
+ int maxlen)
+{
+   
+    int i     = 0;
+    int j     = 0;
+    int steps = 0;
+    const int* indices    = part->charindices;
+    int nchars      = part->ncharsinpart;
+    MPLstate* tgt1  = tgt1set->uppass1;
+    MPLstate* tgt2  = tgt2set->uppass1;
+    MPLstate* src   = srcset->downpass1;
+    
+    unsigned long* weights = part->intwts;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (!(src[j] & (tgt1[j] | tgt2[j]))) {
+            
+            steps += weights[i];
+            
+            if (steps > maxlen)
+            {
+                return steps;
+            }
+        }
+    }
+    
+    return steps;
+}
 
-/**/
 int mpl_NA_fitch_first_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
 {
@@ -110,6 +142,53 @@ int mpl_NA_fitch_first_downpass
                     n[j] = (left[j] | right[j]);
                 }
             }
+        }
+#ifdef DEBUG
+        assert(n[j]);
+#endif
+    }
+    
+    return 0;
+}
+
+
+int mpl_NA_fitch_first_update_downpass
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
+{
+    int i     = 0;
+    int j     = 0;
+    const int* indices    = part->charindices;
+    int nchars      = part->ncharsinpart;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* n     = nset->downpass1;
+    MPLstate temp;
+    
+    for (i = 0; i < nchars; ++i) {
+        j = indices[i];
+        
+        
+        temp = (left[j] & right[j]);
+        
+        if (temp == 0) {
+            temp = (left[j] | right[j]);
+            
+            if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
+                temp = n[j] & ISAPPLIC;
+            }
+        }
+        else {
+            if (temp == NA) {
+                if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
+                    temp = (left[j] | right[j]);
+                }
+            }
+        }
+        
+        if (temp != n[j])
+        {
+            // Flag it
+            n[j] = temp;
         }
 #ifdef DEBUG
         assert(n[j]);
