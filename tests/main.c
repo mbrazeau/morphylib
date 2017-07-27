@@ -27,6 +27,7 @@ int main (void)
     fails += test_bad_load_symbols();
     fails += test_multistate_symbols();
     fails += test_usr_order_symbols();
+    fails += test_big_multistate_symbols();
     
     // morphy.c tests
     fails += test_isreal();
