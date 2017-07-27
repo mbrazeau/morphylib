@@ -12,6 +12,8 @@
 #include "morphy.h"
 #include "statedata.h"
 
+// TODO: This is temporary
+#include "fitch.h"
 
 Morphy mpl_new_Morphy(void)
 {
@@ -567,6 +569,36 @@ int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m)
     }
     
     return ERR_NO_ERROR;
+}
+
+int mpl_get_insertcost
+(const int srcID, const int tgt1ID, const int tgt2ID, const bool max,
+ int cutoff, Morphy m)
+{
+    
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  srcset  = handl->statesets[srcID];
+    MPLndsets*  tgt1set = handl->statesets[tgt1ID];
+    MPLndsets*  tgt2set = handl->statesets[tgt2ID];
+    
+    int i = 0;
+    int res = 0;
+    int numparts = mpl_get_numparts(handl);
+    //MPLdownfxn downfxn = NULL;
+    
+    for (i = 0; i < numparts; ++i) {
+        if (!handl->partitions[i]->isNAtype) { // TODO: This probably should change
+            // TODO: Use a function pointer to handle correctly
+            mpl_fitch_local_reopt(srcset, tgt1set, tgt2set,
+                                  handl->partitions[i], cutoff);
+        }
+    }
+    
+    return res;
 }
 
 
