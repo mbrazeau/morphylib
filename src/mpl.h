@@ -622,36 +622,36 @@ int     mpl_update_lower_root
     
 int		mpl_first_down_update
 
-		(const int node_id,
-		 const int left_id,
-		 const int right_id,
-		 Morphy m);
+		(const int  node_id,
+		 const int  left_id,
+		 const int  right_id,
+		 Morphy     m);
     
 
 int		mpl_first_up_update
 
-		(const int node_id,
-		 const int left_id,
-		 const int right_id,
-		 const int anc_id,
-		 Morphy m);
+		(const int  node_id,
+		 const int  left_id,
+		 const int  right_id,
+		 const int  anc_id,
+		 Morphy     m);
 
 
 int		mpl_second_down_update
 
-		(const int node_id,
-		 const int left_id,
-		 const int right_id,
-		 Morphy m);
+		(const int  node_id,
+		 const int  left_id,
+		 const int  right_id,
+		 Morphy     m);
 
 
 int		mpl_second_up_update
 
-		(const int node_id,
-		 const int left_id,
-		 const int right_id,
-		 const int anc_id,
-		 Morphy m);
+		(const int  node_id,
+		 const int  left_id,
+		 const int  right_id,
+		 const int  anc_id,
+		 Morphy     m);
 
 
 int     mpl_get_insertcost
@@ -660,9 +660,16 @@ int     mpl_get_insertcost
          const int  tgt1ID,
          const int  tgt2ID,
          const bool max,
-         int        cutoff,
+         const int  cutoff,
          Morphy     m);
 
+    
+// Indicates whether or not partitions with inapplicable characters need partial
+// reoptimisation on the target subtree. SHOULD RETURN: Number of characters
+// needing partial reoptimisation on the subtree.
+int     mpl_check_reopt_inapplics
+    
+        (Morphy m);
 /*!
 
  @brief Returns the state set for a character at a given node as set bits in an

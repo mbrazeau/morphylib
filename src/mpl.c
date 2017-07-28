@@ -573,7 +573,7 @@ int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m)
 
 int mpl_get_insertcost
 (const int srcID, const int tgt1ID, const int tgt2ID, const bool max,
- int cutoff, Morphy m)
+ const int cutoff, Morphy m)
 {
     
     if (!m) {
@@ -588,19 +588,31 @@ int mpl_get_insertcost
     int i = 0;
     int res = 0;
     int numparts = mpl_get_numparts(handl);
-    //MPLdownfxn downfxn = NULL;
+    MPLloclfxn loclfxn = NULL;
     
     for (i = 0; i < numparts; ++i) {
-        if (!handl->partitions[i]->isNAtype) { // TODO: This probably should change
-            // TODO: Use a function pointer to handle correctly
-            mpl_fitch_local_reopt(srcset, tgt1set, tgt2set,
-                                  handl->partitions[i], cutoff);
-        }
+        loclfxn = handl->partitions[i]->loclfxn;
+        res = loclfxn(srcset, tgt1set, tgt2set, handl->partitions[i], cutoff, max);
     }
     
     return res;
 }
 
+int mpl_check_reopt_inapplics(Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp mi = (Morphyp)m;
+    int n = 0;
+    int i = 0;
+    for (i = 0; i < mi->numparts; ++i) {
+        n += mi->partitions[i]->nNAtoupdate;
+    }
+    
+    return n;
+}
 
 //int     mpl_get_insertcost_max(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
 //int     mpl_get_insertcost_min(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
