@@ -80,7 +80,7 @@ int mpl_fitch_uppass
 
 int mpl_fitch_local_reopt
 (MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* tgt2set, MPLpartition* part,
- int maxlen)
+ int maxlen, bool domaxlen)
 {
    
     int i     = 0;
@@ -102,7 +102,7 @@ int mpl_fitch_local_reopt
             
             steps += weights[i];
             
-            if (steps > maxlen)
+            if (steps > maxlen && domaxlen == true)
             {
                 return steps;
             }
@@ -122,6 +122,7 @@ int mpl_NA_fitch_first_downpass
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
     MPLstate* n     = nset->downpass1;
+    MPLstate* nt    = nset->temp_downpass1;
     
     for (i = 0; i < nchars; ++i) {
         j = indices[i];
@@ -143,6 +144,8 @@ int mpl_NA_fitch_first_downpass
                 }
             }
         }
+        
+        nt[j] = n[j];   // Store a copy for partially reoptimising the subtree
 #ifdef DEBUG
         assert(n[j]);
 #endif
@@ -151,44 +154,73 @@ int mpl_NA_fitch_first_downpass
     return 0;
 }
 
+static inline int mpl_check_down_NA_steps
+(MPLstate left, MPLstate right, MPLstate lactive, MPLstate ractive)
+{
+    int steps = 0;
+    if (!(left & right)) {
+        if (left & ISAPPLIC && right & ISAPPLIC) {
+            ++steps;
+        }
+        else if (lactive && ractive) {
+            ++steps;
+        }
+    }
+    return steps;
+}
 
 int mpl_NA_fitch_first_update_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
 {
+    /*------------------------------------------------------------------------*
+     |  This function is for doing a partial downpass when proposing a subtree|
+     |  reinsertion during branchswapping. Its purpose is to (partially)      |
+     |  correct any character state sets that are affected by the proposed    |
+     |  reinsertion.                                                          |
+     *------------------------------------------------------------------------*/
     int i     = 0;
     int j     = 0;
+    int step_recall = 0; // The number of steps to take back
     const int* indices    = part->charindices;
     int nchars      = part->ncharsinpart;
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
     MPLstate* n     = nset->downpass1;
-    MPLstate temp;
-    
+    MPLstate* l_orig = lset->temp_downpass1;
+    MPLstate* r_orig = rset->temp_downpass1;
+    MPLstate* n_orig = nset->temp_downpass1;
+    MPLstate* lactive = lset->subtree_actives;
+    MPLstate* ractive = rset->subtree_actives;
+    unsigned long* weights = part->intwts;
+
     for (i = 0; i < nchars; ++i) {
+        
         j = indices[i];
         
+        n[j] = (left[j] & right[j]);
         
-        temp = (left[j] & right[j]);
-        
-        if (temp == 0) {
-            temp = (left[j] | right[j]);
+        if (n[j] == 0) {
+            n[j] = (left[j] | right[j]);
             
             if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
-                temp = n[j] & ISAPPLIC;
+                n[j] = n[j] & ISAPPLIC;
             }
         }
         else {
-            if (temp == NA) {
+            if (n[j] == NA) {
                 if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
-                    temp = (left[j] | right[j]);
+                    n[j] = (left[j] | right[j]);
                 }
             }
         }
         
-        if (temp != n[j])
+        if (n[j] != n[j])
         {
-            // TODO: Flag it
-            n[j] = temp;
+            // TODO: Set flag for state sets having been updated.
+            n[j] = n_orig[j];
+            step_recall = mpl_check_down_NA_steps(l_orig[j], r_orig[j],
+                                                  lactive[j], ractive[j]);
+            step_recall *= weights[i];
         }
 #ifdef DEBUG
         assert(n[j]);
@@ -203,6 +235,69 @@ int mpl_NA_fitch_first_uppass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
  MPLpartition* part)
 {
+    int i     = 0;
+    int j     = 0;
+    const int* indices    = part->charindices;
+    int nchars      = part->ncharsinpart;
+    MPLstate* left  = lset->downpass1;
+    MPLstate* right = rset->downpass1;
+    MPLstate* npre  = nset->downpass1;
+    MPLstate* nifin = nset->uppass1;
+    MPLstate* anc   = ancset->uppass1;
+    MPLstate* nfint = nset->temp_uppass1;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (npre[j] & NA) {
+            if (npre[j] & ISAPPLIC) {
+                if (anc[j] == NA) {
+                    nifin[j] = NA;
+                }
+                else {
+                    nifin[j] = npre[j] & ISAPPLIC;
+                }
+            }
+            else {
+                if (anc[j] == NA) {
+                    nifin[j] = NA;
+                }
+                else {
+                    if ((left[j] | right[j]) & ISAPPLIC) {
+                        nifin[j] = ((left[j] | right[j]) & ISAPPLIC);
+                    }
+                    else {
+                        nifin[j] = NA;
+                    }
+                }
+            }
+        }
+        else {
+            nifin[j] = npre[j];
+        }
+        
+        nfint[j] = nifin[j];
+        
+#ifdef DEBUG
+        assert(nifin[j]);
+#endif
+    }
+    
+    
+    return 0;
+}
+
+int mpl_NA_fitch_first_update_uppass
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
+ MPLpartition* part)
+{
+    /*------------------------------------------------------------------------*
+     |  This function is for doing a partial uppsass when proposing a subtree |
+     |  reinsertion during branchswapping. Its purpose is to (partially)      |
+     |  correct any character state sets that are affected by the proposed    |
+     |  reinsertion.                                                          |
+     *------------------------------------------------------------------------*/
     int i     = 0;
     int j     = 0;
     const int* indices    = part->charindices;
@@ -243,6 +338,8 @@ int mpl_NA_fitch_first_uppass
         else {
             nifin[j] = npre[j];
         }
+        
+        
 #ifdef DEBUG
         assert(nifin[j]);
 #endif
@@ -346,7 +443,7 @@ int mpl_NA_fitch_second_uppass
                             if ((left[j] | right[j]) & anc[j]) {
                                 nfin[j] = anc[j];
                             } else {
-                                nfin[j] = (left[j] | right[j] | anc[j]) & NA;
+                                nfin[j] = (left[j] | right[j] | anc[j]) & ISAPPLIC;
                             }
                         } else {
                             nfin[j] = npre[j] | anc[j];
@@ -378,7 +475,7 @@ int mpl_NA_fitch_second_uppass
 
 int mpl_fitch_NA_local_reopt
 (MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* tgt2set, MPLpartition* part,
- int maxlen)
+ int maxlen, bool domaxlen)
 {
     
     part->ntoupdate = 0; // V. important: resets the record of characters needing updates
@@ -417,18 +514,20 @@ int mpl_fitch_NA_local_reopt
                      * could reduce the number of characters that need to be 
                      * updated. */
                     
-                    // part->update_indices[need_update] = j;
-                    // ++need_update;
+                    part->update_NA_indices[need_update] = j;
+                    ++need_update;
                 }
             }
             else {
                 if (src[j] & (tgt1d1[j] | tgt2d1[j])) {
-                    // part->update_indices[need_update] = j;
-                    // ++need_update;
+                    part->update_NA_indices[need_update] = j;
+                    ++need_update;
                 }
             }
         }
     }
+    
+    part->nNAtoupdate = need_update;
     
     return steps;
 }

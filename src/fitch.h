@@ -13,7 +13,7 @@ int mpl_fitch_downpass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpar
 
 int mpl_fitch_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset, MPLpartition* part);
 
-int mpl_fitch_local_reopt(MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* tgt2set, MPLpartition* part, int maxlen);
+int mpl_fitch_local_reopt(MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* tgt2set, MPLpartition* part, int maxlen, bool domaxlen);
 
 int mpl_NA_fitch_first_downpass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part);
 
@@ -22,6 +22,8 @@ int mpl_NA_fitch_first_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset,
 int mpl_NA_fitch_second_downpass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part);
 
 int mpl_NA_fitch_second_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset, MPLpartition* part);
+
+int mpl_fitch_NA_local_reopt (MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* tgt2set, MPLpartition* part, int maxlen, bool domaxlen);
 
 int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part);
 
