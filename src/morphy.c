@@ -334,6 +334,7 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
         part->finalfxn      = mpl_NA_fitch_first_uppass;
         part->tipupdate     = mpl_fitch_NA_tip_update;
         part->tipfinalize   = mpl_fitch_NA_tip_finalize;
+        part->loclfxn       = mpl_fitch_NA_local_reopt;
     }
     else {
         part->prelimfxn     = mpl_fitch_downpass;
@@ -342,6 +343,7 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
         part->tipfinalize   = NULL;
         part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
         part->inappupfxn    = NULL;
+        part->loclfxn       = mpl_fitch_local_reopt;
     }
 }
 
@@ -356,6 +358,7 @@ void mpl_assign_wagner_fxns(MPLpartition* part)
 //        part->finalfxn      = NULL;
 //        part->tipupdate     = NULL;
 //        part->tipfinalize   = NULL;
+//        part->loclfxn       = NULL;
 //    }
 //    else {
         part->prelimfxn     = mpl_wagner_downpass;
@@ -364,6 +367,7 @@ void mpl_assign_wagner_fxns(MPLpartition* part)
         part->tipfinalize   = NULL;
         part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
         part->inappupfxn    = NULL;
+        part->loclfxn       = NULL;
 //    }
 }
 
@@ -474,6 +478,7 @@ int mpl_delete_partition(MPLpartition* part)
     int err = ERR_UNEXP_NULLPTR;
     
     if (part) {
+        
         if (part->charindices) {
             free(part->charindices);
             part->charindices   = NULL;
@@ -696,6 +701,48 @@ int mpl_put_partitions_in_handle(MPLpartition* first, Morphyp handl)
 }
 
 
+void mpl_delete_all_update_buffers(Morphyp handl)
+{
+    /* Erases all the update buffers */
+    int i = 0;
+    for (i = 0; i < handl->numparts; ++i) {
+        MPLpartition* p = handl->partitions[i];
+        if (p->update_indices) {
+            free(p->update_indices);
+            p->update_indices = NULL;
+        }
+        if (p->update_NA_indices) {
+            free(p->update_NA_indices);
+            p->update_NA_indices = NULL;
+        }
+    }
+}
+
+
+int mpl_allocate_update_buffers(Morphyp handl)
+{
+    /* Allocates memory for an array of indices needed update on the tree */
+    int i = 0;
+    for (i = 0; i < handl->numparts; ++i) {
+        MPLpartition* p = handl->partitions[i];
+        p->update_indices = (int*)calloc(p->ncharsinpart, sizeof(int));
+        if (!p->update_indices) {
+            mpl_delete_all_update_buffers(handl);
+            return ERR_BAD_MALLOC;
+        }
+        p->update_NA_indices = (int*)calloc(p->ncharsinpart, sizeof(int));
+        if (!p->update_NA_indices) {
+            mpl_delete_all_update_buffers(handl);
+            return ERR_BAD_MALLOC;
+        }
+        
+        p->ntoupdate = 0;
+        p->nNAtoupdate = 0;
+    }
+    
+    return ERR_NO_ERROR;
+}
+
 int mpl_setup_partitions(Morphyp handl)
 {
     assert(handl);
@@ -751,6 +798,7 @@ int mpl_setup_partitions(Morphyp handl)
     
     handl->numparts = numparts;
     err = mpl_put_partitions_in_handle(first, handl);
+    mpl_allocate_update_buffers(handl);
     
     return err;
 }
