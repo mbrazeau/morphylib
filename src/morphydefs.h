@@ -63,6 +63,14 @@ typedef int (*MPLtipfxn)
             (MPLndsets*     tset,
              MPLndsets*     ancset,
              MPLpartition*  part);
+    
+typedef int (*MPLloclfxn)
+            (MPLndsets* srcset,
+             MPLndsets* topnod,
+             MPLndsets* botnod,
+             MPLpartition* part,
+             int cutoff,
+             bool usemax);
 
 // Key data types
 typedef enum {
@@ -135,6 +143,8 @@ typedef struct partition_s {
     unsigned long   nchanges;       /*!< Number of state changes in this partition */
     int             ntoupdate;
     int*            update_indices;
+    int             nNAtoupdate;
+    int*            update_NA_indices;
     bool            usingfltwt;
     unsigned long*  intwts;
     Mflt*           fltwts;
@@ -144,6 +154,7 @@ typedef struct partition_s {
     MPLupfxn        inappupfxn;
     MPLdownfxn      prelimfxn;
     MPLupfxn        finalfxn;
+    MPLloclfxn      loclfxn;
     MPLpartition*   next;
     
 } MPLpartition;
