@@ -21,14 +21,6 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
-//#include <glib.h>
-
-//typedef struct mplarray_s {
-//    int nelems;
-//    int maxelems;
-//    size_t elemsize;
-//    void **data;
-//} MPLarray;
 
 /* Function prototypes */
 

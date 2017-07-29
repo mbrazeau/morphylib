@@ -6,10 +6,10 @@
 //  Copyright © 2017 brazeaulab. All rights reserved.
 //
 
-#include "morphydefs.h"
-#include "mplerror.h"
 #include "mpl.h"
+#include "morphydefs.h"
 #include "morphy.h"
+#include "mplerror.h"
 #include "statedata.h"
 
 // TODO: This is temporary

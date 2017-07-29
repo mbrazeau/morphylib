@@ -5,13 +5,13 @@
 //  Created by mbrazeau on 23/04/2017.
 //  Copyright © 2017 brazeaulab. All rights reserved.
 //
+#include "mpl.h"
 #include "morphydefs.h"
-#include "mplerror.h"
 #include "morphy.h"
+#include "mplerror.h"
 #include "statedata.h"
 #include "fitch.h"
 #include "wagner.h"
-#include "mpl.h"
 
 void *mpl_alloc(size_t size, int setval)
 {

@@ -15,6 +15,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
+    
 //#ifdef MPLDBL
 typedef double Mflt;
 #define MPL_EPSILON DBL_EPSILON
@@ -73,29 +74,6 @@ typedef int (*MPLloclfxn)
              bool usemax);
 
 // Key data types
-typedef enum {
-    
-    NONE_T          = 0,
-    FITCH_T         = 1,
-    WAGNER_T        = 2,
-    DOLLO_T         = 3,
-    IRREVERSIBLE_T  = 4,
-    USERTYPE_T      = 5,
-    
-    MAX_CTYPE,
-    
-} MPLchtype;
-
-typedef enum {
-    
-    GAP_INAPPLIC,
-    GAP_MISSING,
-    GAP_NEWSTATE,
-    
-    GAP_MAX,
-    
-} MPLgap_t;
-
 typedef struct {
     MPLstate    asint;
     char*       asstr;
@@ -228,7 +206,6 @@ typedef struct Morphy_t {
     
 } Morphy_t, *Morphyp;
 
-typedef void* Morphy;
 
 #ifdef __cplusplus
 }

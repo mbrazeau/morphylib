@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include "mpl.h"
+#include "morphydefs.h"
 #include "mpltest.h"
 #include "../src/statedata.h"
 

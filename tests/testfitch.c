@@ -6,7 +6,8 @@
 //  Copyright © 2017 brazeaulab. All rights reserved.
 //
 #include "mpltest.h"
-#include "../src/mpl.h"
+#include "mpl.h"
+#include "morphydefs.h"
 #include "../src/fitch.h"
 #include "testfitch.h"
 #include "ctreelib/treelib.h"

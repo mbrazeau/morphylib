@@ -5,11 +5,11 @@
 //  Created by mbrazeau on 26/04/2017.
 //  Copyright © 2017 brazeaulab. All rights reserved.
 //
-#include "morphydefs.h"
-#include "mplerror.h"
-#include "morphy.h"
-#include "statedata.h"
 #include "mpl.h"
+#include "morphydefs.h"
+#include "morphy.h"
+#include "mplerror.h"
+#include "statedata.h"
 
 char* mpl_skip_closure(const char *closure, const char openc, const char closec)
 {

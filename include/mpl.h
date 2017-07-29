@@ -1,78 +1,102 @@
-/*!
- @file mpl.h
- 
- @brief Defines the Morphy Phylogenetic Library API: a library for phylogenetic
- computation accommodating morphological character hierarchies.
- 
- Copyright (C) 2017  Martin D. Brazeau
- 
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
- 
- @discussion This header includes all the externally exported definitions and
- function prototypes. A calling program creates an instance of a Morphy object 
- and interacts with its elements through the functions described in this 
- interface. The Morphy object contains no tree objects, but requires a 
- pre-specified list of indices (integers) corresponding to the node indices in 
- the calling program. Morphy will not keep track of the relationships between
- the nodes, and it is up to the caller to keep track of these. Each character
- *must* be assigned a type, and Morphy will make no default assumptions. Once 
- one or more characters are assigned a function type (which creates internal
- partitions), and a postorder list of nodes is known, then the library functions
- can be called to reconstruct state sets and deliver length estimates for each
- node.
- 
- Morphy will provide functions for local reoptimisation, partial reoptimisation
- and optimisation of subtrees.
- 
- */
+	/*!
+	 @file mpl.h
+	 
+	 @brief Defines the Morphy Phylogenetic Library API: a library for phylogenetic
+	 computation accommodating morphological character hierarchies.
+	 
+	 Copyright (C) 2017  Martin D. Brazeau
+	 
+	 This program is free software: you can redistribute it and/or modify
+	 it under the terms of the GNU General Public License as published by
+	 the Free Software Foundation, either version 3 of the License, or
+	 (at your option) any later version.
+	 
+	 This program is distributed in the hope that it will be useful,
+	 but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 GNU General Public License for more details.
+	 
+	 You should have received a copy of the GNU General Public License
+	 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 
+	 @discussion This header includes all the externally exported definitions and
+	 function prototypes. A calling program creates an instance of a Morphy object 
+	 and interacts with its elements through the functions described in this 
+	 interface. The Morphy object contains no tree objects, but requires a 
+	 pre-specified list of indices (integers) corresponding to the node indices in 
+	 the calling program. Morphy will not keep track of the relationships between
+	 the nodes, and it is up to the caller to keep track of these. Each character
+	 *must* be assigned a type, and Morphy will make no default assumptions. Once 
+	 one or more characters are assigned a function type (which creates internal
+	 partitions), and a postorder list of nodes is known, then the library functions
+	 can be called to reconstruct state sets and deliver length estimates for each
+	 node.
+	 
+	 Morphy will provide functions for local reoptimisation, partial reoptimisation
+	 and optimisation of subtrees.
+	 
+	 */
 
 #ifndef mpl_h
 #define mpl_h
 
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif /*__cplusplus */
-    
+		
 #include <stdbool.h>
-#include "morphydefs.h"
 #include "mplerror.h"
+		
+typedef void* Morphy;
+
+typedef enum {
     
-// Public functions
+    NONE_T          = 0,
+    FITCH_T         = 1,
+    WAGNER_T        = 2,
+    DOLLO_T         = 3,
+    IRREVERSIBLE_T  = 4,
+    USERTYPE_T      = 5,
+    
+    MAX_CTYPE,
+    
+} MPLchtype;
 
-/*!
- 
- @brief Creates a new instance of a Morphy object
+typedef enum {
+    
+    GAP_INAPPLIC,
+    GAP_MISSING,
+    GAP_NEWSTATE,
+    
+    GAP_MAX,
+    
+} MPLgap_t;
 
- @discussion Creates a new empty Morphy object. All fields are unpopulated and
- uninitialised.
- 
- @return A void pointer to the Morphy instance. NULL if unsuccessful.
- 
- */
+	// Public functions
+
+	/*!
+	 
+	 @brief Creates a new instance of a Morphy object
+
+	 @discussion Creates a new empty Morphy object. All fields are unpopulated and
+	 uninitialised.
+	 
+	 @return A void pointer to the Morphy instance. NULL if unsuccessful.
+	 
+	 */
 Morphy  mpl_new_Morphy
-    
-        (void);
+	
+		(void);
 
 
-/*!
- 
- @brief Destroys an instance of a Morphy object.
+	/*!
+	 
+	 @brief Destroys an instance of a Morphy object.
 
- @discussion Destroys an instance of the Morphy object, calling all destructors
- for internal object completely returning the memory to the system.
- 
+	 @discussion Destroys an instance of the Morphy object, calling all destructors
+	 for internal object completely returning the memory to the system.
+	 
  @param m A Morphy object to be destroyed.
  
  @return A Morphy error code.

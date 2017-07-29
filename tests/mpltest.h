@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../src/mplerror.h"
-#include "../src/mpl.h"
+#include "mplerror.h"
+#include "mpl.h"
 #include "./ctreelib/treelib.h"
 #include "./ctreelib/tltree.h"
 
