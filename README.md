@@ -1,4 +1,4 @@
-# MorphyLib     [![Build Status](https://travis-ci.org/mbrazeau/MorphyLib.svg?branch=master)](https://travis-ci.org/mbrazeau/MorphyLib) [![Coverage Status](https://coveralls.io/repos/github/mbrazeau/MorphyLib/badge.svg?branch=development)](https://coveralls.io/github/mbrazeau/MorphyLib?branch=development) ![](https://zenodo.org/badge/doi/10.5281/zenodo.8475.svg)
+# MorphyLib     [![Build Status](https://travis-ci.org/mbrazeau/morphylib.svg?branch=master)](https://travis-ci.org/mbrazeau/morphylib) [![Coverage Status](https://coveralls.io/repos/github/mbrazeau/MorphyLib/badge.svg?branch=development)](https://coveralls.io/github/mbrazeau/MorphyLib?branch=development) ![](https://zenodo.org/badge/doi/10.5281/zenodo.8475.svg)
 Phylogenetic reconstruction library using inapplicable data reconstruction
 
 ## About MorphyLib right now
