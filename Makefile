@@ -1,7 +1,7 @@
 # Makefile for morphy library
 NAME	:= libmorphy
-CC		:= icc
-DBGF	:= -g -D DEBUG --coverage
+CC		:= gcc
+DBGF	:= -g -D DEBUG #--coverage
 CFLAGS	:= -c -Wall -fPIC #$(shell pkg-config --cflags glib-2.0)
 SRC		:= *.c
 OBJS	:= *.o
@@ -18,10 +18,10 @@ LDFLAGS	:= -L ./$(LIBS)
 all: $(SNAME) $(DNAME)
 
 debug: CFLAGS := $(CFLAGS) $(DBGF) #-fprofile-instr-generate
-debug: LDFLAGS := $(LDFLAGS) --coverage
+debug: LDFLAGS := $(LDFLAGS) #--coverage
 debug: all
 
-release: CFLAGS := $(CFLAGS) -O3 -xhost -prof-use -prof-dir=./profile
+release: CFLAGS := $(CFLAGS) -O3 #-xhost -prof-use -prof-dir=./profile
 release: all
 
 $(SNAME) : $(OBJS)
