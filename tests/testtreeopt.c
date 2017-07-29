@@ -7,7 +7,7 @@
 //
 
 #include "mpltest.h"
-#include "morphydefs.h"
+#include "../src/morphydefs.h"
 
 
 int test_do_fullpass_on_tree(TLtree* t, Morphy m)

@@ -768,7 +768,7 @@ int test_get_partial_reopt_for_na(void)
     int num_to_update = 0;
     num_to_update = mpl_check_reopt_inapplics(m);
     
-    if (num_to_update != 11) {
+    if (num_to_update != 17) {
         ++failn;
         pfail;
     }
