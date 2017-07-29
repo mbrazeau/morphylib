@@ -1,3 +1,6 @@
+*.so
+*.a
+*.o
 .DS_Store
 *.pbxuser
 *.mode1v3
@@ -6,3 +9,4 @@
 *.xcuserstate
 project.xcworkspace/
 xcuserdata/
+*.xcodeproj
