@@ -753,10 +753,10 @@ int test_get_partial_reopt_for_na(void)
     TLnode* src = &tree->trnodes[3];
     TLnode* orig = NULL; // For the original site of the insertion
     orig = tl_remove_branch(src, tree);
-    length = 0;
-    length = test_do_fullpass_on_tree(tree, m);
+    int subtree_len = 0;
+    subtree_len = test_do_fullpass_on_tree(tree, m);
     
-    if (!(length < 29)) { // TODO: Make more precise
+    if (!(subtree_length < 29)) { // TODO: Make more precise
         ++failn;
         pfail;
     }
@@ -764,7 +764,8 @@ int test_get_partial_reopt_for_na(void)
         ppass;
     }
     
-    length = mpl_get_insertcost(src->index, orig->index, orig->anc->index, false, 100, m);
+    int init_added_len = 0;
+    init_added_len = mpl_get_insertcost(src->index, orig->index, orig->anc->index, false, 0, m);
     
     int num_to_update = 0;
     num_to_update = mpl_check_reopt_inapplics(m);
