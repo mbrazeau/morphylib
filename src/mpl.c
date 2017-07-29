@@ -592,7 +592,7 @@ int mpl_get_insertcost
     
     for (i = 0; i < numparts; ++i) {
         loclfxn = handl->partitions[i]->loclfxn;
-        res = loclfxn(srcset, tgt1set, tgt2set, handl->partitions[i], cutoff, max);
+        res += loclfxn(srcset, tgt1set, tgt2set, handl->partitions[i], cutoff, max);
     }
     
     return res;

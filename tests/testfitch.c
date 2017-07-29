@@ -710,11 +710,11 @@ int test_get_partial_reopt_for_na(void)
     //                       111111111122222
     //              123456789012345678901234
     char* matrix = "1-1030000000000000000---\
-                    1133--0000-0-0000-------\
+                    1123--0000-0-0000-------\
                     1-----------------------\
                     11----0511-1--------00--\
                     1---3-----1111111110---1\
-                    113330----1-1-11-1111111\
+                    112330----1-1-11-1111111\
                     0-11100011---11111111111\
                     011111111111111111111111\
                     011111111111111111111111\
@@ -753,8 +753,8 @@ int test_get_partial_reopt_for_na(void)
     TLnode* src = &tree->trnodes[3];
     TLnode* orig = NULL; // For the original site of the insertion
     orig = tl_remove_branch(src, tree);
-    int subtree_len = 0;
-    subtree_len = test_do_fullpass_on_tree(tree, m);
+    int subtree_length = 0;
+    subtree_length = test_do_fullpass_on_tree(tree, m);
     
     if (!(subtree_length < 29)) { // TODO: Make more precise
         ++failn;
