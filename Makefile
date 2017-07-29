@@ -38,6 +38,6 @@ clean:
 	rm *.o
 
 test: 
-	$(CC) -I./ -I./tests/ctreelib --coverage -o ./tests/utest ./tests/*.c ./tests/ctreelib/*.c  $(SNAME) $(LDFLAGS) -lm
+	$(CC) -I./src -I./include -I./tests/ctreelib --coverage -o ./tests/utest ./tests/*.c ./tests/ctreelib/*.c  $(SNAME) $(LDFLAGS) -lm
 run:
 	$(TDIRS)tcreate
