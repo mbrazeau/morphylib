@@ -69,7 +69,7 @@ int test_small_wagner(void)
 
 int test_wagner_extended(void)
 {
-    theader("Extended test of Wanger optimisation");
+    theader("Extended test of Wagner optimisation");
     int err     = 0;
     int failn   = 0;
     

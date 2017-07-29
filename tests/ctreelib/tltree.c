@@ -761,11 +761,50 @@ TLnode* tl_pull_node(TLndstack *ndstk)
 	return ret;
 }
 
-
-int tl_remove_branch(TLnode* src, TLtree* t)
+TLnode* tl_find_sib(TLnode* n)
 {
+    if (n->anc == NULL) {
+        return NULL;
+    }
     
-    return 0;
+    if (n->anc->left == n) {
+        return n->anc->right;
+    }
+    else {
+        return n->anc->left;
+    }
+}
+
+TLnode* tl_remove_branch(TLnode* src, TLtree* t)
+{
+    TLnode* tgtop = NULL;
+    TLnode* tgbottom = NULL;
+    
+    tgtop = tl_find_sib(src);
+    tgbottom = src->anc->anc;
+    
+    assert(tgtop->anc->anc == src->anc->anc);
+    TLnode** bback = NULL;
+    if (tgbottom->left == src->anc) {
+        bback = &tgbottom->left;
+    } else {
+        bback = &tgbottom->right;
+    }
+    
+    *bback = tgtop;
+    tgtop->anc = tgbottom;
+    
+    src->anc->anc = NULL;
+    
+    if (src->anc->left == src) {
+        src->anc->right = NULL;
+    }
+    else {
+        src->anc->left = NULL;
+    }
+    
+    
+    return tgtop;
 }
 
 TLnode** tl_get_anc_pointer(TLnode* n)

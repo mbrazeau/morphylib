@@ -303,11 +303,12 @@ int test_bulk_balanced_tree_cases(void)
         (char*)"10----11---1;", // 36
         (char*)"320--??3--21;", // 37
         (char*)"-------1----;", // 38
+        (char*)"0--11-111111;", // 39
     };
     
-    int nummatrices = 37;
+    int nummatrices = 40;
     
-    int expected[] = {5, 2, 3, 2, 1, 5, 5, 2, 5, 2, 2, 4, 3, 2, 5, 0, 5, 2, 4, 5, 2, 4, 3, 3, 2, 5, 1, 4, 4, 0, 5, 5, 4, 5, 2, 1, 3, 5, 0};
+    int expected[] = {5, 2, 3, 2, 1, 5, 5, 2, 5, 2, 2, 4, 3, 2, 5, 0, 5, 2, 4, 5, 2, 4, 3, 3, 2, 5, 1, 4, 4, 0, 5, 5, 4, 5, 2, 1, 3, 5, 0, 1};
     
     int tipancs[]= {12, 12, 13, 14, 15, 16, 21, 20, 19, 18, 17, 17};
     int ancs[]   = {13, 14, 15, 16, 22, 18, 19, 20, 21, 22, 23};
@@ -604,6 +605,176 @@ int test_twopass_fitch(void)
     
     mpl_delete_Morphy(m1);
     tl_delete_TL(tlp);
+    
+    return failn;
+}
+
+int test_local_reoptimisation(void)
+{
+    theader("Testing local reoptimization under standard Fitch");
+    int err     = 0;
+    int failn   = 0;
+    
+    int ntax = 12;
+    int nchar = 2;
+    
+    char* matrix = "11\
+    11\
+    11\
+    11\
+    11\
+    11\
+    00\
+    00\
+    00\
+    00\
+    00\
+    00;";
+    
+    char *newick = "((((((1,2),3),4),5),6),(7,(8,(9,(10,(11,12))))));";
+    
+    TLP tlp = tl_new_TL();
+    tl_set_numtaxa(ntax, tlp);
+    tl_attach_Newick(newick, tlp);
+    tl_set_current_tree(0, tlp);
+    TLtree *tree = tl_get_TLtree(tlp);
+    int * postoder[2* ntax * sizeof(int)];
+    
+    Morphy m = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m);
+    mpl_set_num_internal_nodes(ntax, m);
+    mpl_attach_rawdata(matrix, m);
+    mpl_apply_tipdata(m);
+    
+    int length = 0;
+    int diff = 0;
+    
+    length = test_do_fullpass_on_tree(tree, m);
+    
+    if (length != 2) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    TLnode* src = &tree->trnodes[2];
+    TLnode* orig = NULL; // For the original site of the insertion
+    orig = tl_remove_branch(src, tree);
+    length = 0;
+    length = test_do_fullpass_on_tree(tree, m);
+    
+    // This should not affect the tree length
+    if (length != 2) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    // Now propose a reinsertion at the original site. It should be zero.
+    diff = mpl_get_insertcost(src->index, orig->index, orig->anc->index, false, 100, m);
+    if (diff != 0) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    // Now propose a reinsertion on the other side of the tree. It should cost two.
+    diff = 0;
+    TLnode *newsite = &tree->trnodes[10];
+    diff = mpl_get_insertcost(src->index, newsite->index, newsite->anc->index, false, 100, m);
+    
+    if (diff != 2) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    return failn;
+}
+
+int test_get_partial_reopt_for_na(void)
+{
+    theader("Testing counting of characters needing partial reoptimization");
+    int err     = 0;
+    int failn   = 0;
+    int ntax = 12;
+    int nchar = 24;
+    //                       111111111122222
+    //              123456789012345678901234
+    char* matrix = "1-1030000000000000000---\
+                    1133--0000-0-0000-------\
+                    1-----------------------\
+                    11----0511-1--------00--\
+                    1---3-----1111111110---1\
+                    113330----1-1-11-1111111\
+                    0-11100011---11111111111\
+                    011111111111111111111111\
+                    011111111111111111111111\
+                    011111111111111111111111\
+                    011111111111111111111111\
+                    011111111111111111111111;";
+    
+    char *newick = "((((((1,2),3),4),5),6),(7,(8,(9,(10,(11,12))))));";
+    
+    TLP tlp = tl_new_TL();
+    tl_set_numtaxa(ntax, tlp);
+    tl_attach_Newick(newick, tlp);
+    tl_set_current_tree(0, tlp);
+    TLtree *tree = tl_get_TLtree(tlp);
+    int * postoder[2* ntax * sizeof(int)];
+    
+    Morphy m = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m);
+    mpl_set_num_internal_nodes(ntax, m);
+    mpl_attach_rawdata(matrix, m);
+    mpl_apply_tipdata(m);
+    
+    int length = 0;
+    int diff = 0;
+    
+    length = test_do_fullpass_on_tree(tree, m);
+    
+    if (length != 29) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    TLnode* src = &tree->trnodes[3];
+    TLnode* orig = NULL; // For the original site of the insertion
+    orig = tl_remove_branch(src, tree);
+    length = 0;
+    length = test_do_fullpass_on_tree(tree, m);
+    
+    if (!(length < 29)) { // TODO: Make more precise
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    length = mpl_get_insertcost(src->index, orig->index, orig->anc->index, false, 100, m);
+    
+    int num_to_update = 0;
+    num_to_update = mpl_check_reopt_inapplics(m);
+    
+    if (num_to_update != 11) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
     
     return failn;
 }

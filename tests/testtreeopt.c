@@ -7,6 +7,7 @@
 //
 
 #include "mpltest.h"
+#include "morphydefs.h"
 
 
 int test_do_fullpass_on_tree(TLtree* t, Morphy m)
@@ -18,8 +19,8 @@ int test_do_fullpass_on_tree(TLtree* t, Morphy m)
     
     int index = 0;
     int postorder[2 * t->ntaxa];
-    
-    end = tl_traverse_tree(t->start, &index, postorder);
+    tl_traverse_tree(t->start, &index, postorder);
+    end = index-1;
     printf("\n");
     for (i = 0; i <= end; ++i)
     {
