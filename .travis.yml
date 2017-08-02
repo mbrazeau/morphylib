@@ -4,12 +4,6 @@ compiler:
   - gcc
   - clang
 
-addons:
-  apt:
-    sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7', 'kalakris-cmake']
-    packages: ['clang-3.7', 'cmake']
-  env: COMPILER=clang++-3.7
-
 install:
   - cd ${TRAVIS_BUILD_DIR}
   - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
@@ -19,7 +13,14 @@ install:
   - sudo make install
   - cd ..
   - gem install coveralls-lcov
-  - cd ${TRAVIS_BUILD_DIR}
+  - sudo apt-get install build-essential
+  - wget http://www.cmake.org/files/v3.2/cmake-3.2.2.tar.gz
+  - tar xf cmake-3.2.2.tar.gz
+  - cd cmake-3.2.2
+  - ./configure
+  - make
+  - sudo make install
+ 
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
