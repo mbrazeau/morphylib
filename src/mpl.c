@@ -547,6 +547,7 @@ int mpl_finalize_tip(const int tip_id, const int anc_id, Morphy m)
     return  ERR_NO_ERROR;
 }
 
+
 int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m)
 {
     if (!m) {
@@ -571,11 +572,36 @@ int mpl_update_lower_root(const int l_root_id, const int root_id, Morphy m)
     return ERR_NO_ERROR;
 }
 
+
+int mpl_first_down_update
+(const int node_id, const int left_id, const int right_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  nstates = handl->statesets[node_id];
+    MPLndsets*  lstates = handl->statesets[left_id];
+    MPLndsets*  rstates = handl->statesets[right_id];
+    
+    int i = 0;
+    int res = 0;
+    int numparts = mpl_get_numparts(handl);
+    MPLdownfxn downfxn = NULL;
+    
+    for (i = 0; i < numparts; ++i) {
+        
+    }
+    
+    return res;
+}
+
+
 int mpl_get_insertcost
 (const int srcID, const int tgt1ID, const int tgt2ID, const bool max,
  const int cutoff, Morphy m)
 {
-    
     if (!m) {
         return ERR_UNEXP_NULLPTR;
     }
@@ -593,10 +619,12 @@ int mpl_get_insertcost
     for (i = 0; i < numparts; ++i) {
         loclfxn = handl->partitions[i]->loclfxn;
         res += loclfxn(srcset, tgt1set, tgt2set, handl->partitions[i], cutoff, max);
+        loclfxn = NULL;
     }
     
     return res;
 }
+
 
 int mpl_check_reopt_inapplics(Morphy m)
 {
@@ -608,15 +636,15 @@ int mpl_check_reopt_inapplics(Morphy m)
     int n = 0;
     int i = 0;
     for (i = 0; i < mi->numparts; ++i) {
-        n += mi->partitions[i]->nNAtoupdate;
+        if (mi->partitions[i]->isNAtype == true) { // This is just a safety measure but could be removed for optimisation
+            n += mi->partitions[i]->nNAtoupdate;
+        }
     }
     
     return n;
 }
 
-//int     mpl_get_insertcost_max(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
-//int     mpl_get_insertcost_min(const int srcID, const int tgt1ID, const int tgt2ID, Morphy m);
-//
+
 unsigned int mpl_get_packed_states
 (const int nodeID, const int character, const int passnum, const Morphy m)
 {
