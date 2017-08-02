@@ -19,11 +19,11 @@ int mpl_fitch_downpass
     int i     = 0;
     int j     = 0;
     int steps = 0;
-    const int* indices    = part->charindices;
-    int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->downpass1;
-    MPLstate* right = rset->downpass1;
-    MPLstate* n     = nset->downpass1;
+    const int* indices  = part->charindices;
+    int nchars          = part->ncharsinpart;
+    MPLstate* left      = lset->downpass1;
+    MPLstate* right     = rset->downpass1;
+    MPLstate* n         = nset->downpass1;
     
     unsigned long* weights = part->intwts;
     
@@ -48,7 +48,7 @@ int mpl_fitch_uppass
 {
     int i     = 0;
     int j     = 0;
-    const int* indices    = part->charindices;
+    const int* indices  = part->charindices;
     int nchars      = part->ncharsinpart;
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
