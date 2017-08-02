@@ -778,5 +778,15 @@ int test_get_partial_reopt_for_na(void)
         ppass;
     }
     
+    // Put the branch back in
+    tl_insert_branch(src, orig->index, tree);
+    
+    // Step down the tree until no further updates are required; take back length counts as required
+    TLnode* downstart = src->anc;
+    
+    // Move up the tree
+    // Downpass back to the starting point (of original uppass)
+    // Add the result to init_added_len and subtree_length
+    
     return failn;
 }
