@@ -363,6 +363,7 @@ int mpl_NA_fitch_second_downpass
     MPLstate* right = rset->downpass2;
     MPLstate* nifin = nset->uppass1;
     MPLstate* npre    = nset->downpass2;
+    MPLstate* npret   = nset->temp_downpass2;
     MPLstate* stacts  = nset->subtree_actives;
     MPLstate* lacts   = lset->subtree_actives;
     MPLstate* racts   = rset->subtree_actives;
@@ -398,6 +399,7 @@ int mpl_NA_fitch_second_downpass
             npre[j] = nifin[j];
         }
         
+        npret[j] = npre[j]; // Storage for temporary updates
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
     
 #ifdef DEBUG
@@ -559,6 +561,7 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
     }
     return 0;
 }
+
 
 int mpl_fitch_NA_tip_update
 (MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
