@@ -424,6 +424,7 @@ int mpl_NA_fitch_second_uppass
     MPLstate* right = rset->downpass2;
     MPLstate* npre  = nset->downpass2;
     MPLstate* nfin  = nset->uppass2;
+    MPLstate* nfint = nset->temp_uppass2;
     MPLstate* anc   = ancset->uppass2;
     MPLstate* lacts = lset->subtree_actives;
     MPLstate* racts = rset->subtree_actives;
@@ -468,6 +469,8 @@ int mpl_NA_fitch_second_uppass
                 steps += weights[i];
             }
         }
+        
+        nfint[j] = nfin[j]; // Storage of states for undoing temp updates
 #ifdef DEBUG
         assert(nfin[j]);
 #endif

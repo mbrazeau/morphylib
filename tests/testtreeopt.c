@@ -103,5 +103,7 @@ int test_partial_downpass_for_inapplicables(TLtree* t, Morphy m)
     // Then from the new list, pass all the way down, adding steps
     // And finally all the way back up again, adding steps.
     
+    // Once it's all over, restore the state sets to their original values.
+    // Reset the partitions' number of NA chars to update
     return length;
 }

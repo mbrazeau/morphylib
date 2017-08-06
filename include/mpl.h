@@ -661,6 +661,7 @@ int		mpl_first_up_update
 		 Morphy     m);
 
 
+// Returns number of steps to add
 int		mpl_second_down_update
 
 		(const int  node_id,
@@ -668,7 +669,7 @@ int		mpl_second_down_update
 		 const int  right_id,
 		 Morphy     m);
 
-
+// Returns number of steps to add
 int		mpl_second_up_update
 
 		(const int  node_id,
