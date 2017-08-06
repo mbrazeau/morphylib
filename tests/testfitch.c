@@ -378,6 +378,10 @@ int test_bulk_balanced_tree_cases(void)
             (nd, ldescs[i], rdescs[i], ndanc, m1);
         }
         
+        for (i = 0; i < ntax; ++i) {
+            mpl_update_tip(i, tipancs[i], m1);
+        }
+        
         // TODO: Final tip calculations
         //    // Optional for basic length count, but probably necessary for
         //    // indirect optimisation.
@@ -502,6 +506,11 @@ int test_bulk_unrooted_tree_cases(void)
     int j = 0;
     
     for (j = 0; j < nummatrices; ++j) {
+        
+        if (j == 15)
+        {
+            printf("break\n");
+        }
         Morphy m1 = mpl_new_Morphy();
         mpl_init_Morphy(ntax, nchar, m1);
         //    mpl_set_gaphandl(GAP_MISSING, m1);
@@ -526,15 +535,15 @@ int test_bulk_unrooted_tree_cases(void)
         }
         
         // Update lower root
-        length += mpl_update_lower_root(0, 21, m1);
+        //length += mpl_update_lower_root(21, 21, m1);
         
         for (i = (ntax-3); i >= 0; --i) {
             length += mpl_first_up_recon
             (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
         }
         
-        for (i = 0; i < ntax; ++i) {
-            mpl_update_tip(i, tipancs[i], m1);
+        for (i = 1; i <= ntax; ++i) {
+            mpl_update_tip(i, tipancs[i-1], m1);
         }
         
         for (i = 0; i < (ntax-2); ++i) {
@@ -542,11 +551,19 @@ int test_bulk_unrooted_tree_cases(void)
             length += mpl_second_down_recon(nodes[i], ldescs[i], rdescs[i], m1);
         }
         
+        
         for (i = (ntax-3); i >= 0; --i) {
             // Second uppass reconstruction
             length += mpl_second_up_recon
             (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
         }
+        
+        
+        for (i = 1; i <= ntax; ++i) {
+            mpl_finalize_tip(i, tipancs[i-1], m1);
+        }
+        length += mpl_do_tiproot(0, 21, m1);
+        
         
         if (length != expected[j]) {
             printf("Calculated: %i, expected: %i\n", length, expected[j]);

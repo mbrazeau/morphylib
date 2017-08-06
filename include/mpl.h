@@ -618,6 +618,8 @@ int     mpl_finalize_tip
          Morphy m);
 
     
+        
+int mpl_do_tiproot(const int tip_id, const int node_id, Morphy m);
 /*!
  
  @brief Updates the nodal sets for a lower ('dummy') root node

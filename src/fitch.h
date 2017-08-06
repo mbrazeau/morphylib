@@ -27,6 +27,7 @@ int mpl_fitch_NA_local_reopt (MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* 
 
 int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part);
 
+int mpl_fitch_NA_one_branch(MPLndsets* tipanc, MPLndsets* node, MPLpartition* part);
 int mpl_fitch_NA_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part);
 
 int mpl_fitch_NA_tip_finalize(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part);

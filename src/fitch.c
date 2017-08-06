@@ -261,7 +261,7 @@ int mpl_NA_fitch_first_uppass
                 }
             }
             else {
-                if (anc[j] == NA) {
+                if (anc[j] & NA) {
                     nifin[j] = NA;
                 }
                 else {
@@ -565,6 +565,78 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
     return 0;
 }
 
+int mpl_fitch_one_branch
+(MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
+{
+    int i     = 0;
+    int j     = 0;
+    int* indices     = part->charindices;
+    int nchars       = part->ncharsinpart;
+    MPLstate* tipset = tipanc->downpass1;
+    MPLstate* tipfin = tipanc->uppass1;
+    MPLstate* ndset  = node->downpass1;
+    MPLstate temp    = 0;
+    unsigned long* weights = part->intwts;
+    int length = 0;
+    
+    for (i = 0; i < nchars; ++i) {
+        j = indices[i];
+        
+        temp = tipset[j] & ndset[j];
+
+        if (temp == 0) {
+            tipfin[j] = tipset[j];
+            length += weights[i];
+        }
+        else {
+            tipfin[j] = temp;
+        }
+    }
+    
+    return length;
+}
+
+int mpl_fitch_NA_one_branch
+(MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
+{
+    int i     = 0;
+    int j     = 0;
+    int* indices     = part->charindices;
+    int nchars       = part->ncharsinpart;
+    MPLstate* tipset = tipanc->downpass1;
+    MPLstate* tipfin = tipanc->uppass2;
+    MPLstate* ndset  = node->downpass2;
+    MPLstate* ndacts = node->subtree_actives;
+    MPLstate  temp   = 0;
+    unsigned long* weights = part->intwts;
+    int length = 0;
+    
+    for (i = 0; i < nchars; ++i) {
+        j = indices[i];
+        
+        temp = tipset[j] & ndset[j];
+        
+        if (temp == 0) {
+            if (tipset[j] & ISAPPLIC) {
+                if (ndset[j] & ISAPPLIC) {
+                    length += weights[i];
+                }
+                else {
+                    if (ndacts[j]) {
+                        length += weights[i];
+                    }
+                }
+            }
+            
+            tipfin[j] = tipset[j];
+        }
+        else {
+            tipfin[j] = temp;
+        }
+    }
+    
+    return length;
+}
 
 int mpl_fitch_NA_tip_update
 (MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
