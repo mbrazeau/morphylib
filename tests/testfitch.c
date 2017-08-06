@@ -344,11 +344,17 @@ int test_bulk_balanced_tree_cases(void)
         }
         
         // Update lower root
-        mpl_update_lower_root(23, 22, m1);
+        mpl_update_lower_root(22, 22, m1);
         
         for (i = (ntax-2); i >= 0; --i) {
+            int nd = nodes[i];
+            int ndanc = ancs[i];
+            if (i == (ntax-2))
+            {
+                ndanc = nd;
+            }
             length += mpl_first_up_recon
-            (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
+            (nd, ldescs[i], rdescs[i], ndanc, m1);
         }
         
         for (i = 0; i < ntax; ++i) {
@@ -362,8 +368,14 @@ int test_bulk_balanced_tree_cases(void)
         
         for (i = (ntax-2); i >= 0; --i) {
             // Second uppass reconstruction
+            int nd = nodes[i];
+            int ndanc = ancs[i];
+            if (i == (ntax-2))
+            {
+                ndanc = nd;
+            }
             length += mpl_second_up_recon
-            (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
+            (nd, ldescs[i], rdescs[i], ndanc, m1);
         }
         
         // TODO: Final tip calculations
@@ -509,14 +521,14 @@ int test_bulk_unrooted_tree_cases(void)
         
         // ...
         int i = 0;
-        for (i = 0; i < (ntax-1); ++i) {
+        for (i = 0; i < (ntax-2); ++i) {
             length += mpl_first_down_recon(nodes[i], ldescs[i], rdescs[i], m1);
         }
         
         // Update lower root
-        mpl_update_lower_root(0, 21, m1);
+        length += mpl_update_lower_root(0, 21, m1);
         
-        for (i = (ntax-2); i >= 0; --i) {
+        for (i = (ntax-3); i >= 0; --i) {
             length += mpl_first_up_recon
             (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
         }
@@ -525,12 +537,12 @@ int test_bulk_unrooted_tree_cases(void)
             mpl_update_tip(i, tipancs[i], m1);
         }
         
-        for (i = 0; i < (ntax-1); ++i) {
+        for (i = 0; i < (ntax-2); ++i) {
             // Second downpass
             length += mpl_second_down_recon(nodes[i], ldescs[i], rdescs[i], m1);
         }
         
-        for (i = (ntax-2); i >= 0; --i) {
+        for (i = (ntax-3); i >= 0; --i) {
             // Second uppass reconstruction
             length += mpl_second_up_recon
             (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
