@@ -113,12 +113,12 @@ typedef struct {
 typedef struct partition_s MPLpartition;
 typedef struct partition_s {
     
-    MPLchtype       chtype;         /*!< The optimality type used for this partition */
-    bool            isNAtype;       /*!< This character should be treated as having inapplicable data */ 
+    MPLchtype       chtype;         /*!< The optimality type used for this partition. */
+    bool            isNAtype;       /*!< This character should be treated as having inapplicable data. */ 
     int             maxnchars;
     int             ncharsinpart;
     int*            charindices;
-    unsigned long   nchanges;       /*!< Number of state changes in this partition */
+    unsigned long   nchanges;       /*!< Number of state changes in this partition. */
     int             ntoupdate;
     int*            update_indices;
     int             nNAtoupdate;
@@ -128,6 +128,7 @@ typedef struct partition_s {
     Mflt*           fltwts;
     MPLtipfxn       tipupdate;
     MPLtipfxn       tipfinalize;
+    MPLtipfxn       tiproot;        /*!< For the function that adds length at the base of an unrooted tree. */
     MPLdownfxn      inappdownfxn;
     MPLupfxn        inappupfxn;
     MPLdownfxn      prelimfxn;
