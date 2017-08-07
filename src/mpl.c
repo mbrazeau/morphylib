@@ -584,15 +584,15 @@ int mpl_do_tiproot(const int tip_id, const int node_id, Morphy m)
     MPLndsets* upper        = handl->statesets[node_id];
     MPLpartition** parts    = handl->partitions;
     
+    MPLtipfxn tiprootfxn = NULL;
     int i = 0;
     int numparts = mpl_get_numparts(handl);
     int res = 0;
     
     for (i = 0; i < numparts; ++i) {
-        if (!parts[i]->isNAtype) {
-        } else {
-            res += mpl_fitch_NA_one_branch(lower, upper, parts[i]);
-        }
+        
+        tiprootfxn = parts[i]->tiproot;
+        res += tiprootfxn(lower, upper, parts[i]);
     }
     
     return res;

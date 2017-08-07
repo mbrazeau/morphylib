@@ -334,12 +334,14 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
         part->finalfxn      = mpl_NA_fitch_first_uppass;
         part->tipupdate     = mpl_fitch_NA_tip_update;
         part->tipfinalize   = mpl_fitch_NA_tip_finalize;
+        part->tiproot       = mpl_fitch_NA_one_branch;
         part->loclfxn       = mpl_fitch_NA_local_reopt;
     }
     else {
         part->prelimfxn     = mpl_fitch_downpass;
         part->finalfxn      = mpl_fitch_uppass;
         part->tipupdate     = mpl_fitch_tip_update;
+        part->tiproot       = mpl_fitch_one_branch;
         part->tipfinalize   = NULL;
         part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
         part->inappupfxn    = NULL;
@@ -364,6 +366,7 @@ void mpl_assign_wagner_fxns(MPLpartition* part)
         part->prelimfxn     = mpl_wagner_downpass;
         part->finalfxn      = mpl_wagner_uppass;
         part->tipupdate     = mpl_wagner_tip_update;
+    // TODO: Wagner tiproot function!
         part->tipfinalize   = NULL;
         part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
         part->inappupfxn    = NULL;
