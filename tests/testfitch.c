@@ -559,7 +559,7 @@ int test_bulk_unrooted_tree_cases(void)
         }
         
         for (i = 1; i <= ntax; ++i) {
-            mpl_finalize_tip(i, tipancs[i-1], m1);
+            //mpl_finalize_tip(i, tipancs[i-1], m1);
         }
         
         length += mpl_do_tiproot(0, 21, m1);
