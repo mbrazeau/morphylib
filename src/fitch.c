@@ -182,8 +182,8 @@ int mpl_NA_fitch_first_update_downpass
     int i     = 0;
     int j     = 0;
     int step_recall = 0; // The number of steps to take back
-    const int* indices    = part->charindices;
-    int nchars      = part->ncharsinpart;
+    const int* indices    = part->update_NA_indices;
+    int nchars      = part->nNAtoupdate;
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
     MPLstate* n     = nset->downpass1;
@@ -215,7 +215,7 @@ int mpl_NA_fitch_first_update_downpass
             }
         }
         
-        if (n[j] != n[j])
+        if (n[j] != n_orig[j])
         {
             // TODO: Set flag for state sets having been updated.
             n[j] = n_orig[j];
@@ -289,6 +289,20 @@ int mpl_NA_fitch_first_uppass
     return 0;
 }
 
+static inline int mpl_check_up_NA_steps
+(MPLstate ndset, MPLstate lactive, MPLstate ractive)
+{
+    int steps = 0;
+    
+    if (ndset == NA) {
+        if (lactive != 0 && ractive != 0) {
+            ++steps;
+        }
+    }
+    
+    return steps;
+}
+
 int mpl_NA_fitch_first_update_uppass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
  MPLpartition* part)
@@ -301,8 +315,8 @@ int mpl_NA_fitch_first_update_uppass
      *------------------------------------------------------------------------*/
     int i     = 0;
     int j     = 0;
-    const int* indices    = part->charindices;
-    int nchars      = part->ncharsinpart;
+    const int* indices    = part->update_NA_indices;
+    int nchars      = part->nNAtoupdate;
     MPLstate* left  = lset->downpass1;
     MPLstate* right = rset->downpass1;
     MPLstate* npre  = nset->downpass1;
