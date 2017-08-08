@@ -62,7 +62,7 @@ int mpl_fitch_uppass
         
         nfin[j] = anc[j] & npre[j];
         
-        if (nfin[j] == 0) {
+        if (nfin[j] != anc[j]) {
             
             if (left[j] & right[j]) {
                 nfin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
@@ -591,6 +591,7 @@ int mpl_fitch_one_branch
         else {
             tipfin[j] = temp;
         }
+        //node->uppass1[j] = ndset[j];
     }
     
     return length;
