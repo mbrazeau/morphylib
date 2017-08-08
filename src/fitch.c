@@ -587,11 +587,12 @@ int mpl_fitch_one_branch
         if (temp == 0) {
             tipfin[j] = tipset[j];
             length += weights[i];
+            node->uppass1[j] = ndset[j];
         }
         else {
             tipfin[j] = temp;
+            node->uppass1[j] = temp;
         }
-        //node->uppass1[j] = ndset[j];
     }
     
     return length;
