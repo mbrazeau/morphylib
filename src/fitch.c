@@ -347,6 +347,7 @@ int mpl_NA_fitch_second_downpass
     MPLstate*       npre    = nset->downpass2;
     MPLstate*       npret   = nset->temp_downpass2;
     MPLstate*       stacts  = nset->subtree_actives;
+    MPLstate*       tstatcs = nset->temp_subtr_actives;
     MPLstate*       lacts   = lset->subtree_actives;
     MPLstate*       racts   = rset->subtree_actives;
     MPLstate        temp    = 0;
@@ -378,8 +379,9 @@ int mpl_NA_fitch_second_downpass
             npre[j] = nifin[j];
         }
         
-        npret[j] = npre[j]; // Storage for temporary updates
+        npret[j] = npre[j]; // Storage for temporary updates.
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
+        tstatcs[j] = stacts[j]; // Storage for temporary updates.
     
 #ifdef DEBUG
         assert(npre[j]);
@@ -435,6 +437,8 @@ int mpl_NA_fitch_second_update_downpass
     MPLstate*       stacts      = nset->subtree_actives;
     MPLstate*       lacts       = lset->subtree_actives;
     MPLstate*       racts       = rset->subtree_actives;
+    MPLstate*       tlacts      = lset->temp_subtr_actives;
+    MPLstate*       tracts      = rset->temp_subtr_actives;
     MPLstate        temp        = 0;
     unsigned long*  weights     = part->intwts;
     
@@ -467,7 +471,9 @@ int mpl_NA_fitch_second_update_downpass
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
         
         if (npre [j] != npret[j]) {
-            //step_recall += mpl_check_down_NA_steps(tleft[j], tright[j], <#MPLstate lactive#>, <#MPLstate ractive#>);
+            /* Count whether any steps need to be taken back at this node */
+            step_recall += mpl_check_down_NA_steps(tleft[j], tright[j],
+                                                   tlacts[j], tracts[j]);
             // TODO: Store the step recall.
             // TODO: Flag the update.
         }
