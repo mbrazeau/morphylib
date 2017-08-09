@@ -27,6 +27,7 @@ int main (void)
     fails += test_bad_load_symbols();
     fails += test_multistate_symbols();
     fails += test_usr_order_symbols();
+    fails += test_big_multistate_symbols();
     
     // morphy.c tests
     fails += test_isreal();
@@ -59,7 +60,10 @@ int main (void)
     fails += test_small_fitch_na();
     fails += test_small_fitch_withmissing();
     fails += test_bulk_balanced_tree_cases();
+    fails += test_bulk_unrooted_tree_cases();
     fails += test_twopass_fitch();
+    fails += test_local_reoptimisation();
+    fails += test_get_partial_reopt_for_na();
     
     // wagner.c tests 
     fails += test_small_wagner();

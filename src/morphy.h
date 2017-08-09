@@ -21,14 +21,6 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
-//#include <glib.h>
-
-//typedef struct mplarray_s {
-//    int nelems;
-//    int maxelems;
-//    size_t elemsize;
-//    void **data;
-//} MPLarray;
 
 /* Function prototypes */
 
@@ -52,8 +44,16 @@ int             mpl_part_remove_index(int index, MPLpartition* part);
 int             mpl_delete_partition(MPLpartition* part);
 MPLpartition*   mpl_new_partition(const MPLchtype chtype, const bool hasNA);
 int             mpl_count_gaps_in_columns(Morphyp handl);
+int             mpl_put_partitions_in_handle(MPLpartition* first, Morphyp handl);
+void            mpl_delete_all_update_buffers(Morphyp handl);
+int             mpl_allocate_update_buffers(Morphyp handl);
 int             mpl_setup_partitions(Morphyp handle);
 int             mpl_get_numparts(Morphyp handl);
+void            mpl_swap_downpass1(MPLndsets* nset);
+void            mpl_swap_uppass1(MPLndsets* nset);
+void            mpl_swap_downpass2(MPLndsets* nset);
+void            mpl_swap_uppass2(MPLndsets* nset);
+void            mpl_swap_tempsets(MPLndsets* nset);
 MPLndsets*      mpl_alloc_stateset(int numchars);
 void            mpl_free_stateset(const int nchars, MPLndsets* statesets);
 int             mpl_delete_all_partitions(Morphyp handl);

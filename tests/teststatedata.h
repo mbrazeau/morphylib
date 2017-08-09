@@ -17,6 +17,6 @@ int test_load_symbols(void);
 int test_bad_load_symbols(void);
 int test_usr_order_symbols(void);
 int test_multistate_symbols(void);
-
+int test_big_multistate_symbols(void);
 
 #endif /* teststatedata_h */

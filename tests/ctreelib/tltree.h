@@ -32,6 +32,7 @@ void        tl_mark_for_comparison(TLtree* t, TLtopol* topol);
 int         tl_compare_topols(TLtopol* tp1, TLtopol* tp2);
 int         tl_push_node(const TLnode *n, TLndstack *ndstk);
 TLnode*     tl_pull_node(TLndstack *ndstk);
+TLnode*     tl_remove_branch(TLnode* n, TLtree* t);
 int         tl_insert_branch(TLnode* src, int tgt, TLtree* t);
 void        tl_create_starting_fork(int left, int right, int anc, TLtree* t);
 

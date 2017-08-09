@@ -761,11 +761,50 @@ TLnode* tl_pull_node(TLndstack *ndstk)
 	return ret;
 }
 
-
-int tl_remove_branch(TLnode* src, TLtree* t)
+TLnode* tl_find_sib(TLnode* n)
 {
+    if (n->anc == NULL) {
+        return NULL;
+    }
     
-    return 0;
+    if (n->anc->left == n) {
+        return n->anc->right;
+    }
+    else {
+        return n->anc->left;
+    }
+}
+
+TLnode* tl_remove_branch(TLnode* src, TLtree* t)
+{
+    TLnode* tgtop = NULL;
+    TLnode* tgbottom = NULL;
+    
+    tgtop = tl_find_sib(src);
+    tgbottom = src->anc->anc;
+    
+    assert(tgtop->anc->anc == src->anc->anc);
+    TLnode** bback = NULL;
+    if (tgbottom->left == src->anc) {
+        bback = &tgbottom->left;
+    } else {
+        bback = &tgbottom->right;
+    }
+    
+    *bback = tgtop;
+    tgtop->anc = tgbottom;
+    
+    src->anc->anc = NULL;
+    
+    if (src->anc->left == src) {
+        src->anc->right = NULL;
+    }
+    else {
+        src->anc->left = NULL;
+    }
+    
+    
+    return tgtop;
 }
 
 TLnode** tl_get_anc_pointer(TLnode* n)
@@ -798,45 +837,29 @@ int tl_insert_branch(TLnode* src, int tgt, TLtree* t)
     TLnode*  p  = NULL;
     TLnode** q  = NULL;
     
+    n = &t->trnodes[tgt];
+    p = n->anc;
     
-    //tl_make_node_available(n);
-    n = tl_pull_node(&t->nodestk);
-    assert(n);
-    if (!n) {
-        return -1; // TODO: Maybe needs error code
+    if (p->left == n)
+    {
+        q = &p->left;
+    }
+    else {
+        q = &p->right;
     }
     
-    // Hookup the src base and the new fork node
-    n->left = src;
-    src->anc = n;
+    *q = src->anc;
+    src->anc->anc = p;
     
-    // Set up pointers around the target site
+    n->anc = src->anc;
     
-    // Make p the base of the target
-    p = &t->trnodes[tgt];
-   
-    // Fetch the pointer to the pointer to the target
-    if (!p->anc->tip) {
-        
-        if (p->anc->left == p) {
-            q = &p->anc->left;
-        }
-        else {
-            q = &p->anc->right;
-            assert(p->anc->right == p);
-        }
-    } else {
-        
-        q = &p->anc->anc;
-        if (p == t->start) {
-            t->start = n;
-        }
+    if (src->anc->left == src)
+    {
+        src->anc->right = n;
     }
-    
-    n->anc = p->anc;
-    n->right = p;
-    p->anc = n;
-    *q = n;
+    else {
+        src->anc->left = n;
+    }
     
     return 0;
 }

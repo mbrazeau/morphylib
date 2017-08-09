@@ -8,6 +8,7 @@
 
 #include "mpltest.h"
 //#include "testmorphy.h"
+#include "morphydefs.h"
 #include "../src/morphy.h"
 
 int test_isreal(void)

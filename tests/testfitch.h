@@ -14,6 +14,9 @@ int test_weighted_small_fitch(void);
 int test_small_fitch_na(void);
 int test_small_fitch_withmissing(void);
 int test_bulk_balanced_tree_cases(void);
+int test_bulk_unrooted_tree_cases(void);
 int test_twopass_fitch(void);
+int test_local_reoptimisation(void);
+int test_get_partial_reopt_for_na(void);
 
 #endif /* testfitch_h */

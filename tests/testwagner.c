@@ -7,8 +7,9 @@
 //
 
 #include "mpltest.h"
-#include "../src/mpl.h"
-#include "../src/wagner.h"
+#include "mpl.h"
+#include "morphydefs.h"
+#include "wagner.h"
 #include "testwagner.h"
 #include <string.h>
 
@@ -69,7 +70,7 @@ int test_small_wagner(void)
 
 int test_wagner_extended(void)
 {
-    theader("Extended test of Wanger optimisation");
+    theader("Extended test of Wagner optimisation");
     int err     = 0;
     int failn   = 0;
     

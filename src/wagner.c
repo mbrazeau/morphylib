@@ -5,10 +5,10 @@
 //  Created by mbrazeau on 21/05/2017.
 //  Copyright © 2017 brazeaulab. All rights reserved.
 //
+#include "mpl.h"
 #include "morphydefs.h"
 #include "morphy.h"
 #include "wagner.h"
-
 
 static inline unsigned mpl_closed_interval(MPLstate* res, MPLstate a, MPLstate b)
 {
