@@ -215,14 +215,6 @@ int mpl_NA_fitch_first_update_downpass
             }
         }
         
-        if (n[j] != n_orig[j])
-        {
-            // TODO: Set flag for state sets having been updated.
-            n[j] = n_orig[j];
-            step_recall = mpl_check_down_NA_steps(l_orig[j], r_orig[j],
-                                                  lactive[j], ractive[j]);
-            step_recall *= weights[i];
-        }
 #ifdef DEBUG
         assert(n[j]);
 #endif
