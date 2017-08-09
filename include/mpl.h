@@ -613,13 +613,38 @@ int     mpl_update_tip
  */
 int     mpl_finalize_tip
 
-        (const int tip_id,
-         const int anc_id,
-         Morphy m);
+        (const int  tip_id,
+         const int  anc_id,
+         Morphy     m);
 
-    
+/*!
+ @brief Used to update a root-like tip in an unrooted tree and length added.
+ 
+ @discussion If using an unrooted tree structure, a tip is commonly used as an
+ entry point for traversals on the tree. This tip is jointed either as an extra
+ descendant or the ancestor of the calculation root node in the tree. In these
+ circumstances, a binary traversal on the tree will not give complete 
+ reconstructions or length counts for the tree. This function is called at the 
+ end of the optimization process and is required for the complete tree length of
+ an unrooted tree. This function will update the state sets of both nodes
+ reciprocally.
+ 
+ @param tip_id An index corresponding to the tip number being updated.
+ 
+ @param node_id An index of the tip's neighboring internal node.
+ 
+ @param m An instance of the Morphylib object.
+ 
+ @return The weighted number of steps (positive) or a negative number 
+ corresponding to a morphylib error code.
+ */
         
-int mpl_do_tiproot(const int tip_id, const int node_id, Morphy m);
+int     mpl_do_tiproot
+        
+        (const int  tip_id,
+         const int  node_id,
+         Morphy     m);
+        
 /*!
  
  @brief Updates the nodal sets for a lower ('dummy') root node
@@ -641,9 +666,9 @@ int mpl_do_tiproot(const int tip_id, const int node_id, Morphy m);
  */
 int     mpl_update_lower_root
     
-        (const int l_root_id,
-         const int root_id,
-         Morphy m);
+        (const int  l_root_id,
+         const int  root_id,
+         Morphy     m);
     
     
 int		mpl_first_down_update
