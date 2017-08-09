@@ -558,8 +558,8 @@ int mpl_NA_fitch_second_update_uppass
     int             i       = 0;
     int             j       = 0;
     int             steps   = 0;
-    const int*      indices = part->charindices;
-    int             nchars  = part->ncharsinpart;
+    const int*      indices = part->update_NA_indices;
+    int             nchars  = part->nNAtoupdate;
     MPLstate*       left    = lset->downpass2;
     MPLstate*       right   = rset->downpass2;
     MPLstate*       npre    = nset->downpass2;
