@@ -12,6 +12,13 @@
 #include "fitch.h"
 #include "statedata.h"
 
+static inline int mpl_check_up_NA_steps
+(MPLstate ndset, MPLstate lactive, MPLstate ractive);
+
+static inline int mpl_check_down_NA_steps
+(MPLstate left, MPLstate right, MPLstate lactive, MPLstate ractive);
+
+
 /**/
 int mpl_fitch_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
@@ -637,7 +644,6 @@ int mpl_fitch_NA_local_reopt
 //    MPLstate* tgt1u1    = tgt1set->uppass1;
     MPLstate* tgt2d1    = tgt2set->downpass1;
 //    MPLstate* tgt2u1    = tgt2set->uppass1;
-//
     MPLstate* tgt1f     = tgt1set->uppass2;
     MPLstate* tgt2f     = tgt2set->downpass2;
     MPLstate* src       = srcset->downpass1; // TODO: Verify this.
