@@ -208,16 +208,16 @@ int mpl_NA_fitch_first_uppass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
  MPLpartition* part)
 {
-    int i     = 0;
-    int j     = 0;
-    const int* indices    = part->charindices;
-    int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->downpass1;
-    MPLstate* right = rset->downpass1;
-    MPLstate* npre  = nset->downpass1;
-    MPLstate* nifin = nset->uppass1;
-    MPLstate* anc   = ancset->uppass1;
-    MPLstate* nfint = nset->temp_uppass1;
+    int         i       = 0;
+    int         j       = 0;
+    const int*  indices = part->charindices;
+    int         nchars  = part->ncharsinpart;
+    MPLstate*   left    = lset->downpass1;
+    MPLstate*   right   = rset->downpass1;
+    MPLstate*   npre    = nset->downpass1;
+    MPLstate*   nifin   = nset->uppass1;
+    MPLstate*   anc     = ancset->uppass1;
+    MPLstate*   nfint   = nset->temp_uppass1;
     
     for (i = 0; i < nchars; ++i) {
         
@@ -555,12 +555,6 @@ int mpl_NA_fitch_second_update_uppass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
  MPLpartition* part)
 {
-    /*------------------------------------------------------------------------*
-     |  This function is for doing a partial uppsass when proposing a subtree |
-     |  reinsertion during branchswapping. Its purpose is to (partially)      |
-     |  correct any character state sets that are affected by the proposed    |
-     |  reinsertion.                                                          |
-     *------------------------------------------------------------------------*/
     int             i       = 0;
     int             j       = 0;
     int             steps   = 0;
