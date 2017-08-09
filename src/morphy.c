@@ -959,6 +959,12 @@ MPLndsets* mpl_alloc_stateset(int numchars)
         return NULL;
     }
     
+    new->temp_subtr_actives = (MPLstate*)calloc(numchars, sizeof(MPLstate));
+    if (!new->temp_subtr_actives) {
+        mpl_free_stateset(numchars, new);
+        return NULL;
+    }
+    
     new->temp_downpass1 = (MPLstate*)calloc(numchars, sizeof(MPLstate));
     if (!new->temp_downpass1) {
         mpl_free_stateset(numchars, new);
@@ -1013,6 +1019,10 @@ void mpl_free_stateset(const int nchars, MPLndsets* statesets)
     if (statesets->subtree_actives) {
         free(statesets->subtree_actives);
         statesets->subtree_actives = NULL;
+    }
+    if (statesets->temp_subtr_actives) {
+        free(statesets->temp_subtr_actives);
+        statesets->temp_subtr_actives = NULL;
     }
     if (statesets->temp_downpass1) {
         free(statesets->temp_downpass1);

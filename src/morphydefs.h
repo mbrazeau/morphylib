@@ -148,6 +148,7 @@ typedef struct MPLndsets {
     MPLstate*   downpass2;
     MPLstate*   uppass2;
     MPLstate*   subtree_actives;
+    MPLstate*   temp_subtr_actives;
     MPLstate*   temp_downpass1;
     MPLstate*   temp_uppass1;
     MPLstate*   temp_downpass2;
