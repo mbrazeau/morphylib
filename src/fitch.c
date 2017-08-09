@@ -481,6 +481,7 @@ int mpl_NA_fitch_second_update_downpass
     return steps;
 }
 
+
 int mpl_NA_fitch_second_uppass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
  MPLpartition* part)
@@ -548,6 +549,82 @@ int mpl_NA_fitch_second_uppass
     
     return steps;
 }
+
+
+int mpl_NA_fitch_second_update_uppass
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
+ MPLpartition* part)
+{
+    /*------------------------------------------------------------------------*
+     |  This function is for doing a partial uppsass when proposing a subtree |
+     |  reinsertion during branchswapping. Its purpose is to (partially)      |
+     |  correct any character state sets that are affected by the proposed    |
+     |  reinsertion.                                                          |
+     *------------------------------------------------------------------------*/
+    int             i       = 0;
+    int             j       = 0;
+    int             steps   = 0;
+    const int*      indices = part->charindices;
+    int             nchars  = part->ncharsinpart;
+    MPLstate*       left    = lset->downpass2;
+    MPLstate*       right   = rset->downpass2;
+    MPLstate*       npre    = nset->downpass2;
+    MPLstate*       nfin    = nset->uppass2;
+    MPLstate*       nfint   = nset->temp_uppass2;
+    MPLstate*       anc     = ancset->uppass2;
+    MPLstate*       lacts   = lset->subtree_actives;
+    MPLstate*       racts   = rset->subtree_actives;
+    unsigned long*  weights = part->intwts;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (npre[j] & ISAPPLIC) {
+            if (anc[j] & ISAPPLIC) {
+                if ((anc[j] & npre[j]) == anc[j]) {
+                    nfin[j] = anc[j] & npre[j];
+                } else {
+                    if (left[j] & right[j]) {
+                        nfin[j] = (npre[j] | (anc[j] & left[j] & right[j]));
+                    }
+                    else {
+                        if ((left[j] | right[j]) & NA) {
+                            if ((left[j] | right[j]) & anc[j]) {
+                                nfin[j] = anc[j];
+                            } else {
+                                nfin[j] = (left[j] | right[j] | anc[j]) & ISAPPLIC;
+                            }
+                        } else {
+                            nfin[j] = npre[j] | anc[j];
+                            if ((anc[j] & nfin[j]) == anc[j]) {
+                                nfin[j] = anc[j] & nfin[j];
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                nfin[j] = npre[j];
+            }
+        }
+        else {
+            nfin[j] = npre[j];
+            
+            if (lacts[j] && racts[j]) {
+                steps += weights[i];
+            }
+        }
+        
+        nfint[j] = nfin[j]; // Storage of states for undoing temp updates
+#ifdef DEBUG
+        assert(nfin[j]);
+#endif
+    }
+    
+    return steps;
+}
+
 
 int mpl_fitch_NA_local_reopt
 (MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* tgt2set, MPLpartition* part,
