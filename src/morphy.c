@@ -1210,8 +1210,8 @@ int mpl_update_NA_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)
         
         // Some of these assignments are a bit overkill, but they should
         // be fairly safe in case of changes in how the nodal functions work.
-        lower->uppass2[j]  = lower->downpass1[j];
-        lower->downpass1[j]   = lower->downpass1[j];
+        lower->uppass2[j]   = upper->downpass2[j];
+        lower->downpass1[j] = lower->downpass1[j];
         lower->uppass1[j]   = lower->downpass1[j];
     }
     

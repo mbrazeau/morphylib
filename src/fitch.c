@@ -243,7 +243,7 @@ int mpl_NA_fitch_first_uppass
                 }
             }
             else {
-                if (anc[j] & NA) {
+                if (anc[j] == NA) {
                     nifin[j] = NA;
                 }
                 else {
@@ -508,7 +508,7 @@ int mpl_NA_fitch_second_uppass
                     nfin[j] = anc[j] & npre[j];
                 } else {
                     if (left[j] & right[j]) {
-                        nfin[j] = (npre[j] | (anc[j] & left[j] & right[j]));
+                        nfin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
                     }
                     else {
                         if ((left[j] | right[j]) & NA) {
@@ -519,9 +519,9 @@ int mpl_NA_fitch_second_uppass
                             }
                         } else {
                             nfin[j] = npre[j] | anc[j];
-                            if ((anc[j] & nfin[j]) == anc[j]) {
-                                nfin[j] = anc[j] & nfin[j];
-                            }
+//                            if ((anc[j] & nfin[j]) == anc[j]) {
+//                                nfin[j] = anc[j] & nfin[j];
+//                            }
                         }
                     }
                 }
@@ -758,7 +758,7 @@ int mpl_fitch_NA_one_branch
     int nchars       = part->ncharsinpart;
     MPLstate* tipset = tipanc->downpass1;
     MPLstate* tipfin = tipanc->uppass2;
-    MPLstate* ndset  = node->downpass2;
+    MPLstate* ndset  = node->downpass1;
     MPLstate* ndacts = node->subtree_actives;
     MPLstate  temp   = 0;
     unsigned long* weights = part->intwts;
@@ -781,10 +781,13 @@ int mpl_fitch_NA_one_branch
                 }
             }
             
-            tipfin[j] = tipset[j];
+            tipfin[j]        = tipset[j];
+            //node->uppass2[j] = ndset[j];
         }
         else {
-            tipfin[j] = temp;
+            tipfin[j]        = temp;
+            //node->uppass1[j] = temp;
+            //node->uppass2[j] = temp;
         }
     }
     

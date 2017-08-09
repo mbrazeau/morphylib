@@ -265,7 +265,9 @@ int test_bulk_balanced_tree_cases(void)
     int failn = 0;
     int ntax	= 12;
     int nchar	= 1;
-    char *rawmatrices[] = {(char*)"23--1??--032;", // 0
+    char *rawmatrices[] =
+    {
+        (char*)"23--1??--032;", // 0
         (char*)"1---1111---1;", // 1
         (char*)"1100----1100;", // 2
         (char*)"11-------100;", // 3
@@ -365,6 +367,9 @@ int test_bulk_balanced_tree_cases(void)
             // Second downpass
             length += mpl_second_down_recon(nodes[i], ldescs[i], rdescs[i], m1);
         }
+        
+        // Update lower root
+        mpl_update_lower_root(22, 22, m1);
         
         for (i = (ntax-2); i >= 0; --i) {
             // Second uppass reconstruction
@@ -497,7 +502,7 @@ int test_bulk_unrooted_tree_cases(void)
     
     int expected[] = {5, 2, 3, 2, 1, 5, 5, 2, 5, 2, 2, 4, 3, 2, 5, 0, 5, 2, 4, 5, 2, 4, 3, 3, 2, 5, 1, 4, 4, 0, 5, 5, 4, 5, 2, 1, 3, 5, 0, 1};
     
-    int tipancs[]= {21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 12};
+    int tipancs[]= {    21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 12};
     int ancs[]   = {13, 14, 15, 16, 17, 18, 19, 20, 21, 0};
     int nodes[]  = {12, 13, 14, 15, 16, 17, 18, 19, 20, 21};
     int ldescs[] = {10,  9,  8,  7,  6,  5,  4,  3,  2,  1};
@@ -535,14 +540,15 @@ int test_bulk_unrooted_tree_cases(void)
         }
         
         // Update lower root
-        //length += mpl_update_lower_root(21, 21, m1);
+        mpl_do_tiproot(0, 21, m1);
+        mpl_update_lower_root(21, 21, m1);
         
         for (i = (ntax-3); i >= 0; --i) {
             length += mpl_first_up_recon
             (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
         }
         
-        for (i = 1; i <= ntax; ++i) {
+        for (i = 1; i < ntax; ++i) {
             mpl_update_tip(i, tipancs[i-1], m1);
         }
         
