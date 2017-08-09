@@ -425,8 +425,8 @@ int mpl_NA_fitch_second_update_downpass
     int             j           = 0;
     int             steps       = 0;
     int             step_recall = 0;
-    const int*      indices     = part->charindices;
-    int             nchars      = part->ncharsinpart;
+    const int*      indices     = part->update_NA_indices;
+    int             nchars      = part->nNAtoupdate;
     MPLstate*       left        = lset->downpass2;
     MPLstate*       right       = rset->downpass2;
     const MPLstate* tleft       = lset->temp_downpass2;
