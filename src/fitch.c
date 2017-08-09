@@ -155,23 +155,6 @@ int mpl_NA_fitch_first_downpass
     return 0;
 }
 
-static inline int mpl_check_down_NA_steps
-(MPLstate left, MPLstate right, MPLstate lactive, MPLstate ractive)
-{
-    int steps = 0;
-    
-    if (!(left & right)) {
-        if (left & ISAPPLIC && right & ISAPPLIC) {
-            ++steps;
-        }
-        else if (lactive && ractive) {
-            ++steps;
-        }
-    }
-    
-    return steps;
-}
-
 int mpl_NA_fitch_first_update_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
 {
@@ -355,26 +338,23 @@ int mpl_NA_fitch_first_update_uppass
 int mpl_NA_fitch_second_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
 {
-    int i     = 0;
-    int j     = 0;
-    int steps = 0;
-    const int* indices    = part->charindices;
-    int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->downpass2;
-    MPLstate* right = rset->downpass2;
-    MPLstate* nifin = nset->uppass1;
-    MPLstate* npre    = nset->downpass2;
-    MPLstate* npret   = nset->temp_downpass2;
-    MPLstate* stacts  = nset->subtree_actives;
-    MPLstate* lacts   = lset->subtree_actives;
-    MPLstate* racts   = rset->subtree_actives;
-    MPLstate temp = 0;
-    
-    unsigned long* weights = part->intwts;
+    int             i       = 0;
+    int             j       = 0;
+    int             steps   = 0;
+    const int*      indices = part->charindices;
+    int             nchars  = part->ncharsinpart;
+    MPLstate*       left    = lset->downpass2;
+    MPLstate*       right   = rset->downpass2;
+    MPLstate*       nifin   = nset->uppass1;
+    MPLstate*       npre    = nset->downpass2;
+    MPLstate*       npret   = nset->temp_downpass2;
+    MPLstate*       stacts  = nset->subtree_actives;
+    MPLstate*       lacts   = lset->subtree_actives;
+    MPLstate*       racts   = rset->subtree_actives;
+    MPLstate        temp    = 0;
+    unsigned long*  weights = part->intwts;
     
     for (i = 0; i < nchars; ++i) {
-        
-//        temp = 0;
         
         j = indices[i];
         
@@ -411,6 +391,96 @@ int mpl_NA_fitch_second_downpass
     return steps;
 }
 
+
+static inline int mpl_check_down_NA_steps
+(MPLstate left, MPLstate right, MPLstate lactive, MPLstate ractive)
+{
+    int steps = 0;
+    
+    if (!(left & right)) {
+        if (left & ISAPPLIC && right & ISAPPLIC) {
+            ++steps;
+        }
+        else if (lactive && ractive) {
+            ++steps;
+        }
+    }
+    
+    return steps;
+}
+
+
+int mpl_NA_fitch_second_update_downpass
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
+{
+    /*------------------------------------------------------------------------*
+     |  This function is for doing a partial downpass when proposing a        |
+     |  subtree reinsertion during branchswapping. Its purpose is to          |
+     |  (partially) correct any character state sets that are affected by     |
+     |  the proposed reinsertion. It is nearly identical to its original-     |
+     |  pass counterpart except that it does not overwrite the temp state     |
+     |  storage.                                                              |
+     *------------------------------------------------------------------------*/
+    int             i           = 0;
+    int             j           = 0;
+    int             steps       = 0;
+    int             step_recall = 0;
+    const int*      indices     = part->charindices;
+    int             nchars      = part->ncharsinpart;
+    MPLstate*       left        = lset->downpass2;
+    MPLstate*       right       = rset->downpass2;
+    const MPLstate* tleft       = lset->temp_downpass2;
+    const MPLstate* tright      = rset->temp_downpass2;
+    MPLstate*       nifin       = nset->uppass1;
+    MPLstate*       npre        = nset->downpass2;
+    const MPLstate* npret       = nset->temp_downpass2;
+    MPLstate*       stacts      = nset->subtree_actives;
+    MPLstate*       lacts       = lset->subtree_actives;
+    MPLstate*       racts       = rset->subtree_actives;
+    MPLstate        temp        = 0;
+    unsigned long*  weights     = part->intwts;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (nifin[j] & ISAPPLIC) {
+            if ((temp = (left[j] & right[j]))) {
+                if (temp & ISAPPLIC) {
+                    npre[j] = temp & ISAPPLIC;
+                } else {
+                    npre[j] = temp;
+                }
+            }
+            else {
+                npre[j] = (left[j] | right[j]) & ISAPPLIC;
+                
+                if (left[j] & ISAPPLIC && right[j] & ISAPPLIC) {
+                    steps += weights[i];
+                } else if (lacts[j] && racts[j]) {
+                    steps += weights[i];
+                }
+            }
+        }
+        else {
+            npre[j] = nifin[j];
+        }
+        
+        stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
+        
+        if (npre [j] != npret[j]) {
+            //step_recall += mpl_check_down_NA_steps(tleft[j], tright[j], <#MPLstate lactive#>, <#MPLstate ractive#>);
+            // TODO: Store the step recall.
+            // TODO: Flag the update.
+        }
+    
+#ifdef DEBUG
+        assert(npre[j]);
+#endif
+    }
+    
+    return steps;
+}
 
 int mpl_NA_fitch_second_uppass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
