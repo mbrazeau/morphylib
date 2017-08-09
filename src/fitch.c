@@ -86,6 +86,7 @@ int mpl_fitch_uppass
     return 0;
 }
 
+
 int mpl_fitch_local_reopt
 (MPLndsets* srcset, MPLndsets* tgt1set, MPLndsets* tgt2set, MPLpartition* part,
  int maxlen, bool domaxlen)
@@ -119,6 +120,7 @@ int mpl_fitch_local_reopt
     
     return steps;
 }
+
 
 int mpl_NA_fitch_first_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
@@ -161,6 +163,7 @@ int mpl_NA_fitch_first_downpass
     
     return 0;
 }
+
 
 int mpl_NA_fitch_first_update_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
@@ -267,19 +270,6 @@ int mpl_NA_fitch_first_uppass
     return 0;
 }
 
-static inline int mpl_check_up_NA_steps
-(MPLstate ndset, MPLstate lactive, MPLstate ractive)
-{
-    int steps = 0;
-    
-    if (ndset == NA) {
-        if (lactive != 0 && ractive != 0) {
-            ++steps;
-        }
-    }
-    
-    return steps;
-}
 
 int mpl_NA_fitch_first_update_uppass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
@@ -557,6 +547,20 @@ int mpl_NA_fitch_second_uppass
     return steps;
 }
 
+
+static inline int mpl_check_up_NA_steps
+(MPLstate ndset, MPLstate lactive, MPLstate ractive)
+{
+    int steps = 0;
+    
+    if (ndset == NA) {
+        if (lactive != 0 && ractive != 0) {
+            ++steps;
+        }
+    }
+    
+    return steps;
+}
 
 int mpl_NA_fitch_second_update_uppass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
