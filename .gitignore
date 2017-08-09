@@ -10,3 +10,4 @@
 project.xcworkspace/
 xcuserdata/
 *.xcodeproj
+.ycm_extra_conf.py
