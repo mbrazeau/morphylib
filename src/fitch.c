@@ -247,7 +247,8 @@ int mpl_NA_fitch_first_uppass
                     nifin[j] = NA;
                 }
                 else {
-                    if ((left[j] | right[j]) & ISAPPLIC) {
+                    if ((left[j] | right[j]) & ISAPPLIC
+                        && (left[j] | right[j]) != MISSING) { // TODO: This probably isn't quite safe.
                         nifin[j] = ((left[j] | right[j]) & ISAPPLIC);
                     }
                     else {
@@ -757,6 +758,7 @@ int mpl_fitch_NA_one_branch
     int* indices     = part->charindices;
     int nchars       = part->ncharsinpart;
     MPLstate* tipset = tipanc->downpass1;
+    MPLstate* tipifin = tipanc->uppass1;
     MPLstate* tipfin = tipanc->uppass2;
     MPLstate* ndset  = node->downpass1;
     MPLstate* ndacts = node->subtree_actives;
@@ -781,11 +783,11 @@ int mpl_fitch_NA_one_branch
                 }
             }
             
-            tipfin[j]        = tipset[j];
+            tipifin[j]        = tipset[j];
             //node->uppass2[j] = ndset[j];
         }
         else {
-            tipfin[j]        = temp;
+            tipifin[j]        = temp;
             //node->uppass1[j] = temp;
             //node->uppass2[j] = temp;
         }
@@ -799,11 +801,12 @@ int mpl_fitch_NA_tip_update
 {
     int i     = 0;
     int j     = 0;
-    int* indices    = part->charindices;
-    int nchars      = part->ncharsinpart;
+    int* indices        = part->charindices;
+    int nchars          = part->ncharsinpart;
+    
     MPLstate* tpass1    = tset->downpass1;
-    MPLstate* tpass2   = tset->uppass1;
-    MPLstate* tpass3   = tset->downpass2;
+    MPLstate* tpass2    = tset->uppass1;
+    MPLstate* tpass3    = tset->downpass2;
 //    MPLstate* tifinal   = tset->uppass2;
     MPLstate* astates   = ancset->uppass1;
     MPLstate* stacts    = tset->subtree_actives;
