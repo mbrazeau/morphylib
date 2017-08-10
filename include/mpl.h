@@ -722,6 +722,28 @@ int     mpl_get_insertcost
 int     mpl_check_reopt_inapplics
     
         (Morphy m);
+        
+        
+/*!
+ 
+ @brief Restores original state sets at a node.
+ 
+ @discussion This function restores the state sets in the tree to the ones 
+ calculated using the initial fullpass optimizations (first, and second down and
+ up functions). It is used after partial reoptimization of a tree and if the
+ client program needs to restore the state sets to their original values before
+ continuing to evaluate proposed insertions.
+ @param node_id The index value of the node having its state sets restored.
+ 
+ @param m An instance of the morphylib object.
+ 
+ @return 0 if success, a morphylib error code if there has been an error.
+ 
+ */
+int     mpl_restore_original_sets
+        
+        (const int  node_id,
+         Morphy     m);
 /*!
 
  @brief Returns the state set for a character at a given node as set bits in an
