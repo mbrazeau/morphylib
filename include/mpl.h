@@ -671,7 +671,7 @@ int     mpl_update_lower_root
          Morphy     m);
     
     
-int		mpl_first_down_update
+int		mpl_na_first_down_recalculation
 
 		(const int  node_id,
 		 const int  left_id,
