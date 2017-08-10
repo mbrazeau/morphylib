@@ -143,6 +143,7 @@ typedef struct partition_s {
 typedef struct MPLndsets {
     
     bool        needsupdate;
+    int         steps_to_recall;
     MPLstate*   downpass1;
     MPLstate*   uppass1;
     MPLstate*   downpass2;
@@ -160,17 +161,13 @@ typedef struct MPLndsets {
     
 } MPLndsets;
     
+    
 typedef struct mpl_matrix_s {
     int             ncells;
     MPLcell*        cells;
 } MPLmatrix;
 
-//typedef struct {
-//    int*            tips;
-//    int*            internals;
-//    MPLndsets**  ancstates;
-//} MPLnodesets;
-
+    
 typedef struct symbols_s {
     int         numstates;
     char*       statesymbols;
