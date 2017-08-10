@@ -598,7 +598,7 @@ int mpl_do_tiproot(const int tip_id, const int node_id, Morphy m)
     return res;
 }
 
-int mpl_first_down_update
+int mpl_na_first_down_recalculation
 (const int node_id, const int left_id, const int right_id, Morphy m)
 {
     if (!m) {
@@ -616,7 +616,10 @@ int mpl_first_down_update
     MPLdownfxn downfxn = NULL;
     
     for (i = 0; i < numparts; ++i) {
-        
+        if (handl->partitions[i]->isNAtype == true) {
+            downfxn = mpl_NA_fitch_first_update_downpass;
+            downfxn(lstates, rstates, nstates, handl->partitions[i]);
+        }
     }
     
     return res;
