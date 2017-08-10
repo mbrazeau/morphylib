@@ -51,6 +51,7 @@ int main (void)
     fails += test_attemp_load_bad_dimens();
     fails += test_delete_Morphy_no_input();
     fails += test_basic_tip_apply();
+    fails += test_inapplic_state_restoration();
     // TODO: set this test up to return
     test_state_retrieval();
     
