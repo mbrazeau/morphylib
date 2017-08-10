@@ -388,10 +388,10 @@ int test_inapplic_state_restoration(void)
     char* matrix =
     "12100-0-00\
      -212------\
-     12--1-----\
+     ----------\
      1----11111\
-     -----1-1-1\
-     0-001---1-\
+     2----1-1-1\
+     0-0010--1-\
      -11111111-\
      0111111111;";
     
@@ -440,8 +440,16 @@ int test_inapplic_state_restoration(void)
     
     
     // Optimize data on the tree
-    test_do_fullpass_on_tree(tree, m);
+    int origlen = 0;
+    origlen = test_do_fullpass_on_tree(tree, m);
     
+    // Remove a branch
+    tl_remove_branch(&tree->trnodes[10], tree);
+
+    int rttreelen = 0;
+    rttreelen = test_do_fullpass_on_tree(tree, m);
+    
+    // Show 'before' state sets
     int i = 0;
     for (i = 0; i < (2 * ntax -1); ++i) {
         int k = 0;
@@ -452,21 +460,6 @@ int test_inapplic_state_restoration(void)
             beforestates4[i][k] = mpl_get_packed_states(i, k, 4, m);
         }
     }
-    // Remove a branch
-    tl_remove_branch(&tree->trnodes[11], tree);
-    
-    //test_do_fullpass_on_tree(tree, m);
-    // Show 'before' state sets
-    
-//    for (i = 0; i < (2 * ntax -1); ++i) {
-//        int k = 0;
-//        for (k = 0; k < nchar; ++k) {
-//            beforestates1[i][k] = mpl_get_packed_states(i, k, 1, m);
-//            beforestates2[i][k] = mpl_get_packed_states(i, k, 2, m);
-//            beforestates3[i][k] = mpl_get_packed_states(i, k, 3, m);
-//            beforestates4[i][k] = mpl_get_packed_states(i, k, 4, m);
-//        }
-//    }
     
     for (i = 0; i < (2 * ntax - 1); ++i) {
         printf("Node %i:\n", i);
@@ -491,7 +484,11 @@ int test_inapplic_state_restoration(void)
     
     // TODO: Now, need to perturb the tree without touching the temp state storage
     // First attempt a local reoptimization and store characters needing update
-    mpl_get_insertcost(tree->trnodes[10].index, tree->trnodes[3].index, tree->trnodes[3].anc->index, false, 100000, m);
+    int addlen = 0;
+    addlen = mpl_get_insertcost(tree->trnodes[10].index, tree->trnodes[3].anc->index, tree->trnodes[3].anc->anc->index, false, 100000, m);
+    int doreopt = 0;
+    doreopt = mpl_check_reopt_inapplics(m);
+    
     test_partial_downpass_for_inapplicables(tree, m);
     
     for (i = 0; i < (2 * ntax -1); ++i) {
