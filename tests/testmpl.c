@@ -444,7 +444,8 @@ int test_inapplic_state_restoration(void)
     origlen = test_do_fullpass_on_tree(tree, m);
     
     // Remove a branch
-    tl_remove_branch(&tree->trnodes[10], tree);
+    TLnode* orig = NULL;
+    orig = tl_remove_branch(&tree->trnodes[10], tree);
 
     int rttreelen = 0;
     rttreelen = test_do_fullpass_on_tree(tree, m);
@@ -485,7 +486,7 @@ int test_inapplic_state_restoration(void)
     // TODO: Now, need to perturb the tree without touching the temp state storage
     // First attempt a local reoptimization and store characters needing update
     int addlen = 0;
-    addlen = mpl_get_insertcost(tree->trnodes[10].index, tree->trnodes[3].anc->index, tree->trnodes[3].anc->anc->index, false, 100000, m);
+    addlen = mpl_get_insertcost(tree->trnodes[10].index, orig->index, orig->anc->index, false, 100000, m);
     int doreopt = 0;
     doreopt = mpl_check_reopt_inapplics(m);
     
