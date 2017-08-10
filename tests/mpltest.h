@@ -20,7 +20,7 @@
 #define theader(testname) printf("\n\n\t%s\n\n", testname);
 
 int test_do_fullpass_on_tree(TLtree* t, Morphy m);
-int test_partial_downpass_for_inapplicables(TLtree* t, Morphy m);
+int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m);
 
 //typedef struct {
 //    MPLchtype   userchtype;
