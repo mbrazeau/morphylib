@@ -478,7 +478,7 @@ int test_inapplic_state_restoration(void)
     
     // Reoptimize the subtree
     
-    //test_do_fullpass_on_tree(tree, m);
+    // TODO: Now, need to perturb the tree without touching the temp state storage
     
     // Show 'after' state sets
     
