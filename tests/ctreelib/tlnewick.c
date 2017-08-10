@@ -178,10 +178,10 @@ int tl_verify_Newick(const char *nwk)
 {
     int i = 0;
     bool spaceOK = false;
-    unsigned long nwklen = strlen(nwk);
+    //unsigned long nwklen = strlen(nwk);
     int open = 0, close = 0, comma = 0, badspace = 0;
     
-    int end = strlen(nwk);
+    int end = (int)strlen(nwk);
     if (nwk[end-1] != ';') {
         // fprintf(stderr, "Shiiiiit\n");
         // TODO: Check and test this

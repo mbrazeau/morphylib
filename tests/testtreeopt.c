@@ -86,7 +86,7 @@ int test_partial_downpass_for_inapplicables(TLtree* t, Morphy m)
         
         if (!n->tip) {
             // Do the eoptimzation
-            mpl_first_down_update(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), m);
+            mpl_na_first_down_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), m);
             // Mark the node as in the path
             // Check whether any updates have occurred;
             // If not, break the loop

@@ -388,7 +388,7 @@ int test_inapplic_state_restoration(void)
     char* matrix =
     "12100-0-00\
      -212------\
-     12--1-1---\
+     12--1-----\
      1----11111\
      -----1-1-1\
      0-001---1-\
@@ -437,14 +437,10 @@ int test_inapplic_state_restoration(void)
     unsigned int afterstates2 [2 * ntax - 1][nchar];
     unsigned int afterstates3 [2 * ntax - 1][nchar];
     unsigned int afterstates4 [2 * ntax - 1][nchar];
+    
+    
     // Optimize data on the tree
-    
     test_do_fullpass_on_tree(tree, m);
-    
-    // Remove a branch
-    tl_remove_branch(&tree->trnodes[10], tree);
-    
-    // Show 'before' state sets
     
     int i = 0;
     for (i = 0; i < (2 * ntax -1); ++i) {
@@ -456,6 +452,21 @@ int test_inapplic_state_restoration(void)
             beforestates4[i][k] = mpl_get_packed_states(i, k, 4, m);
         }
     }
+    // Remove a branch
+    tl_remove_branch(&tree->trnodes[11], tree);
+    
+    //test_do_fullpass_on_tree(tree, m);
+    // Show 'before' state sets
+    
+//    for (i = 0; i < (2 * ntax -1); ++i) {
+//        int k = 0;
+//        for (k = 0; k < nchar; ++k) {
+//            beforestates1[i][k] = mpl_get_packed_states(i, k, 1, m);
+//            beforestates2[i][k] = mpl_get_packed_states(i, k, 2, m);
+//            beforestates3[i][k] = mpl_get_packed_states(i, k, 3, m);
+//            beforestates4[i][k] = mpl_get_packed_states(i, k, 4, m);
+//        }
+//    }
     
     for (i = 0; i < (2 * ntax - 1); ++i) {
         printf("Node %i:\n", i);
@@ -479,8 +490,46 @@ int test_inapplic_state_restoration(void)
     // Reoptimize the subtree
     
     // TODO: Now, need to perturb the tree without touching the temp state storage
+    // First attempt a local reoptimization and store characters needing update
+    mpl_get_insertcost(tree->trnodes[10].index, tree->trnodes[3].index, tree->trnodes[3].anc->index, false, 100000, m);
+    test_partial_downpass_for_inapplicables(tree, m);
     
-    // Show 'after' state sets
+    for (i = 0; i < (2 * ntax -1); ++i) {
+        int k = 0;
+        for (k = 0; k < nchar; ++k) {
+            afterstates1[i][k] = mpl_get_packed_states(i, k, 1, m);
+            afterstates2[i][k] = mpl_get_packed_states(i, k, 2, m);
+            afterstates3[i][k] = mpl_get_packed_states(i, k, 3, m);
+            afterstates4[i][k] = mpl_get_packed_states(i, k, 4, m);
+        }
+    }
+    // Test 'after' state sets
+    int mismatches = 0;
+    for (i = 0; i < (2 * ntax -1); ++i) {
+        int k = 0;
+        for (k = 0; k < nchar; ++k) {
+            if (beforestates1[i][k] != afterstates1[i][k]) {
+                ++mismatches;
+            }
+            if (beforestates2[i][k] != afterstates2[i][k]) {
+                ++mismatches;
+            }
+            if (beforestates3[i][k] != afterstates3[i][k]) {
+                ++mismatches;
+            }
+            if (beforestates4[i][k] != afterstates4[i][k]) {
+                ++mismatches;
+            }
+        }
+    }
+    
+    if (mismatches == 0) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
     
     // Apply state set restoration
     for (i = 0; i < (2* ntax - 1); ++i) {
