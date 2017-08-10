@@ -490,7 +490,7 @@ int test_inapplic_state_restoration(void)
     int doreopt = 0;
     doreopt = mpl_check_reopt_inapplics(m);
     
-    test_partial_downpass_for_inapplicables(tree, m);
+    test_full_reoptimization_for_inapplics(tree, m);
     
     for (i = 0; i < (2 * ntax -1); ++i) {
         int k = 0;
