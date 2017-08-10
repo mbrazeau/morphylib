@@ -541,7 +541,7 @@ int test_bulk_unrooted_tree_cases(void)
         
         // Update lower root
         mpl_do_tiproot(0, 21, m1);
-        mpl_update_lower_root(21, 21, m1);
+        //mpl_update_lower_root(21, 21, m1);
         
         for (i = (ntax-3); i >= 0; --i) {
             length += mpl_first_up_recon

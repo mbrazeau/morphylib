@@ -247,7 +247,8 @@ int mpl_NA_fitch_first_uppass
                     nifin[j] = NA;
                 }
                 else {
-                    if ((left[j] | right[j]) & ISAPPLIC) {
+                    if ((left[j] | right[j]) & ISAPPLIC
+                        && (left[j] | right[j]) != MISSING) { // TODO: This probably isn't quite safe.
                         nifin[j] = ((left[j] | right[j]) & ISAPPLIC);
                     }
                     else {
@@ -260,6 +261,7 @@ int mpl_NA_fitch_first_uppass
             nifin[j] = npre[j];
         }
         
+        // Store the set for restoration during tree searches.
         nfint[j] = nifin[j];
         
 #ifdef DEBUG
@@ -346,6 +348,7 @@ int mpl_NA_fitch_second_downpass
     MPLstate*       npre    = nset->downpass2;
     MPLstate*       npret   = nset->temp_downpass2;
     MPLstate*       stacts  = nset->subtree_actives;
+    MPLstate*       tstatcs = nset->temp_subtr_actives;
     MPLstate*       lacts   = lset->subtree_actives;
     MPLstate*       racts   = rset->subtree_actives;
     MPLstate        temp    = 0;
@@ -377,8 +380,9 @@ int mpl_NA_fitch_second_downpass
             npre[j] = nifin[j];
         }
         
-        npret[j] = npre[j]; // Storage for temporary updates
+        npret[j] = npre[j]; // Storage for temporary updates.
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
+        tstatcs[j] = stacts[j]; // Storage for temporary updates.
     
 #ifdef DEBUG
         assert(npre[j]);
@@ -434,6 +438,8 @@ int mpl_NA_fitch_second_update_downpass
     MPLstate*       stacts      = nset->subtree_actives;
     MPLstate*       lacts       = lset->subtree_actives;
     MPLstate*       racts       = rset->subtree_actives;
+    MPLstate*       tlacts      = lset->temp_subtr_actives;
+    MPLstate*       tracts      = rset->temp_subtr_actives;
     MPLstate        temp        = 0;
     unsigned long*  weights     = part->intwts;
     
@@ -466,7 +472,9 @@ int mpl_NA_fitch_second_update_downpass
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
         
         if (npre [j] != npret[j]) {
-            //step_recall += mpl_check_down_NA_steps(tleft[j], tright[j], <#MPLstate lactive#>, <#MPLstate ractive#>);
+            /* Count whether any steps need to be taken back at this node */
+            step_recall += mpl_check_down_NA_steps(tleft[j], tright[j],
+                                                   tlacts[j], tracts[j]);
             // TODO: Store the step recall.
             // TODO: Flag the update.
         }
@@ -699,6 +707,7 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
     // TODO: Check these!!!!!!!
     MPLstate* tprelim = tset->downpass1;
     MPLstate* tfinal  = tset->uppass1;
+    MPLstate* ttfinal = tset->temp_uppass1;
     MPLstate* astates = ancset->uppass1;
     
     for (i = 0; i < nchars; ++i) {
@@ -709,6 +718,7 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
         else {
             tfinal[j] = tprelim[j];
         }
+        ttfinal[j] = tfinal[j];
 #ifdef DEBUG
         assert(tfinal[j]);
 #endif
@@ -757,6 +767,7 @@ int mpl_fitch_NA_one_branch
     int* indices     = part->charindices;
     int nchars       = part->ncharsinpart;
     MPLstate* tipset = tipanc->downpass1;
+    MPLstate* tipifin = tipanc->uppass1;
     MPLstate* tipfin = tipanc->uppass2;
     MPLstate* ndset  = node->downpass1;
     MPLstate* ndacts = node->subtree_actives;
@@ -781,11 +792,11 @@ int mpl_fitch_NA_one_branch
                 }
             }
             
-            tipfin[j]        = tipset[j];
+            tipifin[j]        = tipset[j];
             //node->uppass2[j] = ndset[j];
         }
         else {
-            tipfin[j]        = temp;
+            tipifin[j]        = temp;
             //node->uppass1[j] = temp;
             //node->uppass2[j] = temp;
         }
@@ -799,14 +810,18 @@ int mpl_fitch_NA_tip_update
 {
     int i     = 0;
     int j     = 0;
-    int* indices    = part->charindices;
-    int nchars      = part->ncharsinpart;
+    int* indices        = part->charindices;
+    int nchars          = part->ncharsinpart;
+    
     MPLstate* tpass1    = tset->downpass1;
-    MPLstate* tpass2   = tset->uppass1;
-    MPLstate* tpass3   = tset->downpass2;
-//    MPLstate* tifinal   = tset->uppass2;
+    MPLstate* tpass2    = tset->uppass1;
+    MPLstate* tpass3    = tset->downpass2;
+    MPLstate* ttpass1   = tset->temp_downpass1;
+    MPLstate* ttpass2   = tset->temp_uppass1;
+    MPLstate* ttpass3   = tset->temp_downpass2;
     MPLstate* astates   = ancset->uppass1;
     MPLstate* stacts    = tset->subtree_actives;
+    MPLstate* tstatcs   = tset->temp_subtr_actives;
     
     for (i = 0; i < nchars; ++i) {
         
@@ -827,7 +842,13 @@ int mpl_fitch_NA_tip_update
             }
         }
         
-        tpass3[j] = tpass2[j];
+        tpass3[j]  = tpass2[j];
+        
+        // Store the temp sets for restoring after temporary updates
+        ttpass1[j] = tpass1[j];
+        ttpass2[j] = tpass2[j];
+        ttpass3[j] = tpass3[j];
+        tstatcs[j] = stacts[j];
 #ifdef DEBUG   
         assert(tpass3[j]);
         assert(tpass2[j]);
@@ -846,8 +867,10 @@ int mpl_fitch_NA_tip_finalize
     int nchars      = part->ncharsinpart;
     MPLstate* tpass1    = tset->downpass1;
     MPLstate* tfinal    = tset->uppass2;
+    MPLstate* ttfinal   = tset->temp_uppass2;
     MPLstate* astates   = ancset->uppass2;
     MPLstate* stacts    = tset->subtree_actives;
+    MPLstate* tstacts   = tset->temp_subtr_actives;
     
     for (i = 0; i < nchars; ++i) {
         
@@ -861,6 +884,10 @@ int mpl_fitch_NA_tip_finalize
         }
         
         stacts[j] = tfinal[j] & ISAPPLIC;
+        
+        // Store the temp buffers:
+        ttfinal[j] = tfinal[j];
+        tstacts[j] = stacts[j];
 #ifdef DEBUG
         assert(tfinal[j]);
 #endif

@@ -670,6 +670,47 @@ int mpl_check_reopt_inapplics(Morphy m)
 }
 
 
+int mpl_restore_original_sets(const int node_id, Morphy m)
+{
+    if (m == NULL) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp mi = (Morphyp)m;
+    int i = 0;
+    int k = 0;
+    
+    for (i = 0; i < mi->numparts; ++i) {
+        if (mi->partitions[i]->isNAtype) {
+            
+            /* Set any flags or temp variables back to defaults */
+            mi->statesets[node_id]->needsupdate     = false;
+            mi->statesets[node_id]->steps_to_recall = 0;
+            
+            /* Restore the original sets */
+            for (k = 0; k < mi->partitions[i]->ncharsinpart; ++k) {
+                
+                int j = 0;
+                j = mi->partitions[i]->charindices[k];
+                
+                mi->statesets[node_id]->downpass1[j]
+                    = mi->statesets[node_id]->temp_downpass1[j];
+                mi->statesets[node_id]->uppass1[j]
+                    = mi->statesets[node_id]->temp_uppass1[j];
+                mi->statesets[node_id]->downpass2[j]
+                    = mi->statesets[node_id]->temp_downpass2[j];
+                mi->statesets[node_id]->uppass2[j]
+                    = mi->statesets[node_id]->temp_uppass2[j];
+                mi->statesets[node_id]->subtree_actives[j]
+                    = mi->statesets[node_id]->temp_subtr_actives[j];
+            }
+        }
+    }
+    
+    return ERR_NO_ERROR;
+}
+
+
 unsigned int mpl_get_packed_states
 (const int nodeID, const int character, const int passnum, const Morphy m)
 {
