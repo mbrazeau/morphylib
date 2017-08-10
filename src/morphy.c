@@ -1213,6 +1213,12 @@ int mpl_update_NA_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)
         lower->uppass2[j]   = upper->downpass2[j];
         lower->downpass1[j] = lower->downpass1[j];
         lower->uppass1[j]   = lower->downpass1[j];
+        
+        // Must also store the root states in temp;
+        lower->temp_downpass1[j] = lower->downpass1[j];
+        lower->temp_uppass1[j] = lower->uppass1[j];
+        lower->temp_downpass2[j] = lower->downpass2[j];
+        lower->temp_uppass2[j] = lower->uppass2[j];
     }
     
     return 0;
