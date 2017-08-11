@@ -720,6 +720,12 @@ int     mpl_get_insertcost
          const bool max,
          const int  cutoff,
          Morphy     m);
+        
+int     mpl_na_update_tip
+        
+        (const int  tip_id,
+         const int  node_id,
+         Morphy     m);
 
     
 // Indicates whether or not partitions with inapplicable characters need partial
