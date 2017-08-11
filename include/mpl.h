@@ -704,6 +704,12 @@ int		mpl_na_second_up_recalculation
 		 const int  right_id,
 		 const int  anc_id,
 		 Morphy     m);
+        
+int     mpl_lower_root_recalculation
+        
+        (const int  l_root_id,
+         const int  root_id,
+         Morphy     m);
 
 int     mpl_na_tiproot_recalculation
         
@@ -728,6 +734,12 @@ int     mpl_na_update_tip
          Morphy     m);
 
     
+int     mpl_get_step_recall
+        
+        (const int  node_id,
+         Morphy     m);
+        
+        
 // Indicates whether or not partitions with inapplicable characters need partial
 // reoptimisation on the target subtree. SHOULD RETURN: Number of characters
 // needing partial reoptimisation on the subtree.
