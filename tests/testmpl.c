@@ -382,7 +382,7 @@ int test_inapplic_state_restoration(void)
     
     int ntax = 8;
     int nchar = 10;
-    
+    int rmbranch = 4;
     Morphy m = NULL;
 //   1234567890
     char* matrix =
@@ -445,7 +445,7 @@ int test_inapplic_state_restoration(void)
     
     // Remove a branch
     TLnode* orig = NULL;
-    orig = tl_remove_branch(&tree->trnodes[8], tree);
+    orig = tl_remove_branch(&tree->trnodes[rmbranch], tree);
 
     int rttreelen = 0;
     rttreelen = test_do_fullpass_on_tree(tree, m);
@@ -486,11 +486,25 @@ int test_inapplic_state_restoration(void)
     // TODO: Now, need to perturb the tree without touching the temp state storage
     // First attempt a local reoptimization and store characters needing update
     int addlen = 0;
-    addlen = mpl_get_insertcost(tree->trnodes[8].index, orig->index, orig->anc->index, false, 100000, m);
+    addlen = mpl_get_insertcost(tree->trnodes[rmbranch].index, orig->index, orig->anc->index, false, 100000, m);
     int doreopt = 0;
     doreopt = mpl_check_reopt_inapplics(m);
     
-    test_full_reoptimization_for_inapplics(tree, m);
+    tl_insert_branch(&tree->trnodes[rmbranch], orig->index, tree);
+    int updatelen = 0;
+    updatelen = test_full_reoptimization_for_inapplics(tree, m);
+    
+    int total = 0;
+    total = rttreelen + addlen + updatelen;
+    
+    if (total != origlen) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
     
     for (i = 0; i < (2 * ntax -1); ++i) {
         int k = 0;

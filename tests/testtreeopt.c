@@ -68,6 +68,7 @@ int test_do_fullpass_on_tree(TLtree* t, Morphy m)
     return length;
 }
 
+
 int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
 {
     int end = 0;
@@ -95,8 +96,9 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
         }
     }
     
-    if (i == end) {
+    if (i-1 == end) {
         // Do the root;
+        mpl_lower_root_recalculation(I_ANCESTOR(t->trnodes[end].index, t), t->trnodes[end].index, m);
     }
     
     // Now proceed all the way upward until at least 1 node past the clip insertion
@@ -134,7 +136,8 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
         // Collect steps added
         // Collect steps taken back
         if (!n->tip) {
-            mpl_na_second_down_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), m);
+            length += mpl_na_second_down_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), m);
+            length -= mpl_get_step_recall(n->index, m);
         }
     }
    
@@ -155,7 +158,8 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
             // Do first uppass reoptimization
             // Collect steps added
             // Collect steps taken back.
-            mpl_na_second_up_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), I_ANCESTOR(n->index, t), m);
+            length += mpl_na_second_up_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), I_ANCESTOR(n->index, t), m);
+            length -= mpl_get_step_recall(n->index, m);
         }
     }
     
