@@ -1231,3 +1231,30 @@ int mpl_update_NA_root(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)
     
     return 0;
 }
+
+int mpl_update_NA_root_recalculation(MPLndsets* lower, MPLndsets* upper, MPLpartition* part)
+{
+    int i = 0;
+    int j = 0;
+    int nchar = part->nNAtoupdate;
+    int *indices = part->update_NA_indices;
+    
+    for (i = 0; i < nchar; ++i) {
+        j = indices[i];
+        
+        if (upper->downpass1[j] & ISAPPLIC) {
+            lower->downpass1[j] = upper->downpass1[j] & ISAPPLIC;
+        }
+        else {
+            lower->downpass1[j] = NA;
+        }
+        
+        // Some of these assignments are a bit overkill, but they should
+        // be fairly safe in case of changes in how the nodal functions work.
+        lower->uppass2[j]   = upper->downpass2[j];
+        lower->downpass1[j] = lower->downpass1[j];
+        lower->uppass1[j]   = lower->downpass1[j];
+    }
+    
+    return 0;
+}
