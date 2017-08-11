@@ -21,6 +21,8 @@ int mpl_NA_fitch_first_update_downpass(MPLndsets* lset, MPLndsets* rset, MPLndse
 
 int mpl_NA_fitch_first_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset, MPLpartition* part);
 
+int mpl_NA_fitch_first_update_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset, MPLpartition* part);
+
 int mpl_NA_fitch_second_downpass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part);
 
 int mpl_NA_fitch_second_uppass(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset, MPLpartition* part);
