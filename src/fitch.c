@@ -477,7 +477,7 @@ int mpl_NA_fitch_second_update_downpass
             int rec = 0;
             rec = mpl_check_down_NA_steps(tleft[j], tright[j],
                                                    tlacts[j], tracts[j]);
-            step_recall += (weights[j] & rec);
+            step_recall += (weights[j] * rec);
             // TODO: Store the step recall.
             // TODO: Flag the update.
         }
