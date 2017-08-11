@@ -129,9 +129,13 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
     
     // Do the second downpass;
     for (i = 0; i <= end; ++i) {
+        n = &t->trnodes[postorder[i]];
         // Apply downpass calculations
         // Collect steps added
-        // Colelct steps taken back
+        // Collect steps taken back
+        if (!n->tip) {
+            mpl_na_second_down_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), m);
+        }
     }
    
     // This function can limit its depth to the last node updated by the second
@@ -151,6 +155,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
             // Do first uppass reoptimization
             // Collect steps added
             // Collect steps taken back.
+            mpl_na_second_up_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), I_ANCESTOR(n->index, t), m);
         }
     }
     
