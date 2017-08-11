@@ -142,7 +142,7 @@ typedef struct partition_s {
 
 typedef struct MPLndsets {
     
-    bool        needsupdate;
+    bool        updated;
     int         steps_to_recall;
     MPLstate*   downpass1;
     MPLstate*   uppass1;
