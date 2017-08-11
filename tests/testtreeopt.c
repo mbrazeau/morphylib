@@ -110,7 +110,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
     // Once it's all over, restore the state sets to their original values.
     // Reset the partitions' number of NA chars to update
     
-    for (i = end; i >= 0; ++i) {
+    for (i = end; i >= 0; --i) {
         
         n = &t->trnodes[postorder[i]];
         
@@ -137,7 +137,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
     // downpass function; I don't think it can limit its depth to the last
     // node updated by the first downpass update.
     
-    for (i = end; i >= 0; ++i) {
+    for (i = end; i >= 0; --i) {
         // Do the second uppass;
         n = &t->trnodes[postorder[i]];
         
