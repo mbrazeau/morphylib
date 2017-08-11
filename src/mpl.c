@@ -625,7 +625,7 @@ int mpl_na_first_down_recalculation
     MPLndsets*  rstates = handl->statesets[right_id];
     
     int i = 0;
-    int res = 0;
+    //int res = 0;
     int numparts = mpl_get_numparts(handl);
     MPLdownfxn downfxn = NULL;
     
@@ -633,12 +633,23 @@ int mpl_na_first_down_recalculation
     
     for (i = 0; i < numparts; ++i) {
         if (handl->partitions[i]->isNAtype == true) {
-            downfxn = mpl_NA_fitch_first_update_downpass;
+            downfxn = mpl_NA_fitch_first_update_downpass; // TODO: Get partition's type
             downfxn(lstates, rstates, nstates, handl->partitions[i]);
         }
     }
     
-    return res;
+    return ERR_NO_ERROR;
+}
+
+int mpl_na_first_up_recalculation
+(const int node_id, const int left_id, const int right_id, const int anc_id,
+ Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    return ERR_CASE_NOT_IMPL; // TODO: Give this a proper return
 }
 
 
