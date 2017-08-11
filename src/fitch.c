@@ -248,7 +248,7 @@ int mpl_NA_fitch_first_uppass
                 }
                 else {
                     if ((left[j] | right[j]) & ISAPPLIC
-                        && (left[j] | right[j]) != MISSING) { // TODO: This probably isn't quite safe.
+                        && (left[j] | right[j]) != MISSING) { // TODO: This possibly isn't quite safe or right.
                         nifin[j] = ((left[j] | right[j]) & ISAPPLIC);
                     }
                     else {
@@ -311,7 +311,8 @@ int mpl_NA_fitch_first_update_uppass
                     nifin[j] = NA;
                 }
                 else {
-                    if ((left[j] | right[j]) & ISAPPLIC) {
+                    if ((left[j] | right[j]) & ISAPPLIC
+                        && (left[j] | right[j]) != MISSING) { // TODO: This possibly isn't quite safe or right.
                         nifin[j] = ((left[j] | right[j]) & ISAPPLIC);
                     }
                     else {
@@ -599,7 +600,7 @@ int mpl_NA_fitch_second_update_uppass
                     nfin[j] = anc[j] & npre[j];
                 } else {
                     if (left[j] & right[j]) {
-                        nfin[j] = (npre[j] | (anc[j] & left[j] & right[j]));
+                        nfin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
                     }
                     else {
                         if ((left[j] | right[j]) & NA) {
@@ -610,9 +611,9 @@ int mpl_NA_fitch_second_update_uppass
                             }
                         } else {
                             nfin[j] = npre[j] | anc[j];
-                            if ((anc[j] & nfin[j]) == anc[j]) {
-                                nfin[j] = anc[j] & nfin[j];
-                            }
+//                            if ((anc[j] & nfin[j]) == anc[j]) {
+//                                nfin[j] = anc[j] & nfin[j];
+//                            }
                         }
                     }
                 }
