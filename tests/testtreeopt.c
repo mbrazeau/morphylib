@@ -79,6 +79,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
     end = index-1;
     printf("\n");
     TLnode* n = NULL;
+    
     int i = 0;
     for (i = 0; i <= end; ++i) {
         
