@@ -633,7 +633,7 @@ int mpl_na_first_down_recalculation
     
     for (i = 0; i < numparts; ++i) {
         if (handl->partitions[i]->isNAtype == true) {
-            downfxn = mpl_NA_fitch_first_update_downpass; // TODO: Get partition's type
+            downfxn = handl->partitions[i]->downrecalc1;
             downfxn(lstates, rstates, nstates, handl->partitions[i]);
         }
     }
