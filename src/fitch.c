@@ -484,7 +484,7 @@ int mpl_NA_fitch_second_update_downpass
         step_recall += (weights[j] * rec);
         
         /* Flag as updated if current set is different from previous */
-        if (npre [j] != npret[j]) {
+        if (npre[j] != npret[j]) {
             nset->updated = true;
         }
 #ifdef DEBUG
@@ -646,7 +646,6 @@ int mpl_NA_fitch_second_update_uppass
         step_recall += (rec * weights[i]);
     
         if (nfint[j] != nfin[j]) {
-            nfint[j] = nfin[j]; // Storage of states for undoing temp updates
             nset->updated = true;
         }
 #ifdef DEBUG
