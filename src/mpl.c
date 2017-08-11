@@ -691,7 +691,8 @@ int mpl_na_second_down_recalculation
     int numparts = mpl_get_numparts(handl);
     MPLdownfxn downfxn = NULL;
     
-    nstates->updated = false;
+    nstates->updated            = false;
+    nstates->steps_to_recall    = 0;
     
     for (i = 0; i < numparts; ++i) {
         if (handl->partitions[i]->isNAtype == true) {
@@ -723,7 +724,8 @@ int mpl_na_second_up_recalculation
     int numparts = mpl_get_numparts(handl);
     MPLupfxn upfxn = NULL;
     
-    nstates->updated = false;
+    nstates->updated            = false;
+    nstates->steps_to_recall    = 0;
     
     for (i = 0; i < numparts; ++i) {
         if (handl->partitions[i]->isNAtype == true) {
@@ -735,6 +737,45 @@ int mpl_na_second_up_recalculation
     return res; //
 }
 
+
+int mpl_lower_root_recalculation(const int l_root_id, const int root_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp handl           = (Morphyp)m;
+    MPLndsets* lower        = handl->statesets[l_root_id];
+    MPLndsets* upper        = handl->statesets[root_id];
+    MPLpartition** parts    = handl->partitions;
+    
+    int i = 0;
+    int numparts = mpl_get_numparts(handl);
+    
+    for (i = 0; i < numparts; ++i) {
+        if (parts[i]->isNAtype) {
+            mpl_update_NA_root_recalculation(lower, upper, parts[i]);
+        }
+    }
+    
+    return ERR_NO_ERROR;
+}
+
+
+int mpl_get_step_recall(const int node_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp handl = (Morphyp)m;
+    
+    int ret = handl->statesets[node_id]->steps_to_recall;
+    handl->statesets[node_id]->steps_to_recall = 0;
+    
+    return ret;
+    
+}
 
 int mpl_get_insertcost
 (const int srcID, const int tgt1ID, const int tgt2ID, const bool max,
