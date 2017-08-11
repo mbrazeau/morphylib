@@ -474,8 +474,10 @@ int mpl_NA_fitch_second_update_downpass
         
         if (npre [j] != npret[j]) {
             /* Count whether any steps need to be taken back at this node */
-            step_recall += mpl_check_down_NA_steps(tleft[j], tright[j],
+            int rec = 0;
+            rec = mpl_check_down_NA_steps(tleft[j], tright[j],
                                                    tlacts[j], tracts[j]);
+            step_recall += (weights[j] & rec);
             // TODO: Store the step recall.
             // TODO: Flag the update.
         }
@@ -575,20 +577,23 @@ int mpl_NA_fitch_second_update_uppass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
  MPLpartition* part)
 {
-    int             i       = 0;
-    int             j       = 0;
-    int             steps   = 0;
-    const int*      indices = part->update_NA_indices;
-    int             nchars  = part->nNAtoupdate;
-    MPLstate*       left    = lset->downpass2;
-    MPLstate*       right   = rset->downpass2;
-    MPLstate*       npre    = nset->downpass2;
-    MPLstate*       nfin    = nset->uppass2;
-    MPLstate*       nfint   = nset->temp_uppass2;
-    MPLstate*       anc     = ancset->uppass2;
-    MPLstate*       lacts   = lset->subtree_actives;
-    MPLstate*       racts   = rset->subtree_actives;
-    unsigned long*  weights = part->intwts;
+    int             i           = 0;
+    int             j           = 0;
+    int             steps       = 0;
+    int             step_recall = 0;
+    const int*      indices     = part->update_NA_indices;
+    int             nchars      = part->nNAtoupdate;
+    MPLstate*       left        = lset->downpass2;
+    MPLstate*       right       = rset->downpass2;
+    MPLstate*       npre        = nset->downpass2;
+    MPLstate*       nfin        = nset->uppass2;
+    MPLstate*       nfint       = nset->temp_uppass2;
+    MPLstate*       anc         = ancset->uppass2;
+    MPLstate*       lacts       = lset->subtree_actives;
+    MPLstate*       racts       = rset->subtree_actives;
+    MPLstate*       tlacts      = lset->temp_subtr_actives;
+    MPLstate*       tracts      = lset->temp_subtr_actives;
+    unsigned long*  weights     = part->intwts;
     
     for (i = 0; i < nchars; ++i) {
         
@@ -630,7 +635,12 @@ int mpl_NA_fitch_second_update_uppass
             }
         }
         
-        nfint[j] = nfin[j]; // Storage of states for undoing temp updates
+        if (nfint[j] != nfin[j]) {
+            nfint[j] = nfin[j]; // Storage of states for undoing temp updates
+            int rec = 0;
+            rec = mpl_check_up_NA_steps(nfint[j], tlacts[j], tracts[j]);
+            step_recall += (rec * weights[i]);
+        }
 #ifdef DEBUG
         assert(nfin[j]);
 #endif
