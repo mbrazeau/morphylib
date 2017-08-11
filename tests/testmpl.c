@@ -387,13 +387,13 @@ int test_inapplic_state_restoration(void)
 //   1234567890
     char* matrix =
     "12100-0-00\
-     -212------\
-     ----------\
-     1----11111\
-     2----1-1-1\
-     0-0010--1-\
-     -11111111-\
-     0111111111;";
+     -212-0----\
+     ----1----1\
+     1----1111-\
+     2-1-1--1-1\
+     0-00-0--1-\
+     --111-1111\
+     0111-11111;";
     
     err = mpl_init_Morphy(ntax, nchar, m);
     if (err != ERR_UNEXP_NULLPTR) {
@@ -420,7 +420,7 @@ int test_inapplic_state_restoration(void)
     mpl_apply_tipdata(m);
     
     // Build a tree
-    char * treenwk = "(1,(2,((3,4),(5,(7,(6,8))))));";
+    char * treenwk = "(1,(2,(3,(4,(5,(6,(7,8)))))));";
     TLP tlp = tl_new_TL();
     tl_set_numtaxa(ntax, tlp);
     tl_attach_Newick(treenwk, tlp);
@@ -445,7 +445,7 @@ int test_inapplic_state_restoration(void)
     
     // Remove a branch
     TLnode* orig = NULL;
-    orig = tl_remove_branch(&tree->trnodes[10], tree);
+    orig = tl_remove_branch(&tree->trnodes[8], tree);
 
     int rttreelen = 0;
     rttreelen = test_do_fullpass_on_tree(tree, m);
@@ -486,7 +486,7 @@ int test_inapplic_state_restoration(void)
     // TODO: Now, need to perturb the tree without touching the temp state storage
     // First attempt a local reoptimization and store characters needing update
     int addlen = 0;
-    addlen = mpl_get_insertcost(tree->trnodes[10].index, orig->index, orig->anc->index, false, 100000, m);
+    addlen = mpl_get_insertcost(tree->trnodes[8].index, orig->index, orig->anc->index, false, 100000, m);
     int doreopt = 0;
     doreopt = mpl_check_reopt_inapplics(m);
     
