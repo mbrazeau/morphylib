@@ -45,6 +45,8 @@ int mpl_fitch_downpass
         }
     }
     
+    // TODO: rewrite for updated stateset checks.
+    
     return steps;
 }
 
@@ -183,6 +185,7 @@ int mpl_NA_fitch_first_update_downpass
     MPLstate*  left     = lset->downpass1;
     MPLstate*  right    = rset->downpass1;
     MPLstate*  n        = nset->downpass1;
+    MPLstate*  ntemp    = nset->temp_downpass1;
     
     for (i = 0; i < nchars; ++i) {
         
@@ -203,6 +206,10 @@ int mpl_NA_fitch_first_update_downpass
                     n[j] = (left[j] | right[j]);
                 }
             }
+        }
+        
+        if (n[j] != ntemp[j]) {
+            nset->updated = true;
         }
         
 #ifdef DEBUG
@@ -329,7 +336,6 @@ int mpl_NA_fitch_first_update_uppass
         assert(nifin[j]);
 #endif
     }
-    
     
     return 0;
 }
@@ -472,14 +478,14 @@ int mpl_NA_fitch_second_update_downpass
         
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
         
+        /* Count whether any steps need to be taken back at this node */
+        int rec = 0;
+        rec = mpl_check_down_NA_steps(tleft[j], tright[j], tlacts[j], tracts[j]);
+        step_recall += (weights[j] * rec);
+        
+        /* Flag as updated if current set is different from previous */
         if (npre [j] != npret[j]) {
-            /* Count whether any steps need to be taken back at this node */
-            int rec = 0;
-            rec = mpl_check_down_NA_steps(tleft[j], tright[j],
-                                                   tlacts[j], tracts[j]);
-            step_recall += (weights[j] * rec);
-            // TODO: Store the step recall.
-            // TODO: Flag the update.
+            nset->updated = true;
         }
 #ifdef DEBUG
         assert(npre[j]);
