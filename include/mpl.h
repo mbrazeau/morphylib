@@ -679,7 +679,7 @@ int		mpl_na_first_down_recalculation
 		 Morphy     m);
     
 
-int		mpl_first_up_update
+int		mpl_na_first_up_recalculation
 
 		(const int  node_id,
 		 const int  left_id,
@@ -689,7 +689,7 @@ int		mpl_first_up_update
 
 
 // Returns number of steps to add
-int		mpl_second_down_update
+int		mpl_na_second_down_recalculation
 
 		(const int  node_id,
 		 const int  left_id,
@@ -697,13 +697,19 @@ int		mpl_second_down_update
 		 Morphy     m);
 
 // Returns number of steps to add
-int		mpl_second_up_update
+int		mpl_na_second_up_recalculation
 
 		(const int  node_id,
 		 const int  left_id,
 		 const int  right_id,
 		 const int  anc_id,
 		 Morphy     m);
+
+int     mpl_na_tiproot_recalculation
+        
+        (const int  tip_id,
+         const int  node_id,
+         Morphy     m);
 
 
 int     mpl_get_insertcost
