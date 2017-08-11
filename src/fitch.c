@@ -485,11 +485,11 @@ int mpl_NA_fitch_second_update_downpass
         /* Flag as updated if current set is different from previous */
         if (npre[j] != npret[j]) {
             nset->updated = true;
-            if (nset->temp_uppass1[j] & ISAPPLIC) {
-                int rec = 0;
-                rec = mpl_check_down_NA_steps(tleft[j], tright[j], tlacts[j], tracts[j]);
-                step_recall += (weights[j] * rec);
-            }
+//            if (nset->temp_uppass1[j] & ISAPPLIC) {
+//                int rec = 0;
+//                rec = mpl_check_down_NA_steps(tleft[j], tright[j], tlacts[j], tracts[j]);
+//                step_recall += (weights[j] * rec);
+//            }
         }
 #ifdef DEBUG
         assert(npre[j]);
