@@ -119,6 +119,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
         }
         else {
             // Do first uppass reoptimization
+            mpl_na_first_up_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), I_ANCESTOR(n->index, t), m);
         }
     }
     
