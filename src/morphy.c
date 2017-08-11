@@ -328,24 +328,32 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
     assert(part);
     
     if (part->isNAtype) {
-        part->inappdownfxn  = mpl_NA_fitch_second_downpass;
-        part->inappupfxn    = mpl_NA_fitch_second_uppass;
-        part->prelimfxn     = mpl_NA_fitch_first_downpass;//mpl_NA_fitch_second_downpass;
-        part->finalfxn      = mpl_NA_fitch_first_uppass;
-        part->tipupdate     = mpl_fitch_NA_tip_update;
-        part->tipfinalize   = mpl_fitch_NA_tip_finalize;
-        part->tiproot       = mpl_fitch_NA_one_branch;
-        part->loclfxn       = mpl_fitch_NA_local_reopt;
+        part->inappdownfxn      = mpl_NA_fitch_second_downpass;
+        part->inappupfxn        = mpl_NA_fitch_second_uppass;
+        part->prelimfxn         = mpl_NA_fitch_first_downpass;//mpl_NA_fitch_second_downpass;
+        part->finalfxn          = mpl_NA_fitch_first_uppass;
+        part->tipupdate         = mpl_fitch_NA_tip_update;
+        part->tipfinalize       = mpl_fitch_NA_tip_finalize;
+        part->tiproot           = mpl_fitch_NA_one_branch;
+        part->loclfxn           = mpl_fitch_NA_local_reopt;
+        part->downrecalc1       = mpl_NA_fitch_first_update_downpass;
+        part->uprecalc1         = mpl_NA_fitch_first_update_uppass;
+        part->inappdownrecalc2  = mpl_NA_fitch_second_update_downpass;
+        part->inapuprecalc2     = mpl_NA_fitch_second_update_uppass;
     }
     else {
-        part->prelimfxn     = mpl_fitch_downpass;
-        part->finalfxn      = mpl_fitch_uppass;
-        part->tipupdate     = mpl_fitch_tip_update;
-        part->tiproot       = mpl_fitch_one_branch;
-        part->tipfinalize   = NULL;
-        part->inappdownfxn  = NULL; // Not necessary, but safe & explicit
-        part->inappupfxn    = NULL;
-        part->loclfxn       = mpl_fitch_local_reopt;
+        part->prelimfxn         = mpl_fitch_downpass;
+        part->finalfxn          = mpl_fitch_uppass;
+        part->tipupdate         = mpl_fitch_tip_update;
+        part->tiproot           = mpl_fitch_one_branch;
+        part->tipfinalize       = NULL;
+        part->inappdownfxn      = NULL; // Not necessary, but safe & explicit
+        part->inappupfxn        = NULL;
+        part->loclfxn           = mpl_fitch_local_reopt;
+        part->downrecalc1       = NULL;
+        part->uprecalc1         = NULL;
+        part->inappdownrecalc2  = NULL;
+        part->inapuprecalc2     = NULL;
     }
 }
 
