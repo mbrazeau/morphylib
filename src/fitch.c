@@ -365,6 +365,8 @@ int mpl_NA_fitch_second_downpass
         
         j = indices[i];
         
+        nset->changes[j] = false;
+        
         if (nifin[j] & ISAPPLIC) {
             if ((temp = (left[j] & right[j]))) {
                 if (temp & ISAPPLIC) {
@@ -378,8 +380,10 @@ int mpl_NA_fitch_second_downpass
                 
                 if (left[j] & ISAPPLIC && right[j] & ISAPPLIC) {
                     steps += weights[i];
+                    nset->changes[j] = true;
                 } else if (lacts[j] && racts[j]) {
                     steps += weights[i];
+                    nset->changes[j] = true;
                 }
             }
         }
@@ -558,6 +562,7 @@ int mpl_NA_fitch_second_uppass
             
             if (lacts[j] && racts[j]) {
                 steps += weights[i];
+                nset->changes[j] = true;
             }
         }
         
