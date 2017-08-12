@@ -382,18 +382,18 @@ int test_inapplic_state_restoration(void)
     
     int ntax = 8;
     int nchar = 10;
-    
+    int rmbranch = 4;
     Morphy m = NULL;
 //   1234567890
     char* matrix =
     "12100-0-00\
-     -212------\
-     12--1-1---\
-     1----11111\
-     -----1-1-1\
-     0-001---1-\
-     -11111111-\
-     0111111111;";
+     -212-0----\
+     ----1----1\
+     1----1111-\
+     2-1-1--1-1\
+     0-00-0--1-\
+     --111-1111\
+     0111-11111;";
     
     err = mpl_init_Morphy(ntax, nchar, m);
     if (err != ERR_UNEXP_NULLPTR) {
@@ -420,7 +420,7 @@ int test_inapplic_state_restoration(void)
     mpl_apply_tipdata(m);
     
     // Build a tree
-    char * treenwk = "(1,(2,((3,4),(5,(7,(6,8))))));";
+    char * treenwk = "(1,(2,(3,(4,(5,(6,(7,8)))))));";
     TLP tlp = tl_new_TL();
     tl_set_numtaxa(ntax, tlp);
     tl_attach_Newick(treenwk, tlp);
@@ -437,15 +437,20 @@ int test_inapplic_state_restoration(void)
     unsigned int afterstates2 [2 * ntax - 1][nchar];
     unsigned int afterstates3 [2 * ntax - 1][nchar];
     unsigned int afterstates4 [2 * ntax - 1][nchar];
-    // Optimize data on the tree
     
-    test_do_fullpass_on_tree(tree, m);
+    
+    // Optimize data on the tree
+    int origlen = 0;
+    origlen = test_do_fullpass_on_tree(tree, m);
     
     // Remove a branch
-    tl_remove_branch(&tree->trnodes[10], tree);
+    TLnode* orig = NULL;
+    orig = tl_remove_branch(&tree->trnodes[rmbranch], tree);
+
+    int rttreelen = 0;
+    rttreelen = test_do_fullpass_on_tree(tree, m);
     
     // Show 'before' state sets
-    
     int i = 0;
     for (i = 0; i < (2 * ntax -1); ++i) {
         int k = 0;
@@ -479,8 +484,64 @@ int test_inapplic_state_restoration(void)
     // Reoptimize the subtree
     
     // TODO: Now, need to perturb the tree without touching the temp state storage
+    // First attempt a local reoptimization and store characters needing update
+    int addlen = 0;
+    addlen = mpl_get_insertcost(tree->trnodes[rmbranch].index, orig->index, orig->anc->index, false, 100000, m);
+    int doreopt = 0;
+    doreopt = mpl_check_reopt_inapplics(m);
     
-    // Show 'after' state sets
+    tl_insert_branch(&tree->trnodes[rmbranch], orig->index, tree);
+    int updatelen = 0;
+    updatelen = test_full_reoptimization_for_inapplics(tree, m);
+    
+    int total = 0;
+    total = rttreelen + addlen + updatelen;
+    
+    if (total != origlen) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    
+    for (i = 0; i < (2 * ntax -1); ++i) {
+        int k = 0;
+        for (k = 0; k < nchar; ++k) {
+            afterstates1[i][k] = mpl_get_packed_states(i, k, 1, m);
+            afterstates2[i][k] = mpl_get_packed_states(i, k, 2, m);
+            afterstates3[i][k] = mpl_get_packed_states(i, k, 3, m);
+            afterstates4[i][k] = mpl_get_packed_states(i, k, 4, m);
+        }
+    }
+    // Test 'after' state sets
+    int mismatches = 0;
+    for (i = 0; i < (2 * ntax -1); ++i) {
+        int k = 0;
+        for (k = 0; k < nchar; ++k) {
+            if (beforestates1[i][k] != afterstates1[i][k]) {
+                ++mismatches;
+            }
+            if (beforestates2[i][k] != afterstates2[i][k]) {
+                ++mismatches;
+            }
+            if (beforestates3[i][k] != afterstates3[i][k]) {
+                ++mismatches;
+            }
+            if (beforestates4[i][k] != afterstates4[i][k]) {
+                ++mismatches;
+            }
+        }
+    }
+    
+    if (mismatches == 0) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
     
     // Apply state set restoration
     for (i = 0; i < (2* ntax - 1); ++i) {

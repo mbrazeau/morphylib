@@ -3,7 +3,7 @@
 #include "treelib.h"
 #include "tlerror.h"
 
-//#include <stdio.h>
+#include <stdio.h>
 
 void *tl_alloc(size_t size, int setval)
 {
