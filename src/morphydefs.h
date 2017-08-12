@@ -161,6 +161,7 @@ typedef struct MPLndsets {
     MPLstate*   temp_uppass1;
     MPLstate*   temp_downpass2;
     MPLstate*   temp_uppass2;
+    bool*       changes;
     char**      downp1str;
     char**      downp2str;
     char**      upp1str;
