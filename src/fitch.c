@@ -489,12 +489,11 @@ int mpl_NA_fitch_second_update_downpass
         /* Flag as updated if current set is different from previous */
         if (npre[j] != npret[j]) {
             nset->updated = true;
-//            if (nset->temp_uppass1[j] & ISAPPLIC) {
-//                int rec = 0;
-//                rec = mpl_check_down_NA_steps(tleft[j], tright[j], tlacts[j], tracts[j]);
-//                step_recall += (weights[j] * rec);
-//            }
+            if (nset->changes[j] == true) {
+                step_recall += weights[i];
+            }
         }
+        
 #ifdef DEBUG
         assert(npre[j]);
 #endif
@@ -654,10 +653,11 @@ int mpl_NA_fitch_second_update_uppass
         
         if (nfint[j] != nfin[j]) {
             nset->updated = true;
-            int rec = 0;
-            rec = mpl_check_up_NA_steps(nfint[j], tlacts[j], tracts[j]);
-            step_recall += (rec * weights[i]);
+            if (nset->changes[j] == true) {
+                step_recall += weights[i];
+            }
         }
+        
         
 #ifdef DEBUG
         assert(nfin[j]);

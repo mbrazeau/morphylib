@@ -138,7 +138,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
         if (!n->tip) {
             length += mpl_na_second_down_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), m);
             if (n->index != 10)
-                length -= mpl_get_step_recall(n->index, m);
+                length = length - mpl_get_step_recall(n->index, m);
         }
     }
    
@@ -161,7 +161,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
             // Collect steps taken back.
             length += mpl_na_second_up_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), I_ANCESTOR(n->index, t), m);
             if (n->index != 10)
-            length -= mpl_get_step_recall(n->index, m);
+            length = length - mpl_get_step_recall(n->index, m);
         }
     }
     
