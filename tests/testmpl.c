@@ -381,19 +381,19 @@ int test_inapplic_state_restoration(void)
     // Do basic interface test (i.e. pass in NULL object ptr)
     
     int ntax = 8;
-    int nchar = 10;
+    int nchar = 13;
     int rmbranch = 4;
     Morphy m = NULL;
 //   1234567890
     char* matrix =
-    "12100-0-00\
-     -212-0----\
-     ----1----1\
-     1----1111-\
-     2-1-1--1-1\
-     0-00-0--1-\
-     --111-1111\
-     0111-11111;";
+    "12100-0-000-1\
+     -212-0------2\
+     ----1----10-2\
+     1----1111---0\
+     2-1-?--1-1-1-\
+     0-00-0--1--1-\
+     --111-111101-\
+     0111-1111101-;";
     
     err = mpl_init_Morphy(ntax, nchar, m);
     if (err != ERR_UNEXP_NULLPTR) {
@@ -491,6 +491,7 @@ int test_inapplic_state_restoration(void)
     doreopt = mpl_check_reopt_inapplics(m);
     
     tl_insert_branch(&tree->trnodes[rmbranch], orig->index, tree);
+    orig->anc->inpath = true;
     int updatelen = 0;
     updatelen = test_full_reoptimization_for_inapplics(tree, m);
     
