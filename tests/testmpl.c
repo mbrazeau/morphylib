@@ -387,13 +387,13 @@ int test_inapplic_state_restoration(void)
 //   1234567890
     char* matrix =
     "12100-0-000-1\
-     -212-0------2\
+     -212-0?---?-2\
      ----1----10-2\
      1----1111---0\
-     2-1-?--1-1-1-\
+     2-?-1--1-1-1-\
      0-00-0--1--1-\
-     --111-111101-\
-     0111-1111101-;";
+     ---11-111101-\
+     01?1-1?11101-;";
     
     err = mpl_init_Morphy(ntax, nchar, m);
     if (err != ERR_UNEXP_NULLPTR) {
@@ -443,6 +443,26 @@ int test_inapplic_state_restoration(void)
     int origlen = 0;
     origlen = test_do_fullpass_on_tree(tree, m);
     
+    int i = 0;
+    for (i = 0; i < (2 * ntax - 1); ++i) {
+        printf("Node %i:\n", i);
+        int j = 0;
+        int k = 0;
+        printf("char num:\t");
+        for (k = 0; k < nchar; ++k) {
+            printf("%i ", k);
+        }
+        printf("\n");
+        for (j = 1; j < 5; ++j) {
+            printf("Pass number %i: ", j);
+            for (k = 0; k < nchar; ++k) {
+                printf("%s ", mpl_get_stateset(i, k, j, m));
+            }
+            printf("\n");
+        }
+        printf("\n");
+    }
+    
     // Remove a branch
     TLnode* orig = NULL;
     orig = tl_remove_branch(&tree->trnodes[rmbranch], tree);
@@ -451,7 +471,6 @@ int test_inapplic_state_restoration(void)
     rttreelen = test_do_fullpass_on_tree(tree, m);
     
     // Show 'before' state sets
-    int i = 0;
     for (i = 0; i < (2 * ntax -1); ++i) {
         int k = 0;
         for (k = 0; k < nchar; ++k) {

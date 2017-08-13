@@ -489,9 +489,6 @@ int mpl_NA_fitch_second_update_downpass
         /* Flag as updated if current set is different from previous */
         if (npre[j] != npret[j]) {
             nset->updated = true;
-            if (nset->changes[j] == true) {
-                step_recall += weights[i];
-            }
         }
         
 #ifdef DEBUG
@@ -499,7 +496,7 @@ int mpl_NA_fitch_second_update_downpass
 #endif
     }
     
-    nset->steps_to_recall = step_recall;
+    //nset->steps_to_recall = step_recall;
     
     return steps;
 }
@@ -653,9 +650,10 @@ int mpl_NA_fitch_second_update_uppass
         
         if (nfint[j] != nfin[j]) {
             nset->updated = true;
-            if (nset->changes[j] == true) {
-                step_recall += weights[i];
-            }
+        }
+        
+        if (nset->changes[j] == true) {
+            step_recall += weights[i];
         }
         
         
@@ -688,7 +686,7 @@ int mpl_fitch_NA_local_reopt
     MPLstate* tgt2d1    = tgt2set->downpass1;
 //    MPLstate* tgt2u1    = tgt2set->uppass1;
     MPLstate* tgt1f     = tgt1set->uppass2;
-    MPLstate* tgt2f     = tgt2set->downpass2;
+    MPLstate* tgt2f     = tgt2set->uppass2;
     MPLstate* src       = srcset->downpass1; // TODO: Verify this.
     
     unsigned long* weights = part->intwts;
@@ -715,10 +713,10 @@ int mpl_fitch_NA_local_reopt
                 }
             }
             else {
-                if (src[j] & (tgt1d1[j] | tgt2d1[j])) {
+                //if (src[j] & (tgt1d1[j] | tgt2d1[j])) {
                     part->update_NA_indices[need_update] = j;
                     ++need_update;
-                }
+                //}
             }
         }
     }
@@ -888,6 +886,52 @@ int mpl_fitch_NA_tip_update
     
     return 0;
 }
+
+
+int mpl_fitch_NA_tip_recalc_update
+(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
+{
+    int i               = 0;
+    int j               = 0;
+    int* indices        = part->charindices;
+    int nchars          = part->ncharsinpart;
+    
+    MPLstate* tpass1    = tset->downpass1;
+    MPLstate* tpass2    = tset->uppass1;
+    MPLstate* tpass3    = tset->downpass2;
+    MPLstate* astates   = ancset->uppass1;
+    MPLstate* stacts    = tset->subtree_actives;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (tpass1[j] & astates[j]) {
+            stacts[j] = (tpass1[j] & astates[j] & ISAPPLIC);
+        }
+        else {
+            stacts[j] |= tpass1[j] & ISAPPLIC;
+        }
+
+        tpass2[j] = tpass1[j];
+        
+        if (tpass2[j] & astates[j]) {
+            if (astates[j] & ISAPPLIC) {
+                tpass2[j] &= ISAPPLIC;
+            }
+        }
+        
+        tpass3[j]  = tpass2[j];
+        
+#ifdef DEBUG   
+        assert(tpass3[j]);
+        assert(tpass2[j]);
+#endif
+    }
+    
+    return 0;
+}
+
 
 int mpl_fitch_NA_tip_finalize
 (MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)

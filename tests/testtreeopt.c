@@ -118,6 +118,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
         
         if (n->tip > 0) {
             // Do a tip [need update function for this];
+            mpl_na_update_tip(n->index, n->anc->index, m);
         }
         else {
             // Do first uppass reoptimization

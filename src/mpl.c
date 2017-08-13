@@ -762,6 +762,33 @@ int mpl_lower_root_recalculation(const int l_root_id, const int root_id, Morphy 
 }
 
 
+int mpl_na_update_tip(const int tip_id, const int anc_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  tipset  = handl->statesets[tip_id];
+    MPLndsets*  ancset  = handl->statesets[anc_id];
+    
+    int i = 0;
+    int numparts = mpl_get_numparts(handl);
+    MPLtipfxn tipfxn = NULL;
+    
+    tipset->updated = false;
+    
+    for (i = 0; i < numparts; ++i) {
+        if (handl->partitions[i]->isNAtype == true) {
+            tipfxn = handl->partitions[i]->tipupdaterecalc;
+            tipfxn(tipset, ancset, handl->partitions[i]);
+        }
+    }
+
+    
+    return ERR_NO_ERROR;
+}
+
 int mpl_get_step_recall(const int node_id, Morphy m)
 {
     if (!m) {

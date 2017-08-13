@@ -730,7 +730,7 @@ int     mpl_get_insertcost
 int     mpl_na_update_tip
         
         (const int  tip_id,
-         const int  node_id,
+         const int  anc_id,
          Morphy     m);
 
     
