@@ -155,7 +155,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
         
         // Apply uppass calculations
         if (n->tip > 0) {
-            // Do a tip [need update function for this];
+            // TODO: Do a tip [need update function for this];
             // Might be possible to skip it.
         }
         else {
