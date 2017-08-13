@@ -94,6 +94,7 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
             // If not, break the loop
             // Check if at the root of the tree; if so, update the root
         }
+        
     }
     
     if (i-1 == end) {

@@ -850,6 +850,16 @@ int mpl_check_reopt_inapplics(Morphy m)
     return n;
 }
 
+bool mpl_check_updated(const int node_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp mi = (Morphyp)m;
+    
+    return mi->statesets[node_id]->updated;
+}
 
 int mpl_restore_original_sets(const int node_id, Morphy m)
 {

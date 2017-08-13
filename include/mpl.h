@@ -747,6 +747,10 @@ int     mpl_check_reopt_inapplics
     
         (Morphy m);
         
+bool    mpl_check_updated
+        
+        (const int  node_id,
+         Morphy     m);
         
 /*!
  
