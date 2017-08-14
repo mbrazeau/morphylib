@@ -341,6 +341,7 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
         part->inappdownrecalc2  = mpl_NA_fitch_second_update_downpass;
         part->inapuprecalc2     = mpl_NA_fitch_second_update_uppass;
         part->tipupdaterecalc   = mpl_fitch_NA_tip_recalc_update;
+        part->tiprootrecalc     = mpl_fitch_NA_update_one_branch;
     }
     else {
         part->prelimfxn         = mpl_fitch_downpass;

@@ -612,6 +612,36 @@ int mpl_do_tiproot(const int tip_id, const int node_id, Morphy m)
     return res;
 }
 
+
+int mpl_na_tiproot_recalculation(const int tip_id, const int node_id, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp handl           = (Morphyp)m;
+    MPLndsets* lower        = handl->statesets[tip_id];
+    MPLndsets* upper        = handl->statesets[node_id];
+    MPLpartition** parts    = handl->partitions;
+    
+    MPLtipfxn tiprootfxn = NULL;
+    int i = 0;
+    int numparts = mpl_get_numparts(handl);
+    int res = 0;
+    
+    lower->updated = false;
+    
+    for (i = 0; i < numparts; ++i) {
+        if (handl->partitions[i]->isNAtype == true) {
+            tiprootfxn = parts[i]->tiprootrecalc;
+            res += tiprootfxn(lower, upper, parts[i]);
+        }
+    }
+    
+    return res;
+}
+
+
 int mpl_na_first_down_recalculation
 (const int node_id, const int left_id, const int right_id, Morphy m)
 {
