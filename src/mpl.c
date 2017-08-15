@@ -853,6 +853,7 @@ int mpl_get_insertcost
     MPLloclfxn loclfxn = NULL;
     
     for (i = 0; i < numparts; ++i) {
+        handl->partitions[i]->nNAtoupdate = 0;
         loclfxn = handl->partitions[i]->loclfxn;
         res += loclfxn(srcset, tgt1set, tgt2set, handl->partitions[i], cutoff, max);
         loclfxn = NULL;
