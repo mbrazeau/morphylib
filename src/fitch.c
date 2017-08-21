@@ -248,7 +248,7 @@ int mpl_NA_fitch_first_uppass
                 }
                 else {
                     if ((left[j] | right[j]) & ISAPPLIC
-                        && (left[j] | right[j]) != MISSING) { // TODO: This possibly isn't quite safe or right.
+                        /*&& (left[j] | right[j]) != MISSING*/) { // TODO: This possibly isn't quite safe or right.
                         nifin[j] = ((left[j] | right[j]) & ISAPPLIC);
                     }
                     else {
@@ -312,7 +312,7 @@ int mpl_NA_fitch_first_update_uppass
                 }
                 else {
                     if ((left[j] | right[j]) & ISAPPLIC
-                        && (left[j] | right[j]) != MISSING) { // TODO: This possibly isn't quite safe or right.
+                        /*&& (left[j] | right[j]) != MISSING*/) { // TODO: This possibly isn't quite safe or right.
                         nifin[j] = ((left[j] | right[j]) & ISAPPLIC);
                     }
                     else {
@@ -735,7 +735,7 @@ int mpl_fitch_one_branch
     return length;
 }
 
-int mpl_fitch_NA_one_branch
+int mpl_fitch_NA_first_one_branch
 (MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
 {
     int i     = 0;
@@ -744,17 +744,44 @@ int mpl_fitch_NA_one_branch
     int nchars       = part->ncharsinpart;
     MPLstate* tipset = tipanc->downpass1;
     MPLstate* tipifin = tipanc->uppass1;
-    MPLstate* tipfin = tipanc->uppass2;
     MPLstate* ndset  = node->downpass1;
-    MPLstate* ndacts = node->subtree_actives;
     MPLstate  temp   = 0;
-    unsigned long* weights = part->intwts;
-    int length = 0;
     
     for (i = 0; i < nchars; ++i) {
+        
         j = indices[i];
         
         tipanc->changes[j] = false;
+        temp = tipset[j] & ndset[j];
+        
+        if (temp != 0) {
+            tipifin[j]          = temp;
+            node->uppass1[j]    = temp;
+        }
+    }
+    
+    return ERR_NO_ERROR;
+}
+
+int mpl_fitch_NA_second_one_branch
+(MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
+{
+    int i     = 0;
+    int j     = 0;
+    int* indices            = part->charindices;
+    int nchars              = part->ncharsinpart;
+    MPLstate* tipset        = tipanc->downpass1;
+    MPLstate* tipifin       = tipanc->uppass1;
+    MPLstate* ndset         = node->downpass2;
+    MPLstate* ndacts        = node->subtree_actives;
+    MPLstate  temp          = 0;
+    unsigned long* weights  = part->intwts;
+    int length = 0;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
         temp = tipset[j] & ndset[j];
         
         if (temp == 0) {
@@ -772,38 +799,38 @@ int mpl_fitch_NA_one_branch
             }
             
             tipifin[j]        = tipset[j];
-            //node->uppass2[j] = ndset[j];
         }
         else {
             tipifin[j]        = temp;
-            //node->uppass1[j] = temp;
-            //node->uppass2[j] = temp;
         }
         
-        
+        tipanc->temp_downpass1[j]   = tipanc->downpass1[j];
+        tipanc->temp_uppass1[j]     = tipanc->uppass1[j];
+        tipanc->temp_downpass2[j]   = tipanc->downpass2[j];
+        tipanc->temp_uppass2[j]     = tipanc->uppass2[j];
     }
     
     return length;
 }
 
-int mpl_fitch_NA_update_one_branch
+int mpl_fitch_NA_second_one_branch_recalc
 (MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
 {
     int i     = 0;
     int j     = 0;
-    int* indices     = part->charindices;
-    int nchars       = part->ncharsinpart;
-    MPLstate* tipset = tipanc->downpass1;
-    MPLstate* tipifin = tipanc->uppass1;
-    MPLstate* tipfin = tipanc->uppass2;
-    MPLstate* ndset  = node->downpass1;
-    MPLstate* ndacts = node->subtree_actives;
-    MPLstate  temp   = 0;
-    unsigned long* weights = part->intwts;
+    int* indices            = part->charindices;
+    int nchars              = part->ncharsinpart;
+    MPLstate* tipset        = tipanc->downpass1;
+    MPLstate* tipifin       = tipanc->uppass1;
+    MPLstate* ndset         = node->downpass2;
+    MPLstate* ndacts        = node->subtree_actives;
+    MPLstate  temp          = 0;
+    unsigned long* weights  = part->intwts;
     unsigned long step_recall = 0;
     int length = 0;
     
     for (i = 0; i < nchars; ++i) {
+        
         j = indices[i];
         
         temp = tipset[j] & ndset[j];
@@ -830,8 +857,6 @@ int mpl_fitch_NA_update_one_branch
             step_recall += weights[i];
         }
     }
-    
-    tipanc->steps_to_recall = step_recall;
     
     return length;
 }
