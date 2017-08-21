@@ -645,6 +645,11 @@ int     mpl_do_tiproot
          const int  node_id,
          Morphy     m);
         
+int     mpl_finalize_tiproot
+        
+        (const int  tip_id,
+         const int  node_id,
+         Morphy     m);
 /*!
  
  @brief Updates the nodal sets for a lower ('dummy') root node
@@ -717,7 +722,12 @@ int     mpl_na_tiproot_recalculation
          const int  node_id,
          Morphy     m);
 
-
+int     mpl_na_tiproot_final_recalculation
+        
+        (const int  tip_id,
+         const int  node_id,
+         Morphy     m);
+        
 int     mpl_get_insertcost
 
         (const int  srcID,
