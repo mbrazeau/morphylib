@@ -512,7 +512,7 @@ int test_bulk_unrooted_tree_cases(void)
     
     for (j = 0; j < nummatrices; ++j) {
         
-        if (j == 15)
+        if (j == 7)
         {
             printf("break\n");
         }
@@ -557,6 +557,7 @@ int test_bulk_unrooted_tree_cases(void)
             length += mpl_second_down_recon(nodes[i], ldescs[i], rdescs[i], m1);
         }
         
+        length += mpl_finalize_tiproot(0, 21, m1);
         
         for (i = (ntax-3); i >= 0; --i) {
             // Second uppass reconstruction
@@ -568,7 +569,6 @@ int test_bulk_unrooted_tree_cases(void)
             //mpl_finalize_tip(i, tipancs[i-1], m1);
         }
         
-        length += mpl_do_tiproot(0, 21, m1);
         
         
         if (length != expected[j]) {
