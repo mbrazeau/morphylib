@@ -334,14 +334,16 @@ void mpl_assign_fitch_fxns(MPLpartition* part)
         part->finalfxn          = mpl_NA_fitch_first_uppass;
         part->tipupdate         = mpl_fitch_NA_tip_update;
         part->tipfinalize       = mpl_fitch_NA_tip_finalize;
-        part->tiproot           = mpl_fitch_NA_one_branch;
+        part->tiproot           = mpl_fitch_NA_first_one_branch;
+        part->tiprootfinal      = mpl_fitch_NA_second_one_branch;
         part->loclfxn           = mpl_fitch_NA_local_reopt;
         part->downrecalc1       = mpl_NA_fitch_first_update_downpass;
         part->uprecalc1         = mpl_NA_fitch_first_update_uppass;
         part->inappdownrecalc2  = mpl_NA_fitch_second_update_downpass;
         part->inapuprecalc2     = mpl_NA_fitch_second_update_uppass;
         part->tipupdaterecalc   = mpl_fitch_NA_tip_recalc_update;
-        part->tiprootrecalc     = mpl_fitch_NA_update_one_branch;
+        part->tiprootrecalc = mpl_fitch_one_branch; // TODO: fix this mess
+        part->tiprootupdaterecalc = mpl_fitch_NA_second_one_branch_recalc;
     }
     else {
         part->prelimfxn         = mpl_fitch_downpass;

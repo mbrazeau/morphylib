@@ -129,9 +129,11 @@ typedef struct partition_s {
     MPLtipfxn       tipupdate;
     MPLtipfxn       tipfinalize;
     MPLtipfxn       tiproot;        /*!< For the function that adds length at the base of an unrooted tree. */
+    MPLtipfxn       tiprootfinal;
     MPLtipfxn       tipupdaterecalc;
     MPLtipfxn       tipfinalrecalc;
     MPLtipfxn       tiprootrecalc;
+    MPLtipfxn       tiprootupdaterecalc;
     MPLdownfxn      inappdownfxn;
     MPLdownfxn      inappdownrecalc2;
     MPLupfxn        inappupfxn;
