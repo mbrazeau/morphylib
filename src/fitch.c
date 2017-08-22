@@ -133,6 +133,8 @@ int mpl_NA_fitch_first_downpass
         
         j = indices[i];
         
+        nset->changes[j] = false;
+        
         n[j] = (left[j] & right[j]);
         
         if (n[j] == 0) {
@@ -491,8 +493,6 @@ int mpl_NA_fitch_second_uppass
         
         j = indices[i];
         
-        nset->changes[j] = false;
-        
         if (npre[j] & ISAPPLIC) {
             if (anc[j] & ISAPPLIC) {
                 if ((anc[j] & npre[j]) == anc[j]) {
@@ -627,14 +627,14 @@ int mpl_fitch_NA_local_reopt
     
     part->ntoupdate = 0; // V. important: resets the record of characters needing updates
     
-    int i               = 0;
-    int j               = 0;
-    int need_update     = 0;
-    int steps           = 0;
+    int i           = 0;
+    int j           = 0;
+    int need_update = 0;
+    int steps       = 0;
     const int* indices  = part->charindices;
     int nchars          = part->ncharsinpart;
-    MPLstate* tgt1d1    = tgt1set->downpass1;
-    MPLstate* tgt2d1    = tgt2set->downpass1;
+//    MPLstate* tgt1d1    = tgt1set->downpass1;
+//    MPLstate* tgt2d1    = tgt2set->downpass1;
     MPLstate* tgt1f     = tgt1set->uppass2;
     MPLstate* tgt2f     = tgt2set->uppass2;
     MPLstate* src       = srcset->downpass2; // TODO: Verify this.
@@ -666,10 +666,10 @@ int mpl_fitch_NA_local_reopt
                 }
             }
             else {
-                if (src[j] & (tgt1d1[j] | tgt2d1[j])) {
+                //if (src[j] & (tgt1d1[j] | tgt2d1[j])) {
                     part->update_NA_indices[need_update] = j;
                     ++need_update;
-                }
+                //}
             }
         }
     }
@@ -708,7 +708,6 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
     return 0;
 }
 
-
 int mpl_fitch_one_branch
 (MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
 {
@@ -741,7 +740,6 @@ int mpl_fitch_one_branch
     
     return length;
 }
-
 
 int mpl_fitch_NA_first_one_branch
 (MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
