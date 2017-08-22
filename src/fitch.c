@@ -708,6 +708,7 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
     return 0;
 }
 
+
 int mpl_fitch_one_branch
 (MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
 {
@@ -740,6 +741,7 @@ int mpl_fitch_one_branch
     
     return length;
 }
+
 
 int mpl_fitch_NA_first_one_branch
 (MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
