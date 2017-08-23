@@ -633,8 +633,8 @@ int mpl_fitch_NA_local_reopt
     int steps       = 0;
     const int* indices  = part->charindices;
     int nchars          = part->ncharsinpart;
-//    MPLstate* tgt1d1    = tgt1set->downpass1;
-//    MPLstate* tgt2d1    = tgt2set->downpass1;
+    MPLstate* tgt1d1    = tgt1set->downpass1;
+    MPLstate* tgt2d1    = tgt2set->downpass1;
     MPLstate* tgt1f     = tgt1set->uppass2;
     MPLstate* tgt2f     = tgt2set->uppass2;
     MPLstate* src       = srcset->downpass2; // TODO: Verify this.
@@ -645,33 +645,34 @@ int mpl_fitch_NA_local_reopt
         
         j = indices[i];
         
-//        part->update_NA_indices[need_update] = j;
-//        ++need_update;
+        part->update_NA_indices[need_update] = j;
+        ++need_update;
         
-        if (!(src[j] & (tgt1f[j] | tgt2f[j]))) {
-            
-            if (src[j] & ISAPPLIC) {
-                if ((tgt1f[j] | tgt2f[j]) & ISAPPLIC) {
-                    steps += weights[i];
-                }
-                else {
-                    
-                    /* NOTE: This will be written simply at first, but there are
-                     * possible additional checks on tgt preliminary sets that 
-                     * could reduce the number of characters that need to be 
-                     * updated. */
-                    
-                    part->update_NA_indices[need_update] = j;
-                    ++need_update;
-                }
-            }
-            else {
-                //if (src[j] & (tgt1d1[j] | tgt2d1[j])) {
-                    part->update_NA_indices[need_update] = j;
-                    ++need_update;
-                //}
-            }
-        }
+//        if (!(src[j] & (tgt1f[j] | tgt2f[j]))) {
+//            
+//            if (src[j] & ISAPPLIC) {
+//                if ((tgt1f[j] | tgt2f[j]) & ISAPPLIC) {
+//                    steps += weights[i];
+//                }
+//                else {
+//                    
+//                    /* NOTE: This will be written simply at first, but there are
+//                     * possible additional checks on tgt preliminary sets that 
+//                     * could reduce the number of characters that need to be 
+//                     * updated. */
+//                    
+//                    part->update_NA_indices[need_update] = j;
+//                    ++need_update;
+//                }
+//            }
+//            else {
+////                This is a conservative omission for now.
+////                if (src[j] & (tgt1d1[j] | tgt2d1[j])) {
+//                    part->update_NA_indices[need_update] = j;
+//                    ++need_update;
+////                }
+//            }
+//        }
     }
     
     part->nNAtoupdate = need_update;
@@ -741,6 +742,7 @@ int mpl_fitch_one_branch
     return length;
 }
 
+
 int mpl_fitch_NA_first_one_branch
 (MPLndsets* tipanc, MPLndsets* node, MPLpartition* part)
 {
@@ -766,7 +768,7 @@ int mpl_fitch_NA_first_one_branch
         }
     }
     
-    return ERR_NO_ERROR;
+    return 0;
 }
 
 int mpl_fitch_NA_second_one_branch
