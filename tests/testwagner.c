@@ -7,8 +7,9 @@
 //
 
 #include "mpltest.h"
-#include "../src/mpl.h"
-#include "../src/wagner.h"
+#include "mpl.h"
+#include "morphydefs.h"
+#include "wagner.h"
 #include "testwagner.h"
 #include <string.h>
 
@@ -64,5 +65,71 @@ int test_small_wagner(void)
     }
     
     mpl_delete_Morphy(m1);
+    return failn;
+}
+
+int test_wagner_extended(void)
+{
+    theader("Extended test of Wagner optimisation");
+    int err     = 0;
+    int failn   = 0;
+    
+    int numtaxa = 6;
+    int nchar = 2;
+    TLP tlp = tl_new_TL();
+    tl_set_numtaxa(numtaxa, tlp);
+    
+    char* matrix =
+   "21\
+    21\
+    20\
+    10\
+    10\
+    03;";
+    
+    Morphy m = mpl_new_Morphy();
+    
+    err = mpl_init_Morphy(numtaxa, nchar, m);
+    if (err) {
+        ++failn;
+        pfail;
+        err = 0;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_attach_rawdata(matrix, m);
+    mpl_set_parsim_t(0, WAGNER_T, m);
+    mpl_set_parsim_t(1, WAGNER_T, m);
+    mpl_set_num_internal_nodes(numtaxa, m);
+    mpl_apply_tipdata(m);
+    
+    char* newick = "(((1,2),3),(4,(5,6)));";
+    
+    tl_attach_Newick(newick, tlp);
+    
+    tl_set_current_tree(0, tlp);
+    TLtree* tree = tl_get_TLtree(tlp);
+    
+    int* postorder = (int*)calloc(2 * numtaxa, sizeof(int));
+    dbg_printf("\n");
+    
+    int length = 0;
+    
+    length = test_do_fullpass_on_tree(tree, m);
+    
+    if (length != 6) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    free(postorder);
+    mpl_delete_Morphy(m);
+    tl_delete_TL(tlp);
+    
     return failn;
 }

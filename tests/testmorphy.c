@@ -8,6 +8,7 @@
 
 #include "mpltest.h"
 //#include "testmorphy.h"
+#include "morphydefs.h"
 #include "../src/morphy.h"
 
 int test_isreal(void)
@@ -168,6 +169,36 @@ int test_resetting_weights(void)
     }
     
     mpl_set_charac_weight(1, 1, m1);
+    mpl_apply_tipdata(m1);
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+
+    if (length != 9) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_set_charac_weight(1, 0.0, m1);
+    mpl_set_charac_weight(2, 0.0, m1);
+    mpl_set_charac_weight(3, 0.0, m1);
+    mpl_apply_tipdata(m1);
+    
+    length = mpl_first_down_recon(2, 1, 0, m1);
+
+    if (length != 6) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_set_charac_weight(1, 1, m1);
+    mpl_set_charac_weight(2, 1, m1);
+    mpl_set_charac_weight(3, 1, m1);
     mpl_apply_tipdata(m1);
     
     length = mpl_first_down_recon(2, 1, 0, m1);
@@ -493,6 +524,79 @@ int test_set_weights(void)
     return 0;
 }
 
+int test_weights_realtree(void)
+{
+    theader("Testing weights on a real tree");
+    //    int err     = 0;
+    int failn   = 0;
+    
+    int ntax	= 12;
+    int nchar	= 2;
+    char *rawmatrix =
+    "213-----11?1?1-1--0-3-21;";
+    
+    Morphy m1 = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m1);
+    mpl_attach_rawdata(rawmatrix, m1);
+    mpl_set_num_internal_nodes(13, m1);
+    mpl_set_parsim_t(0, FITCH_T, m1);
+    mpl_set_parsim_t(1, FITCH_T, m1);
+    mpl_set_charac_weight(0, 1, m1);
+    mpl_set_charac_weight(1, 2, m1);
+    mpl_apply_tipdata(m1);
+    
+    int length = 0;
+    
+    int tipancs[]= {12, 12, 13, 14, 15, 16, 21, 20, 19, 18, 17, 17};
+    int ancs[]   = {13, 14, 15, 16, 22, 18, 19, 20, 21, 22, 23};
+    int nodes[]  = {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23};
+    int ldescs[] = {0,  12, 13, 14, 15, 10,  9,  8,  7,  6, 16};
+    int rdescs[] = {1,   2,  3,  4,  5, 11, 17, 18, 19, 20, 21};
+    
+    // ...
+    int i = 0;
+    for (i = 0; i < (ntax-1); ++i) {
+        length += mpl_first_down_recon(nodes[i], ldescs[i], rdescs[i], m1);
+    }
+    
+    // Update lower root
+    mpl_update_lower_root(23, 22, m1);
+    
+    for (i = (ntax-2); i >= 0; --i) {
+        length += mpl_first_up_recon
+        (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
+    }
+    
+    for (i = 0; i < ntax; ++i) {
+        mpl_update_tip(i, tipancs[i], m1);
+    }
+    
+    for (i = 0; i < (ntax-1); ++i) {
+        // Second downpass
+        length += mpl_second_down_recon(nodes[i], ldescs[i], rdescs[i], m1);
+    }
+    
+    for (i = (ntax-2); i >= 0; --i) {
+        // Second uppass reconstruction
+        length += mpl_second_up_recon
+        (nodes[i], ldescs[i], rdescs[i], ancs[i], m1);
+    }
+    
+    
+    if (length != 9) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    
+    mpl_delete_Morphy(m1);
+    
+    return failn;
+}
+
 int test_basic_tip_apply(void)
 {
     theader("Testing application of state data to tips");
@@ -541,3 +645,4 @@ int test_basic_tip_apply(void)
     return failn;
     
 }
+

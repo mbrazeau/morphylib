@@ -19,5 +19,6 @@ int test_data_partitioning_simple(void);
 int test_data_partitioning_gapmissing(void);
 int test_data_partitioning_gapnewstate(void);
 int test_set_weights(void);
+int test_weights_realtree(void);
 int test_basic_tip_apply(void);
 #endif /* testmorphy_h */
