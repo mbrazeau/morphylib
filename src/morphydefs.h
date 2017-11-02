@@ -28,7 +28,7 @@ typedef double Mflt;
 typedef unsigned int MPLstate;
 
 #define NA              ((MPLstate)0b1)
-#define MISSING         ((MPLstate)~0)
+#define ISMISSING       ((MPLstate)~0)
 #define ISAPPLIC        (((MPLstate)~0)^NA)
 #define MAXSTATES       (CHAR_BIT * sizeof(MPLstate))
 #define DEFAULTGAP      '-'
