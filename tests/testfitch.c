@@ -986,3 +986,14 @@ int test_get_partial_reopt_for_na(void)
     
     return failn;
 }
+
+int test_all_unrooted_directions(void)
+{
+    theader("Testing counting of characters needing partial reoptimization");
+    int err     = 0;
+    int failn   = 0;
+    int ntax = 12;
+    int nchar = 1;
+    
+    return failn;
+}

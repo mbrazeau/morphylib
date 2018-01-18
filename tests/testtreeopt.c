@@ -22,6 +22,7 @@ int test_do_fullpass_on_tree(TLtree* t, Morphy m)
     tl_traverse_tree(t->start, &index, postorder);
     end = index-1;
     printf("\n");
+    
     for (i = 0; i <= end; ++i)
     {
         TLnode* n = &t->trnodes[postorder[i]];
@@ -170,4 +171,31 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
     }
     
     return length;
+}
+
+int rotate_all_views(TLtree* t, Morphy m)
+{
+    unsigned long score     = 0;
+    unsigned long testscore = 0;
+    int ntax                = t->ntaxa;
+    int i                   = 0;
+    int result = 0;
+    
+    if (t->isrooted == true) {
+        tl_unroot_tree(t);
+    }
+    
+    testscore = score = test_do_fullpass_on_tree(t, m);
+    
+    for (i = 0; i < ntax; ++i) {
+        tl_quick_root(t);
+        tl_root_tree(t, 0, false);
+        tl_unroot_tree(t);
+        score = test_do_fullpass_on_tree(t, m);
+        if (score != testscore) {
+            ++result;
+        }
+    }
+    
+    return result;
 }

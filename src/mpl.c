@@ -688,6 +688,8 @@ int mpl_na_tiproot_final_recalculation
     
     lower->updated = false; // TODO: not going to work.
     
+    lower->steps_to_recall = 0;
+    
     for (i = 0; i < numparts; ++i) {
         if (handl->partitions[i]->isNAtype == true) {
             tiprootfxn = parts[i]->tiprootupdaterecalc;

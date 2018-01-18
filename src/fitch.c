@@ -454,8 +454,6 @@ int mpl_NA_fitch_second_update_downpass
         
         stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
         
-        /* Count whether any steps need to be taken back at this node */
-        
         /* Flag as updated if current set is different from previous */
         if (npre[j] != npret[j]) {
             nset->updated = true;
@@ -996,7 +994,7 @@ int mpl_fitch_NA_tip_finalize
             tfinal[j] = tpass1[j];
         }
         
-        stacts[j] = tfinal[j] & ISAPPLIC;
+        //stacts[j] = tfinal[j] & ISAPPLIC;
         
         // Store the temp buffers:
         ttfinal[j] = tfinal[j];
