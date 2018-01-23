@@ -657,9 +657,19 @@ int tl_unroot_tree(TLtree* t)
         return 1;
     }
     
-    // Find an internal tip
     TLnode *tip = NULL;
-    tip = tl_find_anytip(t->start);
+	// If there's a tip neighboring the root, use it.
+	if (t->start->left->tip > 0) {
+		tip = t->start->left;
+	}
+	else if (t->start->right->tip > 0) {
+		tip = t->start->right;
+	}
+	else {
+    // Find an internal tip
+		tip = tl_find_anytip(t->start);
+	}
+
     assert(tip);
    
     int index = tip->index;
@@ -673,11 +683,15 @@ int tl_unroot_tree(TLtree* t)
     tl_root_tree(t, index, false);
     
     // Remove the root
-    tl_extract_internal_node(t->start);
+    //tl_extract_internal_node(t->start);
     
-    // Set start to the base of the first interal node at that tip
-    t->start = tip->anc;
-    t->start->anc = tip;
+    // Set start to the internal node neighboring the root tip 
+    //t->start->anc = tip;
+    //tip->left = t->start;
+    //tip->right = NULL;
+//    t->start = tip->anc;
+
+	
     
     t->isrooted = 0;
     

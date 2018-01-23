@@ -381,19 +381,19 @@ int test_inapplic_state_restoration(void)
     // Do basic interface test (i.e. pass in NULL object ptr)
     
     int ntax = 8;
-    int nchar = 10;
-    
+    int nchar = 18;
+    int rmbranch = 4;
     Morphy m = NULL;
 //   1234567890
     char* matrix =
-    "12100-0-00\
-     -212------\
-     12--1-1---\
-     1----11111\
-     -----1-1-1\
-     0-001---1-\
-     -11111111-\
-     0111111111;";
+    "12100-0-000-1111??\
+     -212-0?---?-2101??\
+     ----1----10-210010\
+     1----1111---0-----\
+     2-?-1--1-1-1---(12)-1\
+     0-00-0--1--1-1111-\
+     ---11-111101------\
+     01?1-1?11101-10010;";
     
     err = mpl_init_Morphy(ntax, nchar, m);
     if (err != ERR_UNEXP_NULLPTR) {
@@ -420,7 +420,7 @@ int test_inapplic_state_restoration(void)
     mpl_apply_tipdata(m);
     
     // Build a tree
-    char * treenwk = "(1,(2,((3,4),(5,(7,(6,8))))));";
+    char * treenwk = "(1,(2,(3,(4,(5,(6,(7,8)))))));";
     TLP tlp = tl_new_TL();
     tl_set_numtaxa(ntax, tlp);
     tl_attach_Newick(treenwk, tlp);
@@ -437,16 +437,40 @@ int test_inapplic_state_restoration(void)
     unsigned int afterstates2 [2 * ntax - 1][nchar];
     unsigned int afterstates3 [2 * ntax - 1][nchar];
     unsigned int afterstates4 [2 * ntax - 1][nchar];
+    
+    
     // Optimize data on the tree
-    
-    test_do_fullpass_on_tree(tree, m);
-    
-    // Remove a branch
-    tl_remove_branch(&tree->trnodes[10], tree);
-    
-    // Show 'before' state sets
+    int origlen = 0;
+    origlen = test_do_fullpass_on_tree(tree, m);
     
     int i = 0;
+    for (i = 0; i < (2 * ntax - 1); ++i) {
+        printf("Node %i:\n", i);
+        int j = 0;
+        int k = 0;
+        printf("char num:\t");
+        for (k = 0; k < nchar; ++k) {
+            printf("%i ", k);
+        }
+        printf("\n");
+        for (j = 1; j < 5; ++j) {
+            printf("Pass number %i: ", j);
+            for (k = 0; k < nchar; ++k) {
+                printf("%s ", mpl_get_stateset(i, k, j, m));
+            }
+            printf("\n");
+        }
+        printf("\n");
+    }
+    
+    // Remove a branch
+    TLnode* orig = NULL;
+    orig = tl_remove_branch(&tree->trnodes[rmbranch], tree);
+
+    int rttreelen = 0;
+    rttreelen = test_do_fullpass_on_tree(tree, m);
+    
+    // Show 'before' state sets
     for (i = 0; i < (2 * ntax -1); ++i) {
         int k = 0;
         for (k = 0; k < nchar; ++k) {
@@ -479,8 +503,65 @@ int test_inapplic_state_restoration(void)
     // Reoptimize the subtree
     
     // TODO: Now, need to perturb the tree without touching the temp state storage
+    // First attempt a local reoptimization and store characters needing update
+    int addlen = 0;
+    addlen = mpl_get_insertcost(tree->trnodes[rmbranch].index, orig->index, orig->anc->index, false, 100000, m);
+    int doreopt = 0;
+    doreopt = mpl_check_reopt_inapplics(m);
     
-    // Show 'after' state sets
+    tl_insert_branch(&tree->trnodes[rmbranch], orig->index, tree);
+    orig->anc->inpath = true;
+    int updatelen = 0;
+    updatelen = test_full_reoptimization_for_inapplics(tree, m);
+    
+    int total = 0;
+    total = rttreelen + addlen + updatelen;
+    
+    if (total != origlen) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    
+    for (i = 0; i < (2 * ntax -1); ++i) {
+        int k = 0;
+        for (k = 0; k < nchar; ++k) {
+            afterstates1[i][k] = mpl_get_packed_states(i, k, 1, m);
+            afterstates2[i][k] = mpl_get_packed_states(i, k, 2, m);
+            afterstates3[i][k] = mpl_get_packed_states(i, k, 3, m);
+            afterstates4[i][k] = mpl_get_packed_states(i, k, 4, m);
+        }
+    }
+    // Test 'after' state sets
+    int mismatches = 0;
+    for (i = 0; i < (2 * ntax -1); ++i) {
+        int k = 0;
+        for (k = 0; k < nchar; ++k) {
+            if (beforestates1[i][k] != afterstates1[i][k]) {
+                ++mismatches;
+            }
+            if (beforestates2[i][k] != afterstates2[i][k]) {
+                ++mismatches;
+            }
+            if (beforestates3[i][k] != afterstates3[i][k]) {
+                ++mismatches;
+            }
+            if (beforestates4[i][k] != afterstates4[i][k]) {
+                ++mismatches;
+            }
+        }
+    }
+    
+    if (mismatches == 0) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
     
     // Apply state set restoration
     for (i = 0; i < (2* ntax - 1); ++i) {
@@ -552,5 +633,104 @@ int test_inapplic_state_restoration(void)
             }
         }
     }
+    return failn;
+}
+
+
+int test_inapplic_prototype_local_reopt_with_unrooted_tree(void)
+{
+    theader("Testing prototype local reopt with unrooted tree");
+    int err     = 0;
+    int failn   = 0;
+    
+    // Do basic interface test (i.e. pass in NULL object ptr)
+    
+    int ntax = 8;
+    int nchar = 18;
+    int rmbranch = 4;
+    Morphy m = NULL;
+//   1234567890
+    char* matrix =
+    "12100-0-000-1111??\
+     -212-0?---?-2101??\
+     ----1----10-210010\
+     1----1111---0-----\
+     2-?-1--1-1-1---(12)-1\
+     0-00-0--1--1-1111-\
+     ---11-111101------\
+     01?1-1?11101-10010;";
+    
+    err = mpl_init_Morphy(ntax, nchar, m);
+    if (err != ERR_UNEXP_NULLPTR) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    m = mpl_new_Morphy();
+    err = mpl_init_Morphy(ntax, nchar, m);
+    
+    if (err < 0 ) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    mpl_set_num_internal_nodes(ntax, m);
+    mpl_attach_rawdata(matrix, m);
+    mpl_apply_tipdata(m);
+    
+    // Build a tree
+    char * treenwk = "(1,(2,(3,(4,(5,(6,(7,8)))))));";
+    TLP tlp = tl_new_TL();
+    tl_set_numtaxa(ntax, tlp);
+    tl_attach_Newick(treenwk, tlp);
+    tl_set_current_tree(0, tlp);
+    TLtree *tree = tl_get_TLtree(tlp);
+    
+    // Unroot the tree
+    
+    
+    // Optimize data on the tree
+    int origlen = 0;
+    origlen = test_do_fullpass_on_tree(tree, m);
+    
+    
+    // Remove a branch
+    TLnode* orig = NULL;
+    orig = tl_remove_branch(&tree->trnodes[rmbranch], tree);
+
+    int rttreelen = 0;
+    rttreelen = test_do_fullpass_on_tree(tree, m);
+    
+    
+    // Reoptimize the subtree
+    
+    int addlen = 0;
+    addlen = mpl_get_insertcost(tree->trnodes[rmbranch].index, orig->index, orig->anc->index, false, 100000, m);
+    int doreopt = 0;
+    doreopt = mpl_check_reopt_inapplics(m);
+    
+    tl_insert_branch(&tree->trnodes[rmbranch], orig->index, tree);
+    orig->anc->inpath = true;
+    int updatelen = 0;
+    updatelen = test_full_reoptimization_for_inapplics(tree, m);
+    
+    int total = 0;
+    total = rttreelen + addlen + updatelen;
+    
+    if (total != origlen) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    
     return failn;
 }

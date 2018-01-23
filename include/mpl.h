@@ -645,6 +645,11 @@ int     mpl_do_tiproot
          const int  node_id,
          Morphy     m);
         
+int     mpl_finalize_tiproot
+        
+        (const int  tip_id,
+         const int  node_id,
+         Morphy     m);
 /*!
  
  @brief Updates the nodal sets for a lower ('dummy') root node
@@ -671,7 +676,7 @@ int     mpl_update_lower_root
          Morphy     m);
     
     
-int		mpl_first_down_update
+int		mpl_na_first_down_recalculation
 
 		(const int  node_id,
 		 const int  left_id,
@@ -679,7 +684,7 @@ int		mpl_first_down_update
 		 Morphy     m);
     
 
-int		mpl_first_up_update
+int		mpl_na_first_up_recalculation
 
 		(const int  node_id,
 		 const int  left_id,
@@ -689,7 +694,7 @@ int		mpl_first_up_update
 
 
 // Returns number of steps to add
-int		mpl_second_down_update
+int		mpl_na_second_down_recalculation
 
 		(const int  node_id,
 		 const int  left_id,
@@ -697,15 +702,32 @@ int		mpl_second_down_update
 		 Morphy     m);
 
 // Returns number of steps to add
-int		mpl_second_up_update
+int		mpl_na_second_up_recalculation
 
 		(const int  node_id,
 		 const int  left_id,
 		 const int  right_id,
 		 const int  anc_id,
 		 Morphy     m);
+        
+int     mpl_lower_root_recalculation
+        
+        (const int  l_root_id,
+         const int  root_id,
+         Morphy     m);
 
+int     mpl_na_tiproot_recalculation
+        
+        (const int  tip_id,
+         const int  node_id,
+         Morphy     m);
 
+int     mpl_na_tiproot_final_recalculation
+        
+        (const int  tip_id,
+         const int  node_id,
+         Morphy     m);
+        
 int     mpl_get_insertcost
 
         (const int  srcID,
@@ -714,8 +736,20 @@ int     mpl_get_insertcost
          const bool max,
          const int  cutoff,
          Morphy     m);
+        
+int     mpl_na_update_tip
+        
+        (const int  tip_id,
+         const int  anc_id,
+         Morphy     m);
 
     
+int     mpl_get_step_recall
+        
+        (const int  node_id,
+         Morphy     m);
+        
+        
 // Indicates whether or not partitions with inapplicable characters need partial
 // reoptimisation on the target subtree. SHOULD RETURN: Number of characters
 // needing partial reoptimisation on the subtree.
@@ -723,6 +757,10 @@ int     mpl_check_reopt_inapplics
     
         (Morphy m);
         
+bool    mpl_check_updated
+        
+        (const int  node_id,
+         Morphy     m);
         
 /*!
  

@@ -64,7 +64,8 @@ int main (void)
     fails += test_bulk_unrooted_tree_cases();
     fails += test_twopass_fitch();
     fails += test_local_reoptimisation();
-    fails += test_get_partial_reopt_for_na();
+    //fails += test_get_partial_reopt_for_na();
+    fails += test_imbalance_distributions();
     
     // wagner.c tests 
     fails += test_small_wagner();

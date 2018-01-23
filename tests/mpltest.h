@@ -20,20 +20,4 @@
 #define theader(testname) printf("\n\n\t%s\n\n", testname);
 
 int test_do_fullpass_on_tree(TLtree* t, Morphy m);
-
-//typedef struct {
-//    MPLchtype   userchtype;
-//    int         numoftype;
-//    int*        indices;
-//} typesetter;
-//
-//typedef struct {
-//    int         numtax;
-//    int         numchar;
-//    char*       symbols;
-//    char*       usrmatrix;
-//    MPLgap_t    usrgaphandl;
-//    typesetter* typesetters;
-//    int         numtypes;
-//    
-//} testdata;
+int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m);

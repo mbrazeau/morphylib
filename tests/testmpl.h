@@ -18,6 +18,7 @@ int test_delete_Morphy_no_input(void);
 int test_deletion_success(void);
 int test_attemp_load_bad_dimens(void);
 int test_inapplic_state_restoration(void);
+int test_inapplic_prototype_local_reopt_with_unrooted_tree(void);
 
 int test_state_retrieval(void);
 
