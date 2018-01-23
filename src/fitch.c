@@ -161,6 +161,41 @@ int mpl_NA_fitch_first_downpass
     return 0;
 }
 
+int mpl_nadown1_simpl
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
+{
+    int i               = 0;
+    int j               = 0;
+    const int* indices  = part->charindices;
+    int nchars          = part->ncharsinpart;
+    MPLstate* left      = lset->downpass1;
+    MPLstate* right     = rset->downpass1;
+    MPLstate* n         = nset->downpass1;
+    MPLstate* nt        = nset->temp_downpass1;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (left[j] & ISAPPLIC && right[j] & ISAPPLIC) {
+            n[j] = (left[j] | right[j]) & ISAPPLIC;
+        }
+        else {
+            n[j] = (left[j] & right[j]);
+            if (n[j] != NA) {
+                n[j] = (left[j] | right[j]);
+            }
+        }
+        
+        nt[j] = n[j]; // Store a copy for partially reoptimising the subtree
+#ifdef DEBUG
+        assert(n[j]);
+#endif
+    }
+    
+    return 0;
+}
+
 
 int mpl_NA_fitch_first_update_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
@@ -262,6 +297,54 @@ int mpl_NA_fitch_first_uppass
             nifin[j] = npre[j];
         }
         
+        // Store the set for restoration during tree searches.
+        nfint[j] = nifin[j];
+        
+#ifdef DEBUG
+        assert(nifin[j]);
+#endif
+    }
+    
+    return 0;
+}
+
+int mpl_naupp1_simpl
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLndsets* ancset,
+ MPLpartition* part)
+{
+    int         i       = 0;
+    int         j       = 0;
+    const int*  indices = part->charindices;
+    int         nchars  = part->ncharsinpart;
+    MPLstate*   left    = lset->downpass1;
+    MPLstate*   right   = rset->downpass1;
+    MPLstate*   npre    = nset->downpass1;
+    MPLstate*   nifin   = nset->uppass1;
+    MPLstate*   anc     = ancset->uppass1;
+    MPLstate*   nfint   = nset->temp_uppass1;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        // TODO: Rewrite this
+        if (anc[j] == NA) {
+            nifin[j] = npre[j];
+            if (left[j] & right[j] & NA) {
+                nifin[j] = NA;
+            }
+        }
+        else {
+            nifin[j] = npre[j] & anc[j];
+            
+            if (nifin[j] != anc[j]) {
+                nifin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
+            }
+            else {
+                nifin[j] = nifin[j] | anc[j];
+            }
+        }
+
         // Store the set for restoration during tree searches.
         nfint[j] = nifin[j];
         
