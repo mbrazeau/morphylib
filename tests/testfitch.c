@@ -997,3 +997,137 @@ int test_all_unrooted_directions(void)
     
     return failn;
 }
+
+int test_imbalance_distributions(void)
+{
+    theader("Testing imbalance tree distribution");
+    int err = 0;
+    int failn = 0;
+    int ntax    = 12;
+    int nchar    = 1;
+    char *rawmatrices[] =
+    {
+        (char*)"1???---??011;",
+        //(char*)"23--1??--032;", // 0
+        (char*)"1---1111---1;", // 1
+        (char*)"1100----1100;", // 2
+        (char*)"11-------100;", // 3
+        (char*)"----1111---1;", // 4
+        (char*)"01----010101;", // 5
+        (char*)"01---1010101;", // 6
+        (char*)"1??--??--100;", // 7
+        (char*)"21--3??--032;", // 8
+        (char*)"11--1??--111;", // 9
+        (char*)"11--1000001-;", // 10
+        (char*)"01------0101;", // 11
+        (char*)"110--?---100;", // 12
+        (char*)"11--1??--111;", // 13
+        (char*)"210--100--21;", // 14
+        (char*)"????----1???;", // 15
+        (char*)"23--1----032;", // 16
+        (char*)"1----1----1-;", // 17
+        (char*)"-1-1-1--1-1-;", // 18
+        (char*)"23--1??--032;", // 19
+        (char*)"--------0101;", // 20
+        (char*)"10101-----01;", // 21
+        (char*)"011--?--0011;", // 22
+        (char*)"110--??--100;", // 23
+        (char*)"11--1000001-;", // 24
+        (char*)"21--1----012;", // 25
+        (char*)"11----111111;", // 26
+        (char*)"10101-----01;", // 27
+        (char*)"210210------;", // 28
+        (char*)"----1111----;", // 29
+        (char*)"230--??1--32;", // 30
+        (char*)"023--??1--32;", // 31
+        (char*)"023-???1--32;", // 32
+        (char*)"23--1?1--023;", // 33
+        (char*)"----1010----;", // 34
+        (char*)"------11---1;", // 35
+        (char*)"10----11---1;", // 36
+        (char*)"320--??3--21;", // 37
+        (char*)"-------1----;", // 38
+        (char*)"0--11-111111;", // 39
+    };
+    
+    int nummatrices = 40;
+    
+    int expected[] = {2, 2, 3, 2, 1, 5, 5, 2, 5, 2, 2, 4, 3, 2, 5, 0, 5, 2, 4, 5, 2, 4, 3, 3, 2, 5, 1, 4, 4, 0, 5, 5, 4, 5, 2, 1, 3, 5, 0, 1};
+    
+    
+    int j = 0;
+    
+    for (j = 0; j < nummatrices; ++j) {
+        
+        char *newick = "(1,(2,(3,(4,(5,(6,(7,(8,(9,(10,(11,12)))))))))));";
+        char* matrix = rawmatrices[j];
+        TLP tlp = tl_new_TL();
+        tl_set_numtaxa(ntax, tlp);
+        tl_attach_Newick(newick, tlp);
+        tl_set_current_tree(0, tlp);
+        TLtree *tree = tl_get_TLtree(tlp);
+        int * postoder[2* ntax * sizeof(int)];
+        
+        Morphy m = mpl_new_Morphy();
+        mpl_init_Morphy(ntax, nchar, m);
+        mpl_set_num_internal_nodes(ntax, m);
+        mpl_attach_rawdata(matrix, m);
+        mpl_apply_tipdata(m);
+        
+        int length = 0;
+        int diff = 0;
+        
+        length = test_do_fullpass_on_tree(tree, m);
+        
+        
+        if (length != expected[j]) {
+            printf("Calculated: %i, expected: %i\n", length, expected[j]);
+            ++failn;
+            pfail;
+        }
+        else {
+            ppass;
+        }
+        
+        int i = 0;
+        char* result = NULL;
+        for (i = 1; i < 5; ++ i) {
+            int k = 0;
+            printf("Pass %i: ", i);
+            for (k = 0; k < ntax; ++k) {
+                result = (char*)mpl_get_stateset(k, 0, i, m);
+                printf("%s ", result);
+                
+            }
+            printf("\n");
+        }
+        printf("\n");
+        
+        for (i = ntax; i < (ntax-2 + mpl_get_num_internal_nodes(m)); ++i) {
+            int k = 0;
+            printf("Node %i: ", i);
+            for (k = 1; k < 5; ++k) {
+                result = (char*)mpl_get_stateset(i, 0, k, m);
+                if (!(*result)) {
+                    printf(". ");
+                }
+                else {
+                    int pad = 0;
+                    int paddiff = 6;
+                    pad = paddiff - (int)strlen(result);
+                    int x = 0;
+                    for (x = 0; x < pad && pad > 0; ++x) {
+                        printf(" ");
+                    }
+                    printf("%s ", result);
+                }
+            }
+            printf("\n");
+        }
+        
+        mpl_delete_Morphy(m);
+    }
+    
+    
+    return failn;
+}

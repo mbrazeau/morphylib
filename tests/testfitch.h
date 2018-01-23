@@ -18,5 +18,6 @@ int test_bulk_unrooted_tree_cases(void);
 int test_twopass_fitch(void);
 int test_local_reoptimisation(void);
 int test_get_partial_reopt_for_na(void);
+int test_imbalance_distributions(void);
 
 #endif /* testfitch_h */
