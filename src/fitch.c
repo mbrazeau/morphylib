@@ -382,6 +382,11 @@ int mpl_NA_fitch_second_downpass
         }
         else {
             npre[j] = nifin[j];
+            
+            if (lacts[j] && racts[j]) {
+                steps += weights[i];
+                nset->changes[j] = true;
+            }
         }
         
         /* Store the states active on this subtree */
@@ -483,9 +488,9 @@ int mpl_NA_fitch_second_uppass
     MPLstate*       nfin    = nset->uppass2;
     MPLstate*       nfint   = nset->temp_uppass2;
     MPLstate*       anc     = ancset->uppass2;
-    MPLstate*       lacts   = lset->subtree_actives;
-    MPLstate*       racts   = rset->subtree_actives;
-    unsigned long*  weights = part->intwts;
+//    MPLstate*       lacts   = lset->subtree_actives;
+//    MPLstate*       racts   = rset->subtree_actives;
+//    unsigned long*  weights = part->intwts;
     
     for (i = 0; i < nchars; ++i) {
         
@@ -519,10 +524,10 @@ int mpl_NA_fitch_second_uppass
         else {
             nfin[j] = npre[j];
             
-            if (lacts[j] && racts[j]) {
+            /*if (lacts[j] && racts[j]) {
                 steps += weights[i];
                 nset->changes[j] = true;
-            }
+            }*/
         }
         
         nfint[j] = nfin[j]; // Storage of states for undoing temp updates
