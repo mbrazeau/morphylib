@@ -197,6 +197,56 @@ int mpl_nadown1_simpl
 }
 
 
+int mpl_nadown2_simpl
+(MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
+{
+    int             i       = 0;
+    int             j       = 0;
+    int             steps   = 0;
+    const int*      indices = part->charindices;
+    int             nchars  = part->ncharsinpart;
+    MPLstate*       left    = lset->downpass2;
+    MPLstate*       right   = rset->downpass2;
+    MPLstate*       setstat = nset->uppass1;
+    MPLstate*       npre    = nset->downpass2;
+    MPLstate*       stacts  = nset->subtree_actives;
+    MPLstate*       tstatcs = nset->temp_subtr_actives;
+    MPLstate*       lacts   = lset->subtree_actives;
+    MPLstate*       racts   = rset->subtree_actives;
+    MPLstate        temp    = 0;
+    unsigned long*  weights = part->intwts;
+    
+    for (i = 0; i < nchars; ++i) {
+        
+        j = indices[i];
+        
+        if (setstat[j] != NA) { // If the node is not in the inapplicable state
+            // Do regular Fitch parsimony (sort of)
+            if ((temp = (left[j] & right[j]) & ISAPPLIC)) {
+                npre[j] = temp;
+            }
+            else {
+                npre[j] = (left[j] | right[j]);
+                if (left[j] & ISAPPLIC && right[j] & ISAPPLIC) {
+                    if (!(npre[j] & NA)) {
+                        steps += weights[j];
+                    }
+                }
+            }
+        }
+        else {
+            npre[j] = NA;
+        }
+
+#ifdef DEBUG
+        assert(n[j]);
+#endif
+    }
+    
+    return 0;
+}
+
+
 int mpl_NA_fitch_first_update_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
 {
@@ -327,24 +377,27 @@ int mpl_naupp1_simpl
         
         j = indices[i];
         
-        // TODO: Rewrite this
-        if (anc[j] == NA) {
+        if (npre[j] == anc[j]) {
             nifin[j] = npre[j];
-            if (left[j] & right[j] & NA) {
-                nifin[j] = NA;
-            }
         }
         else {
-            nifin[j] = npre[j] & anc[j];
-            
-            if (nifin[j] != anc[j]) {
-                nifin[j] = (npre[j] | (anc[j] & (left[j] | right[j])));
+            if (!(left[j] & ISAPPLIC && right[j] & ISAPPLIC)) {
+                if (anc[j] == NA) {
+                    nifin[j] = NA;
+                }
+                else {
+                    
+                }
             }
             else {
-                nifin[j] = nifin[j] | anc[j];
+                if (!((left[j] | right[j]) & NA)) {
+                    
+                }
+                else {
+                    
+                }
             }
         }
-
         // Store the set for restoration during tree searches.
         nfint[j] = nifin[j];
         

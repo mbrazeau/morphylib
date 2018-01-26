@@ -561,7 +561,7 @@ int mpl_set_gap_push(Morphyp handl)
 int mpl_get_uncorrected_shift_value(char symb, Morphyp handl)
 {
     // Gets the raw shift value as determined by the order in the symbols list
-    assert(symb != DEFAULTGAP && symb != DEFAULTMISSING);
+    assert(symb != DEFAULTGAP && symb != DEFAULTMISSING && symb != DEFAULTUNKNOWN);
     int shift = 0;
     char* symbols = mpl_get_symbols((Morphy)handl);
     

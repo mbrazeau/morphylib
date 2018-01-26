@@ -30,9 +30,11 @@ typedef unsigned int MPLstate;
 #define NA              ((MPLstate)0b1)
 #define MISSING         ((MPLstate)~0)
 #define ISAPPLIC        (((MPLstate)~0)^NA)
+#define UNKNOWN         ISAPPLIC
 #define MAXSTATES       (CHAR_BIT * sizeof(MPLstate))
 #define DEFAULTGAP      '-'
 #define DEFAULTMISSING  '?'
+#define DEFAULTUNKNOWN  '+'
 #define DEFAULCHARTYPE  FITCH_T
 #define DEFAULTWTBASE   1
 #define NACUTOFF        2   // The max number of NA tokens that can be ignored
