@@ -25,13 +25,16 @@ typedef double Mflt;
 //typedef float Mflt;
 //#endif
 
-typedef unsigned int MPLstate;
+typedef long MPLstate;
 
-#define NA              ((MPLstate)0b1)
+#define NA              ((MPLstate)0b01)
+#define ISAPPLIC        ((MPLstate)0b10)
+#define ISSTATE         ((MPLstate)(-1 ^ 0b11))
+#define APPMASK         ((MPLstate)(-1 ^ 0b01))
 #define MISSING         ((MPLstate)~0)
-#define ISAPPLIC        (((MPLstate)~0)^NA)
-#define UNKNOWN         ISAPPLIC
-#define MAXSTATES       (CHAR_BIT * sizeof(MPLstate))
+#define UNKNOWN         APPMASK
+// TODO: Check validity of MAXSTATES
+#define MAXSTATES       (CHAR_BIT * sizeof(MPLstate) - 2)
 #define DEFAULTGAP      '-'
 #define DEFAULTMISSING  '?'
 #define DEFAULTUNKNOWN  '+'
