@@ -127,8 +127,7 @@ int mpl_NA_fitch_first_downpass
     MPLstate* left      = lset->downpass1;
     MPLstate* right     = rset->downpass1;
     MPLstate* n         = nset->downpass1;
-    MPLstate* nt        = nset->temp_downpass1;
-    
+
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
@@ -138,21 +137,9 @@ int mpl_NA_fitch_first_downpass
         n[j] = (left[j] & right[j]);
         
         if (n[j] == 0) {
-            n[j] = (left[j] | right[j]);
-            
-            if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
-                n[j] = n[j] & ISAPPLIC;
-            }
+            n[j] = left[j] | right[j];
         }
-        else {
-            if (n[j] == NA) {
-                if ((left[j] & ISAPPLIC) && (right[j] & ISAPPLIC)) {
-                    n[j] = (left[j] | right[j]);
-                }
-            }
-        }
-        
-        nt[j] = n[j]; // Store a copy for partially reoptimising the subtree
+
 #ifdef DEBUG
         assert(n[j]);
 #endif
@@ -228,42 +215,27 @@ int mpl_NA_fitch_first_uppass
     MPLstate*   npre    = nset->downpass1;
     MPLstate*   nifin   = nset->uppass1;
     MPLstate*   anc     = ancset->uppass1;
-    MPLstate*   nfint   = nset->temp_uppass1;
-    
+
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
         
-        if (npre[j] & NA) {
-            if (npre[j] & ISAPPLIC) {
-                if (anc[j] == NA) {
-                    nifin[j] = NA;
-                }
-                else {
-                    nifin[j] = npre[j] & ISAPPLIC;
-                }
+        nifin[j] = anc[j] & npre[j];
+        
+        if (anc[j] != nifin[j]) {
+            if ((left[j] & right[j]) == 0) {
+                nifin[j] = ((left[j] | right[j]) & anc[j]) | npre[j];
             }
             else {
-                if (anc[j] == NA) {
-                    nifin[j] = NA;
-                }
-                else {
-                    if ((left[j] | right[j]) & ISAPPLIC) {
-                        nifin[j] = ((left[j] | right[j]) & ISAPPLIC);
-                    }
-                    else {
-                        nifin[j] = NA;
-                    }
-                }
+                nifin[j] = npre[j] | anc[j];
             }
         }
-        else {
-            nifin[j] = npre[j];
+        
+        // Enforce the 'auxiliary principle'
+        if (nifin[j] & NA && nifin[j] & ISAPPLIC) {
+            nifin[j] &= APPMASK;
         }
-        
-        // Store the set for restoration during tree searches.
-        nfint[j] = nifin[j];
-        
+
 #ifdef DEBUG
         assert(nifin[j]);
 #endif
@@ -357,46 +329,62 @@ int mpl_NA_fitch_second_downpass
         
         j = indices[i];
         
-        nset->changes[j] = false;
+//        nset->changes[j] = false;
+//
+//        if (nifin[j] & ISAPPLIC) {
+//            if ((temp = (left[j] & right[j]))) {
+//                if (temp & ISAPPLIC) {
+//                    npre[j] = temp & ISAPPLIC;
+//                } else {
+//                    npre[j] = temp;
+//                }
+//            }
+//            else {
+//                npre[j] = (left[j] | right[j]) & ISAPPLIC;
+//
+//                if (left[j] & ISAPPLIC && right[j] & ISAPPLIC) {
+//                    steps += weights[i];
+//                    nset->changes[j] = true;
+//                } else if (lacts[j] && racts[j]) {
+//                    steps += weights[i];
+//                    nset->changes[j] = true;
+//                }
+//            }
+//        }
+//        else {
+//            npre[j] = nifin[j];
+//
+//            if (lacts[j] && racts[j]) {
+//                steps += weights[i];
+//                nset->changes[j] = true;
+//            }
+//        }
         
         if (nifin[j] & ISAPPLIC) {
-            if ((temp = (left[j] & right[j]))) {
-                if (temp & ISAPPLIC) {
-                    npre[j] = temp & ISAPPLIC;
-                } else {
-                    npre[j] = temp;
+            npre[j] = left[j] & right[j];
+            if ((npre[j] & ISSTATE) == 0) {
+                if (npre[j] & ISAPPLIC) {
+                    steps += weights[j];
                 }
-            }
-            else {
-                npre[j] = (left[j] | right[j]) & ISAPPLIC;
-                
-                if (left[j] & ISAPPLIC && right[j] & ISAPPLIC) {
-                    steps += weights[i];
-                    nset->changes[j] = true;
-                } else if (lacts[j] && racts[j]) {
-                    steps += weights[i];
-                    nset->changes[j] = true;
+                else if (lacts[j] && racts[j]) {
+                    steps += weights[j];
                 }
+                npre[j] = (left[j] | right[j]) ^ NA; // Take out any NA
             }
         }
         else {
             npre[j] = nifin[j];
-            
             if (lacts[j] && racts[j]) {
-                steps += weights[i];
-                nset->changes[j] = true;
+                steps += weights[j];
             }
         }
         
         /* Store the states active on this subtree */
         stacts[j]   = (lacts[j] | racts[j]) & ISAPPLIC;
         
-        npret[j]    = npre[j]; // Storage for temporary updates.
-        tstatcs[j]  = stacts[j]; // Storage for temporary updates.
-    
-#ifdef DEBUG
+//#ifdef DEBUG
         assert(npre[j]);
-#endif
+//#endif
     }
     
     return steps;
