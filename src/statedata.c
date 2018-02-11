@@ -189,7 +189,7 @@ MPLstate mpl_convert_gap_symbol(Morphyp handl, bool over_cutoff)
         }
     }
     else if (handl->gaphandl == GAP_NEWSTATE) {
-        return (MPLstate)1;
+        return (MPLstate)0b110;
     }
     else if (handl->gaphandl == GAP_MISSING) {
         return MISSING;
