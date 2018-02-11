@@ -166,12 +166,18 @@ int mpl_create_state_dictionary(Morphyp handl)
         }
     }
 
-    if (handl->gaphandl == GAP_INAPPLIC || handl->gaphandl == GAP_NEWSTATE) {
+    if (handl->gaphandl == GAP_INAPPLIC) {
+        gappush = 3;
+    }
+    else if (handl->gaphandl == GAP_NEWSTATE) {
         gappush = 1;
     }
     
     for (i = 0; i < numsymbs; ++i) {
         handl->symbols.packed[i] = 1 << (i + gappush);
+        if (handl->gaphandl == GAP_INAPPLIC) {
+            handl->symbols.packed[i] |= ISAPPLIC;
+        }
     }
     
     return ERR_NO_ERROR;
