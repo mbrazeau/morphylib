@@ -220,6 +220,7 @@ int mpl_nadown2_simpl
         
         j = indices[i];
         
+        // TODO: Extend and test
         if (setstat[j] != NA) { // If the node is not in the inapplicable state
             // Do regular Fitch parsimony (sort of)
             if ((temp = (left[j] & right[j]) & ISAPPLIC)) {
@@ -377,26 +378,11 @@ int mpl_naupp1_simpl
         
         j = indices[i];
         
-        if (npre[j] == anc[j]) {
-            nifin[j] = npre[j];
+        if (anc[j] == NA && npre[j] & NA) {
+            nifin[j] = NA;
         }
         else {
-            if (!(left[j] & ISAPPLIC && right[j] & ISAPPLIC)) {
-                if (anc[j] == NA) {
-                    nifin[j] = NA;
-                }
-                else {
-                    
-                }
-            }
-            else {
-                if (!((left[j] | right[j]) & NA)) {
-                    
-                }
-                else {
-                    
-                }
-            }
+            nifin[j] = nifin[j] & ISAPPLIC;
         }
         // Store the set for restoration during tree searches.
         nfint[j] = nifin[j];
