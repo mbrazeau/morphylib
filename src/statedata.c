@@ -672,13 +672,17 @@ char *mpl_translate_state2char(MPLstate cstates, Morphyp handl)
     int gapshift = 0;
    
     MPLgap_t gaphandl = mpl_query_gaphandl((Morphyp)handl);
+    
     if (gaphandl == GAP_INAPPLIC || gaphandl == GAP_NEWSTATE) {
         gapshift = 1;
     }
+    
     char *res = calloc(MAXSTATES+1, sizeof(char));
+    
     if (!res) {
         return NULL;
     }
+    
     char* symbols = mpl_get_symbols((Morphy)handl);
     
     if (cstates < (MISSING-NA)) {
