@@ -46,6 +46,30 @@ typedef unsigned int MPLstate;
 #define MPLWTMIN        (MPL_EPSILON * 10) /*! Safest (for me!) if calculations
                                                steer pretty clear of epsilon */
     
+
+typedef struct MPLndsets {
+    
+    bool        updated;
+    int         steps_to_recall;
+    MPLstate*   downpass1;
+    MPLstate*   uppass1;
+    MPLstate*   downpass2;
+    MPLstate*   uppass2;
+    MPLstate*   subtree_actives;
+    MPLstate*   temp_subtr_actives;
+    MPLstate*   temp_downpass1;
+    MPLstate*   temp_uppass1;
+    MPLstate*   temp_downpass2;
+    MPLstate*   temp_uppass2;
+    bool*       changes;
+    char**      downp1str;
+    char**      downp2str;
+    char**      upp1str;
+    char**      upp2str;
+    
+} MPLndsets;
+
+    
 typedef struct partition_s MPLpartition;
 // Evaluator function pointers
 typedef int (*MPLdownfxn)
@@ -147,30 +171,6 @@ typedef struct partition_s {
 } MPLpartition;
     
 
-
-typedef struct MPLndsets {
-    
-    bool        updated;
-    int         steps_to_recall;
-    MPLstate*   downpass1;
-    MPLstate*   uppass1;
-    MPLstate*   downpass2;
-    MPLstate*   uppass2;
-    MPLstate*   subtree_actives;
-    MPLstate*   temp_subtr_actives;
-    MPLstate*   temp_downpass1;
-    MPLstate*   temp_uppass1;
-    MPLstate*   temp_downpass2;
-    MPLstate*   temp_uppass2;
-    bool*       changes;
-    char**      downp1str;
-    char**      downp2str;
-    char**      upp1str;
-    char**      upp2str;
-    
-} MPLndsets;
-    
-    
 typedef struct mpl_matrix_s {
     int             ncells;
     MPLcell*        cells;
