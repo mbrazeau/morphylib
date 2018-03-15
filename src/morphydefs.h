@@ -46,7 +46,6 @@ typedef unsigned int MPLstate;
 #define MPLWTMIN        (MPL_EPSILON * 10) /*! Safest (for me!) if calculations
                                                steer pretty clear of epsilon */
     
-typedef struct MPLndsets MPLndsets;
 typedef struct partition_s MPLpartition;
 // Evaluator function pointers
 typedef int (*MPLdownfxn)
@@ -82,7 +81,6 @@ typedef struct {
 } MPLcell;
     
 
-typedef struct charinfo_s MPLcharinfo;
 typedef struct charinfo_s {
     
     int         charindex;
@@ -112,7 +110,6 @@ typedef struct {
 } MPLcupdate;
     
     
-typedef struct partition_s MPLpartition;
 typedef struct partition_s {
     
     MPLchtype       chtype;         /*!< The optimality type used for this partition. */
