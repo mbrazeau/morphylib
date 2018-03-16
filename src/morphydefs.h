@@ -47,7 +47,7 @@ typedef unsigned int MPLstate;
                                                steer pretty clear of epsilon */
     
 typedef struct MPLndsets MPLndsets;
-typedef struct partition_s MPLpartition;
+typedef struct MPLpartition MPLpartition;
 // Evaluator function pointers
 typedef int (*MPLdownfxn)
             (MPLndsets*     lset,
@@ -112,8 +112,7 @@ typedef struct {
 } MPLcupdate;
     
     
-typedef struct partition_s MPLpartition;
-typedef struct partition_s {
+struct MPLpartition {
     
     MPLchtype       chtype;         /*!< The optimality type used for this partition. */
     bool            isNAtype;       /*!< This character should be treated as having inapplicable data. */ 
@@ -147,11 +146,10 @@ typedef struct partition_s {
     MPLloclfxn      loclfxn;
     MPLpartition*   next;
     
-} MPLpartition;
-    
+};
 
 
-typedef struct MPLndsets {
+struct MPLndsets {
     
     bool        updated;
     int         steps_to_recall;
@@ -171,7 +169,7 @@ typedef struct MPLndsets {
     char**      upp1str;
     char**      upp2str;
     
-} MPLndsets;
+};
     
     
 typedef struct mpl_matrix_s {
