@@ -27,7 +27,7 @@ typedef double Mflt;
 
 typedef unsigned int MPLstate;
 
-#define NA              ((MPLstate)0b1)
+#define NA              ((MPLstate)1)
 #define MISSING         ((MPLstate)~0)
 #define ISAPPLIC        (((MPLstate)~0)^NA)
 #define UNKNOWN         ISAPPLIC
