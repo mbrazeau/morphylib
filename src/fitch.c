@@ -240,7 +240,7 @@ int mpl_nadown2_simpl
         }
 
 #ifdef DEBUG
-        assert(n[j]);
+        assert(npre[j]);
 #endif
     }
     
