@@ -362,15 +362,23 @@ int mpl_NA_fitch_second_downpass
         
         if (nifin[j] & ISAPPLIC) {
             npre[j] = left[j] & right[j];
-            if ((npre[j] & ISSTATE) == 0) {
-                if (npre[j] & ISAPPLIC) {
+            if (npre[j] == 0) {
+                npre[j] = (left[j] | right[j]) ^ NA; // Take out any NA
+                
+                if (left[j] & right[j] & ISAPPLIC) {
                     steps += weights[j];
                 }
                 else if (lacts[j] && racts[j]) {
                     steps += weights[j];
                 }
-                npre[j] = (left[j] | right[j]) ^ NA; // Take out any NA
             }
+            
+//            if ((npre[j] & ISSTATE) == 0 && npre[j] & ISAPPLIC) {
+//                if (npre[j] & ISAPPLIC) {
+//                    steps += weights[j];
+//                }
+//                npre[j] = (left[j] | right[j]) ^ NA; // Take out any NA
+//            }
         }
         else {
             npre[j] = nifin[j];
@@ -382,9 +390,9 @@ int mpl_NA_fitch_second_downpass
         /* Store the states active on this subtree */
         stacts[j]   = (lacts[j] | racts[j]) & ISAPPLIC;
         
-//#ifdef DEBUG
+#ifdef DEBUG
         assert(npre[j]);
-//#endif
+#endif
     }
     
     return steps;
@@ -884,22 +892,32 @@ int mpl_fitch_NA_tip_update
         
         j = indices[i];
         
-        if (tpass1[j] & astates[j]) {
-            stacts[j] = (tpass1[j] & astates[j] & ISAPPLIC);
-        }
-        else {
-            stacts[j] |= tpass1[j] & ISAPPLIC;
-        }
-
         tpass2[j] = tpass1[j];
         
-        if (tpass2[j] & astates[j]) {
+        if (tpass2[j] & ISAPPLIC) {
             if (astates[j] & ISAPPLIC) {
-                tpass2[j] &= ISAPPLIC;
+                tpass2[j] &= APPMASK;
+                stacts[j] = tpass2[j];
             }
+            
         }
-        
-        tpass3[j]  = tpass2[j];
+//
+//        if (tpass1[j] & astates[j]) {
+//            stacts[j] = (tpass1[j] & astates[j] & APPMASK);
+//        }
+//        else {
+//            stacts[j] |= tpass1[j] & APPMASK;
+//        }
+//
+//        tpass2[j] = tpass1[j];
+//
+//        if (tpass2[j] & astates[j]) {
+//            if (astates[j] & ISAPPLIC) {
+//                tpass2[j] &= ISAPPLIC;
+//            }
+//        }
+//
+//        tpass3[j]  = tpass2[j];
         
         // Store the temp sets for restoring after temporary updates
         ttpass1[j] = tpass1[j];
