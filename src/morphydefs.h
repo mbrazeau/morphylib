@@ -27,7 +27,11 @@ typedef double Mflt;
 
 typedef unsigned int MPLstate;
 
+//<<<<<<< HEAD
 #define NA              ((MPLstate)1)
+//=======
+//#define NA              ((MPLstate)01) // 0b1 is not C11 compliant; using octal instead
+//>>>>>>> a5ea9b3108e21362222e716e49930c9f1644dedd
 #define MISSING         ((MPLstate)~0)
 #define ISAPPLIC        (((MPLstate)~0)^NA)
 #define UNKNOWN         ISAPPLIC
