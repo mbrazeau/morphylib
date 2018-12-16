@@ -427,15 +427,15 @@ int test_count_states_in_parts_w_polymorphs (void)
     int ntax    = 6;
     int nchar    = 10;
     char *rawmatrix =
-    "000000001?\
-    0-001-22-0\
-    0-001-110-\
-    10(04)0101100\
-    1-010-0000\
-    0-00{01}1?0-0;";
+    "0 0  0    0  0   0 0 0 1 ?\
+     0 -  1    0  1   - 2 2 - 0\
+     0 -  0    0  1   - 1 1 0 -\
+     1 0 (04)  0  1   0 1 1 0 0\
+     1 -  0    1  0   - 0 0 0 0\
+     0 -  0    0 {01} 1 ? 0 - 0;";
     
     int expvals[] =
-    {2, 1, 3, 1, 3, 2, 3, 3, 4, 1};
+    {2, 1, 3, 2, 2, 2, 3, 3, 2, 1};
     
     MPL_ERR_T err = ERR_NO_ERROR;
     
@@ -449,6 +449,30 @@ int test_count_states_in_parts_w_polymorphs (void)
     //Get inside the handle:
     Morphyp m = (Morphyp)m1;
     
+    int mismatches = 0;
+    int nparts = m->numparts;
+    int nchinpt = 0;
+    int i = 0;
+    int j = 0;
+    
+    // Loop through the partitions comparing the state number counts with
+    // original referents
+    for (i = 0; i < nparts; ++i) {
+        nchinpt = m->partitions[i]->ncharsinpart;
+        for (j = 0; j < nchinpt; ++j) {
+            if (expvals[m->partitions[i]->charindices[j]] != m->partitions[i]->nstates[j]) {
+                ++mismatches;
+            }
+        }
+    }
+    
+    if (mismatches) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
     
     return failn;
 }

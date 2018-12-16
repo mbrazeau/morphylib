@@ -29,6 +29,7 @@ int main (void)
     fails += test_usr_order_symbols();
     fails += test_big_multistate_symbols();
     fails += test_count_states_in_parts_simple();
+    fails += test_count_states_in_parts_w_polymorphs();
     
     // morphy.c tests
     fails += test_isreal();

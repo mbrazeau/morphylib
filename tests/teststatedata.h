@@ -19,5 +19,6 @@ int test_usr_order_symbols(void);
 int test_multistate_symbols(void);
 int test_big_multistate_symbols(void);
 int test_count_states_in_parts_simple (void);
+int test_count_states_in_parts_w_polymorphs (void);
 
 #endif /* teststatedata_h */
