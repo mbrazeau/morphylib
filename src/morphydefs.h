@@ -25,7 +25,7 @@ typedef double Mflt;
 //typedef float Mflt;
 //#endif
 
-typedef unsigned int MPLstate;
+typedef unsigned long MPLstate;
 
 #define NA              ((MPLstate)1)
 #define MISSING         ((MPLstate)~0)
@@ -45,6 +45,15 @@ typedef unsigned int MPLstate;
                                     this will be considered 0. */
 #define MPLWTMIN        (MPL_EPSILON * 10) /*! Safest (for me!) if calculations
                                                steer pretty clear of epsilon */
+
+#if defined(__GNUC__)
+#define MORPHY_PORTABLE_POPCOUNTLL(c, v) (c = __builtin_popcountl(v))
+#else
+#define MORPHY_PORTABLE_POPCOUNTL(c, v) v = v - ((v >> 1) & (unsigned long)~(unsigned long)0/3);\
+v = (v & (unsigned long)~(unsigned long)0/15*3) + ((v >> 2) & (unsigned long)~(unsigned long)0/15*3);\
+v = (v + (v >> 4)) & (unsigned long)~(unsigned long)0/255*15;\
+c = (unsigned long)(v * ((unsigned long)~(unsigned long)0/255)) >> (sizeof(unsigned long) - 1) * CHAR_BIT;
+#endif
     
 typedef struct MPLndsets MPLndsets;
 typedef struct MPLpartition MPLpartition;

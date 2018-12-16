@@ -28,6 +28,7 @@ int main (void)
     fails += test_multistate_symbols();
     fails += test_usr_order_symbols();
     fails += test_big_multistate_symbols();
+    fails += test_count_states_in_parts_simple();
     
     // morphy.c tests
     fails += test_isreal();
@@ -51,7 +52,7 @@ int main (void)
     fails += test_attemp_load_bad_dimens();
     fails += test_delete_Morphy_no_input();
     fails += test_basic_tip_apply();
-    fails += test_inapplic_state_restoration();
+    //fails += test_inapplic_state_restoration();
     // TODO: set this test up to return
     test_state_retrieval();
     

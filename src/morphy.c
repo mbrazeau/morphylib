@@ -738,13 +738,23 @@ void mpl_delete_all_update_buffers(Morphyp handl)
             free(p->update_NA_indices);
             p->update_NA_indices = NULL;
         }
+        if (p->nstates) {
+            free(p->nstates);
+            p->nstates = NULL;
+        }
+        if (p->minscores) {
+            free(p->minscores);
+            p->minscores = NULL;
+        }
     }
 }
 
 
 int mpl_allocate_update_buffers(Morphyp handl)
 {
-    /* Allocates memory for an array of indices needed update on the tree */
+    /* Allocates memory for an array of indices needed update on the tree
+     * as well as all those required to keep track of the number of changes
+     * in each character */
     int i = 0;
     for (i = 0; i < handl->numparts; ++i) {
         MPLpartition* p = handl->partitions[i];
@@ -761,6 +771,27 @@ int mpl_allocate_update_buffers(Morphyp handl)
         
         p->ntoupdate = 0;
         p->nNAtoupdate = 0;
+        
+        // Allocate the vectors for storing states and  minscores
+        if (p->nstates) {
+            free(p->nstates);
+            p->nstates = NULL;
+        }
+        p->nstates = (int*)calloc(p->ncharsinpart, sizeof(int));
+        if (!p->nstates) {
+            mpl_delete_all_update_buffers(handl);
+            return ERR_BAD_MALLOC;
+        }
+        
+        if (p->minscores) {
+            free(p->minscores);
+            p->minscores = NULL;
+        }
+        p->minscores = (int*)calloc(p->ncharsinpart, sizeof(int));
+        if (!p->minscores) {
+            mpl_delete_all_update_buffers(handl);
+            return ERR_BAD_MALLOC;
+        }
     }
     
     return ERR_NO_ERROR;
@@ -822,6 +853,9 @@ int mpl_setup_partitions(Morphyp handl)
     handl->numparts = numparts;
     err = mpl_put_partitions_in_handle(first, handl);
     mpl_allocate_update_buffers(handl);
+    
+    // Write in the minscores and num states in the partitions
+    err = mpl_count_states_in_parts(handl);
     
     return err;
 }

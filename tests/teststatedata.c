@@ -361,6 +361,97 @@ int test_usr_order_symbols(void)
     return failn;
 }
 
+int test_count_states_in_parts_simple (void)
+{
+    theader("Test state counting (simple)");
+    
+    int failn = 0;
+    
+    int ntax    = 6;
+    int nchar    = 10;
+    char *rawmatrix =
+    "0000000010\
+     0-001-22-0\
+     0-001-110-\
+     1030101120\
+     1-002-0030\
+     0-000100-0;";
+    
+    int expvals[] =
+    {2, 1, 2, 1, 3, 2, 3, 3, 4, 1};
+    
+    MPL_ERR_T err = ERR_NO_ERROR;
+    
+    printf("Loading data first\n");
+    
+    Morphy m1 = mpl_new_Morphy();
+    err = mpl_init_Morphy(ntax, nchar, m1);
+    err = mpl_attach_rawdata(rawmatrix, m1);
+    err = mpl_apply_tipdata(m1);
+    
+    //Get inside the handle:
+    Morphyp m = (Morphyp)m1;
+    
+    int mismatches = 0;
+    int nparts = m->numparts;
+    int nchinpt = 0;
+    int i = 0;
+    int j = 0;
+    
+    // Loop through the partitions comparing the state number counts with
+    // original referents
+    for (i = 0; i < nparts; ++i) {
+        nchinpt = m->partitions[i]->ncharsinpart;
+        for (j = 0; j < nchinpt; ++j) {
+            if (expvals[m->partitions[i]->charindices[j]] != m->partitions[i]->nstates[j]) {
+                ++mismatches;
+            }
+        }
+    }
+    
+    if (mismatches) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    return failn;
+}
+
+int test_count_states_in_parts_w_polymorphs (void)
+{
+    int failn = 0;
+    
+    int ntax    = 6;
+    int nchar    = 10;
+    char *rawmatrix =
+    "000000001?\
+    0-001-22-0\
+    0-001-110-\
+    10(04)0101100\
+    1-010-0000\
+    0-00{01}1?0-0;";
+    
+    int expvals[] =
+    {2, 1, 3, 1, 3, 2, 3, 3, 4, 1};
+    
+    MPL_ERR_T err = ERR_NO_ERROR;
+    
+    printf("Loading data first\n");
+    
+    Morphy m1 = mpl_new_Morphy();
+    err = mpl_init_Morphy(ntax, nchar, m1);
+    err = mpl_attach_rawdata(rawmatrix, m1);
+    err = mpl_apply_tipdata(m1);
+    
+    //Get inside the handle:
+    Morphyp m = (Morphyp)m1;
+    
+    
+    return failn;
+}
 
 int test_multistate_symbols(void)
 {
@@ -494,3 +585,4 @@ int test_big_multistate_symbols(void)
     
     return failn;
 }
+
