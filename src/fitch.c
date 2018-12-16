@@ -267,11 +267,13 @@ int mpl_NA_fitch_first_update_downpass
     MPLstate* left      = lset->downpass1;
     MPLstate* right     = rset->downpass1;
     MPLstate* n         = nset->downpass1;
-    MPLstate* ntemp     = nset->temp_downpass1;
+    MPLstate* nt        = nset->temp_downpass1;
     
-    for (i = nchars; i--;) {
+    for (i = nchars; i--; ) {
         
         j = indices[i];
+        
+        nset->changes[j] = false;
         
         n[j] = (left[j] & right[j]);
         
@@ -290,10 +292,7 @@ int mpl_NA_fitch_first_update_downpass
             }
         }
         
-        if (n[j] != ntemp[j]) {
-            nset->updated = true;
-        }
-        
+        nt[j] = n[j]; // Store a copy for partially reoptimising the subtree
 #ifdef DEBUG
         assert(n[j]);
 #endif
@@ -416,6 +415,7 @@ int mpl_NA_fitch_first_update_uppass
     MPLstate*   npre    = nset->downpass1;
     MPLstate*   nifin   = nset->uppass1;
     MPLstate*   anc     = ancset->uppass1;
+    MPLstate*   nfint   = nset->temp_uppass1;
     
     for (i = nchars; i--;) {
         
@@ -447,6 +447,9 @@ int mpl_NA_fitch_first_update_uppass
         else {
             nifin[j] = npre[j];
         }
+        
+        // Store the set for restoration during tree searches.
+        nfint[j] = nifin[j];
         
 #ifdef DEBUG
         assert(nifin[j]);
@@ -543,20 +546,23 @@ int mpl_NA_fitch_second_update_downpass
     int             steps       = 0;
     const int*      indices     = part->update_NA_indices;
     int             nchars      = part->nNAtoupdate;
-    MPLstate*       left        = lset->downpass2;
-    MPLstate*       right       = rset->downpass2;
-    MPLstate*       nifin       = nset->uppass1;
-    MPLstate*       npre        = nset->downpass2;
-    const MPLstate* npret       = nset->temp_downpass2;
-    MPLstate*       stacts      = nset->subtree_actives;
-    MPLstate*       lacts       = lset->subtree_actives;
-    MPLstate*       racts       = rset->subtree_actives;
-    MPLstate        temp        = 0;
-    unsigned long*  weights     = part->intwts;
+    MPLstate*       left    = lset->downpass2;
+    MPLstate*       right   = rset->downpass2;
+    MPLstate*       nifin   = nset->uppass1;
+    MPLstate*       npre    = nset->downpass2;
+    MPLstate*       npret   = nset->temp_downpass2;
+    MPLstate*       stacts  = nset->subtree_actives;
+    MPLstate*       tstatcs = nset->temp_subtr_actives;
+    MPLstate*       lacts   = lset->subtree_actives;
+    MPLstate*       racts   = rset->subtree_actives;
+    MPLstate        temp    = 0;
+    unsigned long*  weights = part->intwts;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
+        
+        nset->changes[j] = false;
         
         if (nifin[j] & ISAPPLIC) {
             if ((temp = (left[j] & right[j]))) {
@@ -571,21 +577,27 @@ int mpl_NA_fitch_second_update_downpass
                 
                 if (left[j] & ISAPPLIC && right[j] & ISAPPLIC) {
                     steps += weights[i];
+                    nset->changes[j] = true;
                 } else if (lacts[j] && racts[j]) {
                     steps += weights[i];
+                    nset->changes[j] = true;
                 }
             }
         }
         else {
             npre[j] = nifin[j];
+            
+            if (lacts[j] && racts[j]) {
+                steps += weights[i];
+                nset->changes[j] = true;
+            }
         }
         
-        stacts[j] = (lacts[j] | racts[j]) & ISAPPLIC;
+        /* Store the states active on this subtree */
+        stacts[j]   = (lacts[j] | racts[j]) & ISAPPLIC;
         
-        /* Flag as updated if current set is different from previous */
-        if (npre[j] != npret[j]) {
-            nset->updated = true;
-        }
+        npret[j]    = npre[j]; // Storage for temporary updates.
+        tstatcs[j]  = stacts[j]; // Storage for temporary updates.
         
 #ifdef DEBUG
         assert(npre[j]);
@@ -679,17 +691,17 @@ int mpl_NA_fitch_second_update_uppass
     int             step_recall = 0;
     const int*      indices     = part->update_NA_indices;
     int             nchars      = part->nNAtoupdate;
-    MPLstate*       left        = lset->downpass2;
-    MPLstate*       right       = rset->downpass2;
-    MPLstate*       npre        = nset->downpass2;
-    MPLstate*       nfin        = nset->uppass2;
-    MPLstate*       nfint       = nset->temp_uppass2;
-    MPLstate*       anc         = ancset->uppass2;
-    MPLstate*       lacts       = lset->subtree_actives;
-    MPLstate*       racts       = rset->subtree_actives;
-    unsigned long*  weights     = part->intwts;
+    MPLstate*       left    = lset->downpass2;
+    MPLstate*       right   = rset->downpass2;
+    MPLstate*       npre    = nset->downpass2;
+    MPLstate*       nfin    = nset->uppass2;
+    MPLstate*       nfint   = nset->temp_uppass2;
+    MPLstate*       anc     = ancset->uppass2;
+    //    MPLstate*       lacts   = lset->subtree_actives;
+    //    MPLstate*       racts   = rset->subtree_actives;
+    //    unsigned long*  weights = part->intwts;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -721,26 +733,17 @@ int mpl_NA_fitch_second_update_uppass
         else {
             nfin[j] = npre[j];
             
-            if (lacts[j] && racts[j]) {
-                steps += weights[i];
-            }
+            /*if (lacts[j] && racts[j]) {
+             steps += weights[i];
+             nset->changes[j] = true;
+             }*/
         }
         
-        if (nfint[j] != nfin[j]) {
-            nset->updated = true;
-        }
-        
-        if (nset->changes[j] == true) {
-            step_recall += weights[i];
-        }
-        
-        
+        nfint[j] = nfin[j]; // Storage of states for undoing temp updates
 #ifdef DEBUG
         assert(nfin[j]);
 #endif
     }
-    
-    nset->steps_to_recall += step_recall;
     
     return steps;
 }
@@ -774,8 +777,8 @@ int mpl_fitch_NA_local_reopt
         if ((tgt1f[j] | tgt2f[j]) & ISAPPLIC) {
             if (src[j] & ISAPPLIC) {
                 if (! (src[j] &(tgt1f[j] | tgt2f[j])) ) {
-                    //steps += weights[i];
-                    ++steps;
+                    steps += weights[i];
+                    //++steps;
                 }
             }
             else {
@@ -788,34 +791,6 @@ int mpl_fitch_NA_local_reopt
             ++need_update;
         }
         
-        //part->update_NA_indices[need_update] = j;
-        //++need_update;
-        
-//        if (!(src[j] & (tgt1f[j] | tgt2f[j]))) {
-//            
-//            if (src[j] & ISAPPLIC) {
-//                if ((tgt1f[j] | tgt2f[j]) & ISAPPLIC) {
-//                    steps += weights[i];
-//                }
-//                else {
-//                    
-//                    /* NOTE: This will be written simply at first, but there are
-//                     * possible additional checks on tgt preliminary sets that 
-//                     * could reduce the number of characters that need to be 
-//                     * updated. */
-//                    
-//                    part->update_NA_indices[need_update] = j;
-//                    ++need_update;
-//                }
-//            }
-//            else {
-////                This is a conservative omission for now.
-////                if (src[j] & (tgt1d1[j] | tgt2d1[j])) {
-//                    part->update_NA_indices[need_update] = j;
-//                    ++need_update;
-////                }
-//            }
-//        }
     }
     
     part->nNAtoupdate = need_update;
