@@ -70,6 +70,70 @@ int test_do_fullpass_on_tree(TLtree* t, Morphy m)
 }
 
 
+int test_do_fullpass_for_NAs(TLtree* t, Morphy m)
+{
+    int length = 0;
+    
+    int i = 0;
+    int end = 0;
+    
+    int index = 0;
+    int postorder[2 * t->ntaxa];
+    tl_traverse_tree(t->start, &index, postorder);
+    end = index-1;
+    printf("\n");
+    
+    for (i = 0; i <= end; ++i)
+    {
+        TLnode* n = &t->trnodes[postorder[i]];
+        
+        if (!n->tip) {
+            // TODO: Replace function
+            length += mpl_na_first_down_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), m);
+        }
+    }
+    
+    mpl_update_lower_root(I_ANCESTOR(t->trnodes[end].index, t), t->trnodes[end].index, m);
+    
+    for (i = end; i >= 0; --i) {
+        TLnode* n = &t->trnodes[postorder[i]];
+        
+        if (n->tip != 0) {
+            mpl_update_tip(n->index, I_ANCESTOR(n->index, t), m);
+        } else {
+            // TODO: Replace function
+            mpl_na_first_up_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), I_ANCESTOR(n->index, t), m);
+        }
+    }
+    
+    if (mpl_query_gaphandl(m) == GAP_INAPPLIC) {
+        
+        for (i = 0; i <= end; ++i)
+        {
+            TLnode* n = &t->trnodes[postorder[i]];
+            
+            if (!n->tip) {
+                // TODO: Replace function
+                length += mpl_na_second_down_recalculation(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), m);
+            }
+        }
+        
+        for (i = end; i >= 0; --i) {
+            TLnode* n = &t->trnodes[postorder[i]];
+            
+            if (n->tip != 0) {
+                mpl_finalize_tip(n->index, I_ANCESTOR(n->index, t), m);
+            } else {
+                // TODO: Replace function
+                mpl_second_up_recon(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), I_ANCESTOR(n->index, t), m);
+            }
+        }
+    }
+    
+    return length;
+}
+
+
 int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
 {
     int end = 0;
