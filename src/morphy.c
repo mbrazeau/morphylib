@@ -684,10 +684,10 @@ int mpl_compare_partitions(const void* ptr1, const void* ptr2)
     
     if (!cdiff) {
         if (part2->isNAtype) {
-            ret = 1;
+            ret = 0;
         }
         else {
-            ret = 0;
+            ret = 1;
         }
     }
     
@@ -852,6 +852,8 @@ int mpl_setup_partitions(Morphyp handl)
     
     handl->numparts = numparts;
     err = mpl_put_partitions_in_handle(first, handl);
+    
+    // TODO: Reconsider this part
     mpl_allocate_update_buffers(handl);
     
     // Write in the minscores and num states in the partitions
