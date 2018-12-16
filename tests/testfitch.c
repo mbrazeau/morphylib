@@ -902,10 +902,40 @@ int test_get_partial_reopt_for_na(void)
     int err     = 0;
     int failn   = 0;
     int ntax = 12;
-    int nchar = 24;
+    int nchar = 10;
     //                       111111111122222
     //              123456789012345678901234
-    char* matrix = "1-1030000000000000000---\
+    char* matrix = "1010300000\
+                    1123--0000\
+                    101-------\
+                    112---0511\
+                    112-3-----\
+                    112330----\
+                    0111100011\
+                    0111111111\
+                    0111111111\
+                    0111111111\
+                    0111111111\
+                    0111111111;";
+    
+    /* 'Clipped' matrix:
+        "1010300000\
+         1123--0000\
+         101-------\
+         **********
+         112-3-----\
+         112330----\
+         0111100011\
+         0111111111\
+         0111111111\
+         0111111111\
+         0111111111\
+         0111111111;";
+     
+         112---0511\
+     */
+    
+    /*char* matrix = "1-1030000000000000000---\
                     1123--0000-0-0000-------\
                     1-----------------------\
                     11----0511-1--------00--\
@@ -916,7 +946,7 @@ int test_get_partial_reopt_for_na(void)
                     011111111111111111111111\
                     011111111111111111111111\
                     011111111111111111111111\
-                    011111111111111111111111;";
+                    011111111111111111111111;"*/
     
     char *newick = "((((((1,2),3),4),5),6),(7,(8,(9,(10,(11,12))))));";
     
@@ -938,7 +968,11 @@ int test_get_partial_reopt_for_na(void)
     
     length = test_do_fullpass_on_tree(tree, m);
     
-    if (length != 29) {
+    int testlen = 29;
+    
+    if (nchar == 10) testlen = 18;
+    
+    if (length != testlen) {
         ++failn;
         pfail;
     }
@@ -950,9 +984,11 @@ int test_get_partial_reopt_for_na(void)
     TLnode* orig = NULL; // For the original site of the insertion
     orig = tl_remove_branch(src, tree);
     int subtree_length = 0;
-    subtree_length = test_do_fullpass_on_tree(tree, m);
     
-    if (!(subtree_length < 29)) { // TODO: Make more precise
+    subtree_length = test_do_fullpass_on_tree(tree, m);
+    // TODO: Do the tips
+    
+    if (subtree_length != 17) {
         ++failn;
         pfail;
     }
@@ -966,7 +1002,7 @@ int test_get_partial_reopt_for_na(void)
     int num_to_update = 0;
     num_to_update = mpl_check_reopt_inapplics(m);
     
-    if (num_to_update != 17) {
+    if (num_to_update != 7) {
         ++failn;
         pfail;
     }

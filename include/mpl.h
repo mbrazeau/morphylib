@@ -820,6 +820,12 @@ const char*   mpl_get_stateset
          const int  passnum,
          Morphy     m);
 
+int mpl_first_down_recon_fasttemp
+        (const int node_id, const int left_id, const int right_id, int cutoff, Morphy m);
+        
+        int mpl_second_down_recon_fasttemp
+        (const int node_id, const int left_id, const int  right_id, const int cutoff, Morphy m);
+        
 #ifdef __cplusplus
 }
 #endif /*__cplusplus */

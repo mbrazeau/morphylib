@@ -380,6 +380,9 @@ int test_count_states_in_parts_simple (void)
     int expvals[] =
     {2, 1, 2, 1, 3, 2, 3, 3, 4, 1};
     
+    int expcosts[] =
+    {1, 0, 1, 0, 2, 1, 2, 2, 3, 0};
+    
     MPL_ERR_T err = ERR_NO_ERROR;
     
     printf("Loading data first\n");
@@ -417,6 +420,25 @@ int test_count_states_in_parts_simple (void)
         ppass;
     }
     
+    mismatches =  0;
+    
+    for (i = 0; i < nparts; ++i) {
+        nchinpt = m->partitions[i]->ncharsinpart;
+        for (j = 0; j < nchinpt; ++j) {
+            if (expcosts[m->partitions[i]->charindices[j]] != m->partitions[i]->minscores[j]) {
+                ++mismatches;
+            }
+        }
+    }
+    
+    if (mismatches) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
     return failn;
 }
 
@@ -436,6 +458,7 @@ int test_count_states_in_parts_w_polymorphs (void)
     
     int expvals[] =
     {2, 1, 3, 2, 2, 2, 3, 3, 2, 1};
+    
     
     MPL_ERR_T err = ERR_NO_ERROR;
     

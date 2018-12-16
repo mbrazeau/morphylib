@@ -61,7 +61,7 @@ int test_do_fullpass_on_tree(TLtree* t, Morphy m)
             if (n->tip != 0) {
                 mpl_finalize_tip(n->index, I_ANCESTOR(n->index, t), m);
             } else {
-                length += mpl_second_up_recon(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), I_ANCESTOR(n->index, t), m);
+                mpl_second_up_recon(n->index, I_LDESC(n->index, t), I_RDESC(n->index, t), I_ANCESTOR(n->index, t), m);
             }
         }
     }
@@ -171,6 +171,13 @@ int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m)
     }
     
     return length;
+}
+
+int test_reconnection(TLnode *up, TLnode *dn, TLnode *srcrt, Morphy m)
+{
+    int ret = 0;
+    
+    return ret;
 }
 
 int rotate_all_views(TLtree* t, Morphy m)

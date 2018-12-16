@@ -761,15 +761,32 @@ int mpl_fitch_NA_local_reopt
     int nchars          = part->ncharsinpart;
 //    MPLstate* tgt1d1    = tgt1set->downpass1;
 //    MPLstate* tgt2d1    = tgt2set->downpass1;
-//    MPLstate* tgt1f     = tgt1set->uppass2;
-//    MPLstate* tgt2f     = tgt2set->uppass2;
-//    MPLstate* src       = srcset->downpass2; // TODO: Verify this.
+    MPLstate* tgt1f     = tgt1set->uppass2;
+    MPLstate* tgt2f     = tgt2set->uppass2;
+    MPLstate* src       = srcset->downpass2; // TODO: Verify this.
 //    
-//    unsigned long* weights = part->intwts;
+    unsigned long* weights = part->intwts;
     
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
+        
+        if ((tgt1f[j] | tgt2f[j]) & ISAPPLIC) {
+            if (src[j] & ISAPPLIC) {
+                if (! (src[j] &(tgt1f[j] | tgt2f[j])) ) {
+                    //steps += weights[i];
+                    ++steps;
+                }
+            }
+            else {
+                part->update_NA_indices[need_update] = j;
+                ++need_update;
+            }
+        }
+        else {
+            part->update_NA_indices[need_update] = j;
+            ++need_update;
+        }
         
         //part->update_NA_indices[need_update] = j;
         //++need_update;

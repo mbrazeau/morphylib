@@ -45,6 +45,7 @@ MPLmatrix*  mpl_new_mpl_matrix(const int ntaxa, const int nchar, const int nstat
 int         mpl_delete_mpl_matrix(MPLmatrix* m);
 MPLmatrix*  mpl_get_mpl_matrix(Morphyp m);
 char*       mpl_translate_state2char(MPLstate cstates, Morphyp handl);
+int         mpl_count_states_in_parts(Morphyp handl);
 int         mpl_init_charac_info(Morphyp handl);
 void        mpl_delete_charac_info(Morphyp handl);
 

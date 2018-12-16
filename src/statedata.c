@@ -726,6 +726,8 @@ int mpl_count_states_in_parts(Morphyp handl)
         numstates = 0;
         indices = handl->partitions[i]->charindices;
         charmax = handl->partitions[i]->ncharsinpart;
+        
+        
         for (j = 0; j < charmax; ++j) {
             total = 0;
             index = indices[j];
@@ -738,7 +740,19 @@ int mpl_count_states_in_parts(Morphyp handl)
             
             total &= ISAPPLIC;
             MORPHY_PORTABLE_POPCOUNTLL(handl->partitions[i]->nstates[j], total);
+            
+            // Assign the minscores
+            if (handl->partitions[i]->nstates[j] != 0) {
+                handl->partitions[i]->minscores[j] = handl->partitions[i]->nstates[j] - 1;
+            }
+            else {
+                handl->partitions[i]->minscores[j] = 0;
+            }
+         
+            // Add new minscore to the partition-specific total
+            handl->partitions[i]->ptminscore += handl->partitions[i]->minscores[j];
         }
+        
     }
     
     return res;

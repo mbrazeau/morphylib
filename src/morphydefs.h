@@ -131,6 +131,7 @@ struct MPLpartition {
     int*            charindices;
     int*            nstates; /*!< The vector of state numbers of each character in this partition > */
     int*            minscores; /*!< The vector of minimum scores possible for each character in this partition > */
+    int             ptminscore; /*!<Minimum score for this partition */
     unsigned long   score;       /*!< The score for all characters in this partition*/
     int             ntoupdate;
     int*            update_indices;
