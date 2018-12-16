@@ -21,3 +21,4 @@
 
 int test_do_fullpass_on_tree(TLtree* t, Morphy m);
 int test_full_reoptimization_for_inapplics(TLtree* t, Morphy m);
+int test_do_fullpass_for_NAs(TLtree* t, Morphy m);

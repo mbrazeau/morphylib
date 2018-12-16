@@ -67,6 +67,7 @@ int main (void)
     fails += test_twopass_fitch();
     fails += test_local_reoptimisation();
     fails += test_get_partial_reopt_for_na();
+    fails += test_get_added_length_for_na();
     fails += test_imbalance_distributions();
     
     // wagner.c tests 
