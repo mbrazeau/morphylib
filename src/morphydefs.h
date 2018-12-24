@@ -87,6 +87,7 @@ struct MPLcharinfo {
     
     int         charindex;
     int         ninapplics;
+    int         nstates;
 //    bool        included;
     MPLchtype   chtype;
     double      realweight;
@@ -119,7 +120,9 @@ struct MPLpartition {
     int             maxnchars;
     int             ncharsinpart;
     int*            charindices;
-    unsigned long   nchanges;       /*!< Number of state changes in this partition. */
+    int*            nstates; /*!< The vector of state numbers of each character in this partition > */
+    int*            minscores; /*!< The vector of minimum scores possible for each character in this partition > */
+    unsigned long   score;       /*!< The score for all characters in this partition*/
     int             ntoupdate;
     int*            update_indices;
     int             nNAtoupdate;

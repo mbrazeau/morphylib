@@ -498,6 +498,14 @@ int mpl_delete_partition(MPLpartition* part)
             free(part->charindices);
             part->charindices   = NULL;
         }
+        if (part->nstates) {
+            free(part->nstates);
+            part->nstates   = NULL;
+        }
+        if (part->minscores) {
+            free(part->minscores);
+            part->minscores   = NULL;
+        }
         if (part->intwts) {
             free(part->intwts);
             part->intwts = NULL;

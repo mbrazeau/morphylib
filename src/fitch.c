@@ -27,7 +27,7 @@ int mpl_fitch_downpass
     
     unsigned long* weights = part->intwts;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         j = indices[i];
         
         n[j] = left[j] & right[j];
@@ -58,7 +58,7 @@ int mpl_fitch_uppass
     MPLstate* nfin  = nset->uppass1;
     MPLstate* anc   = ancset->uppass1;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -106,6 +106,7 @@ int mpl_fitch_local_reopt
             
             steps += weights[i];
             
+            // TODO: Change this function so that maxlen is taken from the partition data
             if (steps > maxlen && domaxlen == true)
             {
                 return steps;
@@ -129,7 +130,7 @@ int mpl_NA_fitch_first_downpass
     MPLstate* n         = nset->downpass1;
     MPLstate* nt        = nset->temp_downpass1;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--; ) {
         
         j = indices[i];
         
@@ -173,7 +174,7 @@ int mpl_nadown1_simpl
     MPLstate* n         = nset->downpass1;
     MPLstate* nt        = nset->temp_downpass1;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -216,7 +217,7 @@ int mpl_nadown2_simpl
     MPLstate        temp    = 0;
     unsigned long*  weights = part->intwts;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -268,7 +269,7 @@ int mpl_NA_fitch_first_update_downpass
     MPLstate* n         = nset->downpass1;
     MPLstate* ntemp     = nset->temp_downpass1;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -317,7 +318,7 @@ int mpl_NA_fitch_first_uppass
     MPLstate*   anc     = ancset->uppass1;
     MPLstate*   nfint   = nset->temp_uppass1;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -374,7 +375,7 @@ int mpl_naupp1_simpl
     MPLstate*   anc     = ancset->uppass1;
     MPLstate*   nfint   = nset->temp_uppass1;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -416,7 +417,7 @@ int mpl_NA_fitch_first_update_uppass
     MPLstate*   nifin   = nset->uppass1;
     MPLstate*   anc     = ancset->uppass1;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -476,7 +477,7 @@ int mpl_NA_fitch_second_downpass
     MPLstate        temp    = 0;
     unsigned long*  weights = part->intwts;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -614,7 +615,7 @@ int mpl_NA_fitch_second_uppass
 //    MPLstate*       racts   = rset->subtree_actives;
 //    unsigned long*  weights = part->intwts;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -770,8 +771,8 @@ int mpl_fitch_NA_local_reopt
         
         j = indices[i];
         
-        part->update_NA_indices[need_update] = j;
-        ++need_update;
+        //part->update_NA_indices[need_update] = j;
+        //++need_update;
         
 //        if (!(src[j] & (tgt1f[j] | tgt2f[j]))) {
 //            
@@ -818,7 +819,7 @@ int mpl_fitch_tip_update(MPLndsets* tset, MPLndsets* ancset, MPLpartition* part)
     MPLstate* ttfinal = tset->temp_uppass1;
     MPLstate* astates = ancset->uppass1;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         j = indices[i];
         if (tprelim[j] & astates[j]) {
             tfinal[j] = tprelim[j] & astates[j];
@@ -848,7 +849,7 @@ int mpl_fitch_one_branch
     unsigned long* weights = part->intwts;
     int length = 0;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         j = indices[i];
         
         temp = tipset[j] & ndset[j];
@@ -880,7 +881,7 @@ int mpl_fitch_NA_first_one_branch
     MPLstate* ndset  = node->downpass1;
     MPLstate  temp   = 0;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -911,7 +912,7 @@ int mpl_fitch_NA_second_one_branch
     unsigned long* weights  = part->intwts;
     int length = 0;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -962,7 +963,7 @@ int mpl_fitch_NA_second_one_branch_recalc
     unsigned long step_recall = 0;
     int length = 0;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -1015,7 +1016,7 @@ int mpl_fitch_NA_tip_update
     MPLstate* stacts    = tset->subtree_actives;
     MPLstate* tstatcs   = tset->temp_subtr_actives;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -1065,7 +1066,7 @@ int mpl_fitch_NA_tip_recalc_update
     MPLstate* astates   = ancset->uppass1;
     MPLstate* stacts    = tset->subtree_actives;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
@@ -1110,7 +1111,7 @@ int mpl_fitch_NA_tip_finalize
     MPLstate* stacts    = tset->subtree_actives;
     MPLstate* tstacts   = tset->temp_subtr_actives;
     
-    for (i = 0; i < nchars; ++i) {
+    for (i = nchars; i--;) {
         
         j = indices[i];
         
