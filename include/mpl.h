@@ -421,7 +421,26 @@ int     mpl_set_gaphandl
 int     mpl_query_gaphandl
 
         (Morphy     m);
-
+        
+        
+/*!
+ 
+ @brief Resets parameters for length count on new tree;
+ 
+ @discussion When doing optimisation of a new tree, this re-sets
+ parameters in the Morphy handl that assume a given tree. This is
+ essential when, for instance, using any functions that need to
+ query the number of steps in each character on a tree. This is
+ used, for instance, in applying some of the inapplicable-related
+ speedups during branch breaking.
+ 
+ @param m An instance of the Morphy object.
+ 
+ @return A Morphy error code.*/
+        
+int mpl_prep_new_count
+        
+        (Morphy m);
 
 /*!
  

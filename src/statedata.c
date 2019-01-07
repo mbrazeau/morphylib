@@ -780,6 +780,13 @@ int mpl_init_charac_info(Morphyp handl)
         handl->charinfo[i].intwt        = 1;
     }
     
+    if (!handl->steps_in_char) {
+        handl->steps_in_char = (long*)calloc(nchar, sizeof(long));
+        if (!handl->steps_in_char) {
+            return ERR_BAD_MALLOC;
+        }
+    }
+    
     return ERR_NO_ERROR;
 }
 

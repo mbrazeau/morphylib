@@ -12,6 +12,16 @@
 #include "fitch.h"
 #include "statedata.h"
 
+MPLstate* left;
+MPLstate* right;
+MPLstate* nifin;
+MPLstate* npre;
+MPLstate* npret;
+MPLstate* stacts;
+MPLstate* tstatcs;
+MPLstate* lacts;
+MPLstate* racts;
+
 /**/
 int mpl_fitch_downpass
 (MPLndsets* lset, MPLndsets* rset, MPLndsets* nset, MPLpartition* part)
@@ -21,8 +31,8 @@ int mpl_fitch_downpass
     int steps = 0;
     const int* indices  = part->charindices;
     int nchars          = part->ncharsinpart;
-    MPLstate* left      = lset->downpass1;
-    MPLstate* right     = rset->downpass1;
+    left      = lset->downpass1;
+    right     = rset->downpass1;
     MPLstate* n         = nset->downpass1;
     
     unsigned long* weights = part->intwts;
@@ -52,8 +62,8 @@ int mpl_fitch_uppass
     int j     = 0;
     const int* indices  = part->charindices;
     int nchars      = part->ncharsinpart;
-    MPLstate* left  = lset->downpass1;
-    MPLstate* right = rset->downpass1;
+    left  = lset->downpass1;
+    right = rset->downpass1;
     MPLstate* npre  = nset->downpass1;
     MPLstate* nfin  = nset->uppass1;
     MPLstate* anc   = ancset->uppass1;
@@ -109,7 +119,7 @@ int mpl_fitch_local_reopt
             // TODO: Change this function so that maxlen is taken from the partition data
             if (steps > maxlen && domaxlen == true)
             {
-                return steps;
+                //return steps;
             }
         }
     }
@@ -125,8 +135,8 @@ int mpl_NA_fitch_first_downpass
     int j               = 0;
     const int* indices  = part->charindices;
     int nchars          = part->ncharsinpart;
-    MPLstate* left      = lset->downpass1;
-    MPLstate* right     = rset->downpass1;
+    left      = lset->downpass1;
+    right     = rset->downpass1;
     MPLstate* n         = nset->downpass1;
     MPLstate* nt        = nset->temp_downpass1;
     
@@ -169,8 +179,8 @@ int mpl_nadown1_simpl
     int j               = 0;
     const int* indices  = part->charindices;
     int nchars          = part->ncharsinpart;
-    MPLstate* left      = lset->downpass1;
-    MPLstate* right     = rset->downpass1;
+    left      = lset->downpass1;
+    right     = rset->downpass1;
     MPLstate* n         = nset->downpass1;
     MPLstate* nt        = nset->temp_downpass1;
     
@@ -310,8 +320,8 @@ int mpl_NA_fitch_first_uppass
     int         j       = 0;
     const int*  indices = part->charindices;
     int         nchars  = part->ncharsinpart;
-    MPLstate*   left    = lset->downpass1;
-    MPLstate*   right   = rset->downpass1;
+    left    = lset->downpass1;
+    right   = rset->downpass1;
     MPLstate*   npre    = nset->downpass1;
     MPLstate*   nifin   = nset->uppass1;
     MPLstate*   anc     = ancset->uppass1;
@@ -468,15 +478,15 @@ int mpl_NA_fitch_second_downpass
     int             steps   = 0;
     const int*      indices = part->charindices;
     int             nchars  = part->ncharsinpart;
-    MPLstate*       left    = lset->downpass2;
-    MPLstate*       right   = rset->downpass2;
-    MPLstate*       nifin   = nset->uppass1;
-    MPLstate*       npre    = nset->downpass2;
-    MPLstate*       npret   = nset->temp_downpass2;
-    MPLstate*       stacts  = nset->subtree_actives;
-    MPLstate*       tstatcs = nset->temp_subtr_actives;
-    MPLstate*       lacts   = lset->subtree_actives;
-    MPLstate*       racts   = rset->subtree_actives;
+    left    = lset->downpass2;
+    right   = rset->downpass2;
+    nifin   = nset->uppass1;
+    npre    = nset->downpass2;
+    npret   = nset->temp_downpass2;
+    stacts  = nset->subtree_actives;
+    tstatcs = nset->temp_subtr_actives;
+    lacts   = lset->subtree_actives;
+    racts   = rset->subtree_actives;
     MPLstate        temp    = 0;
     unsigned long*  weights = part->intwts;
     
@@ -500,9 +510,12 @@ int mpl_NA_fitch_second_downpass
                 if (left[j] & ISAPPLIC && right[j] & ISAPPLIC) {
                     steps += weights[i];
                     nset->changes[j] = true;
+                    part->steps_in_char[i] += weights[i];
+                    
                 } else if (lacts[j] && racts[j]) {
                     steps += weights[i];
                     nset->changes[j] = true;
+                    part->steps_in_char[i] += weights[i];
                 }
             }
         }
@@ -512,6 +525,7 @@ int mpl_NA_fitch_second_downpass
             if (lacts[j] && racts[j]) {
                 steps += weights[i];
                 nset->changes[j] = true;
+                part->steps_in_char[i] += weights[i];
             }
         }
         
@@ -915,11 +929,13 @@ int mpl_fitch_NA_second_one_branch
                 if (ndset[j] & ISAPPLIC) {
                     length += weights[i];
                     tipanc->changes[j] = true;
+                    part->steps_in_char[i] += weights[i];
                 }
                 else {
                     if (ndacts[j]) {
                         length += weights[i];
                         tipanc->changes[j] = true;
+                        part->steps_in_char[i] += weights[i];
                     }
                 }
             }

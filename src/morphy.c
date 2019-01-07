@@ -506,6 +506,10 @@ int mpl_delete_partition(MPLpartition* part)
             free(part->minscores);
             part->minscores   = NULL;
         }
+        if (part->steps_in_char) {
+            free(part->steps_in_char);
+            part->steps_in_char   = NULL;
+        }
         if (part->intwts) {
             free(part->intwts);
             part->intwts = NULL;
@@ -746,6 +750,10 @@ void mpl_delete_all_update_buffers(Morphyp handl)
             free(p->minscores);
             p->minscores = NULL;
         }
+        if (p->steps_in_char) {
+            free(p->steps_in_char);
+            p->steps_in_char   = NULL;
+        }
     }
 }
 
@@ -789,6 +797,11 @@ int mpl_allocate_update_buffers(Morphyp handl)
         }
         p->minscores = (int*)calloc(p->ncharsinpart, sizeof(int));
         if (!p->minscores) {
+            mpl_delete_all_update_buffers(handl);
+            return ERR_BAD_MALLOC;
+        }
+        p->steps_in_char = (int*)calloc(p->ncharsinpart, sizeof(int));
+        if (!p->steps_in_char) {
             mpl_delete_all_update_buffers(handl);
             return ERR_BAD_MALLOC;
         }

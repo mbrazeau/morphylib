@@ -1025,7 +1025,7 @@ int test_get_partial_reopt_for_na(void)
 
 int test_get_added_length_for_na(void)
 {
-    theader("Testing counting of characters needing partial reoptimization");
+    theader("Testing added length from NA-only characters");
     int err     = 0;
     int failn   = 0;
     int ntax = 12;
@@ -1118,6 +1118,104 @@ int test_get_added_length_for_na(void)
         ppass;
     }
 
+    return failn;
+}
+
+int test_get_added_length_for_na_morechars(void)
+{
+    theader("Testing added length from NA-only characters with larger dataset");
+    int err     = 0;
+    int failn   = 0;
+    int ntax = 12;
+    int nchar = 12;
+    //                       111111111122222
+    //              123456789012345678901234
+    char* matrix = "101030000001\
+                    1123--000000\
+                    101-------00\
+                    112---051111\
+                    112-3-----10\
+                    112330----10\
+                    0111100011-1\
+                    0111111111--\
+                    0111111111--\
+                    0111111111--\
+                    0111111111--\
+                    0111111111--;";
+    
+    char *newick = "((((((1,2),3),4),5),6),(7,(8,(9,(10,(11,12))))));";
+    
+    TLP tlp = tl_new_TL();
+    tl_set_numtaxa(ntax, tlp);
+    tl_attach_Newick(newick, tlp);
+    tl_set_current_tree(0, tlp);
+    TLtree *tree = tl_get_TLtree(tlp);
+    
+    Morphy m = mpl_new_Morphy();
+    mpl_init_Morphy(ntax, nchar, m);
+    mpl_set_num_internal_nodes(ntax, m);
+    mpl_attach_rawdata(matrix, m);
+    mpl_apply_tipdata(m);
+    
+    int length = 0;
+    int diff = 0;
+    
+    length = test_do_fullpass_on_tree(tree, m);
+    
+    int testlen = 22;
+    
+    if (length != testlen) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    TLnode* src = &tree->trnodes[3];
+    TLnode* orig = NULL; // For the original site of the insertion
+    orig = tl_remove_branch(src, tree);
+    int subtree_length = 0;
+    
+    subtree_length = test_do_fullpass_on_tree(tree, m);
+    // TODO: Do the tips
+    
+    if (subtree_length != 20) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    int init_added_len = 0;
+    init_added_len = mpl_get_insertcost(src->index, orig->index, orig->anc->index, false, 0, m);
+    
+    int num_to_update = 0;
+    num_to_update = mpl_check_reopt_inapplics(m);
+    
+    if (num_to_update != 7) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
+    // Put the branch back in
+    tl_insert_branch(src, orig->index, tree);
+    
+    int na_only_steps = 0;
+    na_only_steps = test_do_fullpass_for_NAs(tree, m);
+    
+    if (na_only_steps != 12) {
+        ++failn;
+        pfail;
+    }
+    else {
+        ppass;
+    }
+    
     return failn;
 }
 
