@@ -27,6 +27,7 @@ int mpl_fitch_downpass
     
     unsigned long* weights = part->intwts;
     
+#pragma clang loop vectorize(enable)
     for (i = 0; i < nchars; ++i) {
         j = indices[i];
         
@@ -58,6 +59,7 @@ int mpl_fitch_uppass
     MPLstate* nfin  = nset->uppass1;
     MPLstate* anc   = ancset->uppass1;
     
+#pragma clang loop vectorize(enable)
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
@@ -97,7 +99,8 @@ int mpl_fitch_local_reopt
     MPLstate* src   = srcset->downpass1;
     
     unsigned long* weights = part->intwts;
-    
+   
+
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
@@ -128,7 +131,8 @@ int mpl_NA_fitch_first_downpass
     MPLstate* right     = rset->downpass1;
     MPLstate* n         = nset->downpass1;
     MPLstate* nt        = nset->temp_downpass1;
-    
+ 
+#pragma clang loop vectorize(enable)
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
@@ -316,7 +320,8 @@ int mpl_NA_fitch_first_uppass
     MPLstate*   nifin   = nset->uppass1;
     MPLstate*   anc     = ancset->uppass1;
     MPLstate*   nfint   = nset->temp_uppass1;
-    
+
+#pragma clang loop vectorize(enable)
     for (i = 0; i < nchars; ++i) {
         
         j = indices[i];
