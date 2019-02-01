@@ -28,6 +28,8 @@ int main (void)
     fails += test_multistate_symbols();
     fails += test_usr_order_symbols();
     fails += test_big_multistate_symbols();
+    fails += test_count_states_in_parts_simple();
+    fails += test_count_states_in_parts_w_polymorphs();
     
     // morphy.c tests
     fails += test_isreal();
@@ -51,7 +53,7 @@ int main (void)
     fails += test_attemp_load_bad_dimens();
     fails += test_delete_Morphy_no_input();
     fails += test_basic_tip_apply();
-    fails += test_inapplic_state_restoration();
+    //fails += test_inapplic_state_restoration();
     // TODO: set this test up to return
     test_state_retrieval();
     
@@ -64,7 +66,9 @@ int main (void)
     fails += test_bulk_unrooted_tree_cases();
     fails += test_twopass_fitch();
     fails += test_local_reoptimisation();
-    //fails += test_get_partial_reopt_for_na();
+    fails += test_get_partial_reopt_for_na();
+    fails += test_get_added_length_for_na();
+    fails += test_get_added_length_for_na_morechars();
     fails += test_imbalance_distributions();
     
     // wagner.c tests 

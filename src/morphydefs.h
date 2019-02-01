@@ -25,7 +25,7 @@ typedef double Mflt;
 //typedef float Mflt;
 //#endif
 
-typedef unsigned int MPLstate;
+typedef unsigned long MPLstate;
 
 //<<<<<<< HEAD
 #define NA              ((MPLstate)1)
@@ -49,6 +49,15 @@ typedef unsigned int MPLstate;
                                     this will be considered 0. */
 #define MPLWTMIN        (MPL_EPSILON * 10) /*! Safest (for me!) if calculations
                                                steer pretty clear of epsilon */
+
+#if defined(__GNUC__)
+#define MORPHY_PORTABLE_POPCOUNTLL(c, v) (c = __builtin_popcountl(v))
+#else
+#define MORPHY_PORTABLE_POPCOUNTLL(c, v) v = v - ((v >> 1) & (unsigned long)~(unsigned long)0/3);\
+v = (v & (unsigned long)~(unsigned long)0/15*3) + ((v >> 2) & (unsigned long)~(unsigned long)0/15*3);\
+v = (v + (v >> 4)) & (unsigned long)~(unsigned long)0/255*15;\
+c = (unsigned long)(v * ((unsigned long)~(unsigned long)0/255)) >> (sizeof(unsigned long) - 1) * CHAR_BIT;
+#endif
     
 typedef struct MPLndsets MPLndsets;
 typedef struct MPLpartition MPLpartition;
@@ -91,6 +100,7 @@ struct MPLcharinfo {
     
     int         charindex;
     int         ninapplics;
+    int         nstates;
 //    bool        included;
     MPLchtype   chtype;
     double      realweight;
@@ -123,7 +133,11 @@ struct MPLpartition {
     int             maxnchars;
     int             ncharsinpart;
     int*            charindices;
-    unsigned long   nchanges;       /*!< Number of state changes in this partition. */
+    int*            nstates; /*!< The vector of state numbers of each character in this partition > */
+    int*            minscores; /*!< The vector of minimum scores possible for each character in this partition > */
+    int*            steps_in_char; /*!<Number of steps for each character*/
+    int             ptminscore; /*!<Minimum score for this partition */
+    unsigned long   score;       /*!< The score for all characters in this partition*/
     int             ntoupdate;
     int*            update_indices;
     int             nNAtoupdate;
@@ -211,6 +225,7 @@ typedef struct Morphy_t {
         Mflt        asfloat;
     } score;   // The score (parsimony, likelihood etc.) of the evaluated data
     MPLmatrix       inmatrix;   // Internal representation of the matrix
+    long*           steps_in_char; // The number of steps for each character
     char*           char_t_matrix;  // The matrix as a NULL-terminated string
     int             numnodes;   // The number of nodes
     int*            nodesequence;   // The postorder sequence of nodes.

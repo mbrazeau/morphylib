@@ -703,6 +703,61 @@ char *mpl_translate_state2char(MPLstate cstates, Morphyp handl)
     return res;
 }
 
+int mpl_count_states_in_parts(Morphyp handl)
+{
+    int res = ERR_NO_ERROR;
+    
+    if (handl->numparts < 1) {
+        return ERR_NO_DATA;
+    }
+    
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    int index = 0;
+    int nchar =  handl->numcharacters;
+    int charmax = 0;
+    int *indices = NULL;
+    int numstates = 0;
+    MPLstate total = 0;
+    MPLstate dat = 0;
+    
+    for (i = 0; i < handl->numparts; ++i) {
+        numstates = 0;
+        indices = handl->partitions[i]->charindices;
+        charmax = handl->partitions[i]->ncharsinpart;
+        
+        
+        for (j = 0; j < charmax; ++j) {
+            total = 0;
+            index = indices[j];
+            for (k = 0; k < handl->numtaxa; ++k) {
+                dat = handl->inmatrix.cells[k * nchar + index].asint;
+                if (dat != MISSING && dat != UNKNOWN) {
+                    total |= dat;
+                }
+            }
+            
+            total &= ISAPPLIC;
+            MORPHY_PORTABLE_POPCOUNTLL(handl->partitions[i]->nstates[j], total);
+            
+            // Assign the minscores
+            if (handl->partitions[i]->nstates[j] != 0) {
+                handl->partitions[i]->minscores[j] = handl->partitions[i]->nstates[j] - 1;
+            }
+            else {
+                handl->partitions[i]->minscores[j] = 0;
+            }
+         
+            // Add new minscore to the partition-specific total
+            handl->partitions[i]->ptminscore += handl->partitions[i]->minscores[j];
+        }
+        
+    }
+    
+    return res;
+}
+
 int mpl_init_charac_info(Morphyp handl)
 {
     int nchar = mpl_get_num_charac((Morphy)handl);
@@ -723,6 +778,13 @@ int mpl_init_charac_info(Morphyp handl)
         handl->charinfo[i].realweight   = 1.0;
         handl->charinfo[i].basewt       = 1;
         handl->charinfo[i].intwt        = 1;
+    }
+    
+    if (!handl->steps_in_char) {
+        handl->steps_in_char = (long*)calloc(nchar, sizeof(long));
+        if (!handl->steps_in_char) {
+            return ERR_BAD_MALLOC;
+        }
     }
     
     return ERR_NO_ERROR;

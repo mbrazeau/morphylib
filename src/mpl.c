@@ -384,6 +384,25 @@ int mpl_query_gaphandl(Morphy m)
     return mpl_get_gaphandl((Morphyp)m);
 }
 
+int mpl_prep_new_count(Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    
+    memset(handl->steps_in_char, 0, handl->numcharacters * sizeof(long));
+    
+    int i = 0;
+    int numparts = mpl_get_numparts(handl);
+    
+    for (i = 0; i < numparts; ++i) {
+        memset(handl->partitions[i]->steps_in_char, 0, handl->partitions[i]->ncharsinpart * sizeof(int));
+    }
+    
+    return ERR_NO_ERROR;
+}
 
 int mpl_first_down_recon
 (const int node_id, const int left_id, const int right_id, Morphy m)
@@ -412,6 +431,37 @@ int mpl_first_down_recon
     return res; //
 }
 
+int mpl_first_down_recon_fasttemp
+(const int node_id, const int left_id, const int right_id, int cutoff, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  nstates = handl->statesets[node_id];
+    MPLndsets*  lstates = handl->statesets[left_id];
+    MPLndsets*  rstates = handl->statesets[right_id];
+    
+    int i = 0;
+    int res = 0;
+    int numparts = mpl_get_numparts(handl);
+    MPLdownfxn downfxn = NULL;
+    
+    nstates->updated = false;
+    
+    for (i = 0; i < numparts; ++i) {
+        downfxn = handl->partitions[i]->prelimfxn;
+        res += downfxn(lstates, rstates, nstates, handl->partitions[i]);
+        if (cutoff != UINT_MAX) {
+            if (res > cutoff) {
+                return res;
+            }
+        }
+    }
+    
+    return res; //
+}
 
 int mpl_first_up_recon
 (const int node_id, const int left_id, const int right_id, const int anc_id,
@@ -472,6 +522,42 @@ int mpl_second_down_recon
     
     return res;
 }
+
+int mpl_second_down_recon_fasttemp
+(const int node_id, const int left_id, const int  right_id, const int cutoff, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp     handl   = (Morphyp)m;
+    MPLndsets*  nstates = handl->statesets[node_id];
+    MPLndsets*  lstates = handl->statesets[left_id];
+    MPLndsets*  rstates = handl->statesets[right_id];
+    
+    int i = 0;
+    int res = 0;
+    int numparts = mpl_get_numparts(handl);
+    MPLdownfxn downfxn = NULL;
+    
+    nstates->updated = false;
+    
+    for (i = 0; i < numparts; ++i) {
+        downfxn = handl->partitions[i]->inappdownfxn;
+        if (downfxn) {
+            res += downfxn(lstates, rstates, nstates, handl->partitions[i]);
+            if (cutoff != UINT_MAX) {
+                if (res > cutoff) {
+                    return res;
+                }
+            }
+        }
+        downfxn = NULL;
+    }
+    
+    return res;
+}
+
 
 
 int mpl_second_up_recon
@@ -883,12 +969,24 @@ int mpl_get_step_recall(const int node_id, Morphy m)
         return ERR_UNEXP_NULLPTR;
     }
     
-    Morphyp handl = (Morphyp)m;
+    Morphyp     handl   = (Morphyp)m;
     
-    int ret = handl->statesets[node_id]->steps_to_recall;
-    handl->statesets[node_id]->steps_to_recall = 0;
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    int res = 0;
+    int numparts = mpl_get_numparts(handl);
     
-    return ret;
+    for (i = 0; i < numparts; ++i) {
+        if (handl->partitions[i]->isNAtype) {
+            for (j = 0; j < handl->partitions[i]->nNAtoupdate; ++ j) {
+                //k = handl->partitions[i]->update_NA_indices[j];
+                res += handl->partitions[i]->steps_in_char[j];
+            }
+        }
+    }
+    
+    return res;
     
 }
 
