@@ -483,7 +483,7 @@ int mpl_init_inmatrix(Morphyp handl)
     int i = 0;
     
     for (i = 0; i < mat->ncells; ++i) {
-        mat->cells[i].asstr = (char*)calloc(nstates + 1, sizeof(char));
+        mat->cells[i].asstr = (char*)calloc(nstates ? nstates + 1 : 2, sizeof(char));
         if (!mat->cells[i].asstr) {
             int j = 0;
             for (j = 0; j < i; ++j) {
