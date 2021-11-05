@@ -244,6 +244,35 @@ int mpl_delete_rawdata(Morphy m)
     return ERR_NO_ERROR;
 }
 
+int mpl_set_gap_symbol(const char gapsymb, Morphy m)
+{
+    if (!m) {
+        return ERR_UNEXP_NULLPTR;
+    }
+    
+    Morphyp mp = (Morphyp)m;
+    
+    // Check that a matrix is loaded and read, otherwise reject.
+    if (!mpl_get_numtaxa(m) || !mpl_get_num_charac(m)) {
+        return ERR_NO_DIMENSIONS;
+    }
+    
+    if (mpl_check_data_loaded(m)) {
+        return ERR_EX_DATA_CONF;
+    }
+    
+    // Check symbol is not one of the states in the matrix or symbols list
+    char* symbols = mp->symbols.statesymbols;
+    if (strchr(symbols, gapsymb)) {
+        return ERR_BAD_PARAM;
+    }
+    
+    // Set the gap symbol to the indicated character
+    mp->symbols.gap = gapsymb;
+    
+    return ERR_NO_ERROR;
+}
+
 
 int mpl_apply_tipdata(Morphy m)
 {

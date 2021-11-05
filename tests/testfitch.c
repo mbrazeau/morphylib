@@ -447,6 +447,197 @@ int test_bulk_balanced_tree_cases(void)
     return failn;
 }
 
+int test_bulk_alternative_gap_symbol(void)
+{
+    theader("Testing bulk tree cases");
+    int err = 0;
+    int failn = 0;
+    int ntax    = 12;
+    int nchar    = 1;
+    char gapsymb = '9';
+    char *rawmatrices[] =
+    {
+        (char*)"23991??99032;", // 0
+        (char*)"199911119991;", // 1
+        (char*)"110099991100;", // 2
+        (char*)"119999999100;", // 3
+        (char*)"999911119991;", // 4
+        (char*)"019999010101;", // 5
+        (char*)"019991010101;", // 6
+        (char*)"1??99??99100;", // 7
+        (char*)"21993??99032;", // 8
+        (char*)"11991??99111;", // 9
+        (char*)"119910000019;", // 10
+        (char*)"019999990101;", // 11
+        (char*)"11099?999100;", // 12
+        (char*)"11991??99111;", // 13
+        (char*)"210991009921;", // 14
+        (char*)"????99991???;", // 15
+        (char*)"239919999032;", // 16
+        (char*)"199991999919;", // 17
+        (char*)"919191991919;", // 18
+        (char*)"23991??99032;", // 19
+        (char*)"999999990101;", // 20
+        (char*)"101019999901;", // 21
+        (char*)"01199?990011;", // 22
+        (char*)"11099??99100;", // 23
+        (char*)"119910000019;", // 24
+        (char*)"219919999012;", // 25
+        (char*)"119999111111;", // 26
+        (char*)"101019999901;", // 27
+        (char*)"210210999999;", // 28
+        (char*)"999911119999;", // 29
+        (char*)"23099??19932;", // 30
+        (char*)"02399??19932;", // 31
+        (char*)"0239???19932;", // 32
+        (char*)"23991?199023;", // 33
+        (char*)"999910109999;", // 34
+        (char*)"999999119991;", // 35
+        (char*)"109999119991;", // 36
+        (char*)"32099??39921;", // 37
+        (char*)"999999919999;", // 38
+        (char*)"099119111111;", // 39
+    };
+    
+    int nummatrices = 40;
+    
+    int expected[] = {5, 2, 3, 2, 1, 5, 5, 2, 5, 2, 2, 4, 3, 2, 5, 0, 5, 2, 4, 5, 2, 4, 3, 3, 2, 5, 1, 4, 4, 0, 5, 5, 4, 5, 2, 1, 3, 5, 0, 1};
+    
+    int tipancs[]= {12, 12, 13, 14, 15, 16, 21, 20, 19, 18, 17, 17};
+    int ancs[]   = {13, 14, 15, 16, 22, 18, 19, 20, 21, 22, 23};
+    int nodes[]  = {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23};
+    int ldescs[] = {0,  12, 13, 14, 15, 10,  9,  8,  7,  6, 16};
+    int rdescs[] = {1,   2,  3,  4,  5, 11, 17, 18, 19, 20, 21};
+    
+    int j = 0;
+    
+    for (j = 0; j < nummatrices; ++j) {
+        Morphy m1 = mpl_new_Morphy();
+        mpl_init_Morphy(ntax, nchar, m1);
+        //    mpl_set_gaphandl(GAP_MISSING, m1);
+        err = mpl_attach_rawdata(rawmatrices[j], m1);
+        mpl_set_gap_symbol(gapsymb, m1);
+        if (err) {
+            ++failn;
+            pfail;
+        }
+        else {
+            ppass;
+        }
+        mpl_set_num_internal_nodes(13, m1);
+        
+        mpl_apply_tipdata(m1);
+        
+        int length = 0;
+        
+        // ...
+        int i = 0;
+        for (i = 0; i < (ntax-1); ++i) {
+            length += mpl_first_down_recon(nodes[i], ldescs[i], rdescs[i], m1);
+        }
+        
+        // Update lower root
+        mpl_update_lower_root(22, 22, m1);
+        
+        for (i = (ntax-2); i >= 0; --i) {
+            int nd = nodes[i];
+            int ndanc = ancs[i];
+            if (i == (ntax-2))
+            {
+                ndanc = nd;
+            }
+            length += mpl_first_up_recon
+            (nd, ldescs[i], rdescs[i], ndanc, m1);
+        }
+        
+        for (i = 0; i < ntax; ++i) {
+            mpl_update_tip(i, tipancs[i], m1);
+        }
+        
+        for (i = 0; i < (ntax-1); ++i) {
+            // Second downpass
+            length += mpl_second_down_recon(nodes[i], ldescs[i], rdescs[i], m1);
+        }
+        
+        // Update lower root
+        mpl_update_lower_root(22, 22, m1);
+        
+        for (i = (ntax-2); i >= 0; --i) {
+            // Second uppass reconstruction
+            int nd = nodes[i];
+            int ndanc = ancs[i];
+            if (i == (ntax-2))
+            {
+                ndanc = nd;
+            }
+            length += mpl_second_up_recon
+            (nd, ldescs[i], rdescs[i], ndanc, m1);
+        }
+        
+        for (i = 0; i < ntax; ++i) {
+            mpl_update_tip(i, tipancs[i], m1);
+        }
+        
+        // TODO: Final tip calculations
+        //    // Optional for basic length count, but probably necessary for
+        //    // indirect optimisation.
+        //    for (i = 0; i < ntax; ++i) {
+        //        mpl_finalize_tip(i, tipancs[i], m1);
+        //        // Update tips first time
+        //    }
+        
+        
+        if (length != expected[j]) {
+            printf("Calculated: %i, expected: %i\n", length, expected[j]);
+            ++failn;
+            pfail;
+        }
+        else {
+            ppass;
+        }
+        
+        char* result = NULL;
+        for (i = 1; i < 5; ++ i) {
+            int k = 0;
+            printf("Pass %i: ", i);
+            for (k = 0; k < ntax; ++k) {
+                result = (char*)mpl_get_stateset(k, 0, i, m1);
+                printf("%s ", result);
+                
+            }
+            printf("\n");
+        }
+        printf("\n");
+        
+        for (i = ntax; i < (ntax-2 + mpl_get_num_internal_nodes(m1)); ++i) {
+            int k = 0;
+            printf("Node %i: ", i);
+            for (k = 1; k < 5; ++k) {
+                result = (char*)mpl_get_stateset(i, 0, k, m1);
+                if (!(*result)) {
+                    printf(". ");
+                }
+                else {
+                    int pad = 0;
+                    int paddiff = 6;
+                    pad = paddiff - (int)strlen(result);
+                    int x = 0;
+                    for (x = 0; x < pad && pad > 0; ++x) {
+                        printf(" ");
+                    }
+                    printf("%s ", result);
+                }
+            }
+            printf("\n");
+        }
+
+        mpl_delete_Morphy(m1);
+    }
+    
+    
+    return failn;
+}
+
 int test_bulk_unrooted_tree_cases(void)
 {
     theader("Testing bulk unrooted tree cases");

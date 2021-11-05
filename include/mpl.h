@@ -283,7 +283,23 @@ int     mpl_delete_rawdata
 
         (Morphy     m);
 
-    
+
+    /*!
+
+ @brief Change the default symbol used for gap.
+
+ @discussion Allows the caller to specify an alternative state to the dash for
+ specifying the gap symbol in the matrix. It requires that a matrix is loaded
+ and successfully read. The chosen symbol cannot coexist in the matrix symbols
+ list.
+
+ @param gapsymb A constant character indicating the chosen symbol.
+
+ @param m An instance of the Morphy object.
+
+ @return Morphy error code.
+
+ */
 int     mpl_set_gap_symbol
 
         (const char gapsymb,

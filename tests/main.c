@@ -63,6 +63,7 @@ int main (void)
     fails += test_small_fitch_na();
     fails += test_small_fitch_withmissing();
     fails += test_bulk_balanced_tree_cases();
+    fails += test_bulk_alternative_gap_symbol();
     fails += test_bulk_unrooted_tree_cases();
     fails += test_twopass_fitch();
     fails += test_local_reoptimisation();
